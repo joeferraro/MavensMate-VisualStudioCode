@@ -1,0 +1,10 @@
+{
+    "Visualforce template": {
+        "prefix": "vf",
+        "body": [
+            "<apex:page>",
+            "</apex:page>"
+        ],
+        "description": "Simple Page starting point"
+    }
+}
