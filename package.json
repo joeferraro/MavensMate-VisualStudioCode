@@ -1,0 +1,107 @@
+{
+  "name": "MavensMate-VSCode",
+  "displayName": "MavensMate VSCode",
+  "description": "Develop Salesforce/Force.com applications inside Visual Studio Code",
+  "version": "0.0.1",
+  "publisher": "iDev0urer",
+  "author": {
+      "name": "Chris Watson",
+      "email": "chris@marginzero.co",
+      "url": "http://cwatsondev.com"
+  },
+  "engines": {
+    "vscode": "^0.10.10"
+  },
+  "categories": [
+    "Languages",
+    "Other"
+  ],
+  
+  "activationEvents": [
+    "onLanguage:apex",
+    "onLanguage:visualforce",
+    "onCommand:mm.initiailize"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "languages": [
+      {
+        "id": "apex",
+        "aliases": [
+          "APEX",
+          "Apex"
+        ],
+        "extensions": [
+          ".cls",
+          ".trigger",
+          ".apex",
+          ".tgr",
+          ".bsh"
+        ]
+      },
+      {
+        "id": "visualforce",
+        "aliases": [
+          "Visualforce",
+          "VisualForce"
+        ],
+        "extensions": [
+          ".page",
+          ".component",
+          ".email"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "apex",
+        "scopeName": "source.apex",
+        "path": "./syntaxes/apex.plist"
+      },
+      {
+        "language": "visualforce",
+        "scopeName": "text.visualforce.basic",
+        "path": "./syntaxes/visualforce.plist"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "apex",
+        "path": "./snippets/apex.json"
+      },
+      {
+        "language": "visualforce",
+        "path": "./snippets/visualforce.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "mm.reconnect",
+        "title": "Reconnect to Salesforce"
+      }
+    ],
+    "configuration": {
+      "title": "Apex Configuration",
+      "properties": {
+        "apex.buildOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Build and push the file to salesforce every time you save"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  },
+  "dependencies": {
+    "lodash": "^4.6.1",
+    "mavensmate": "0.0.44-beta5",
+    "typescript": "^1.8.5"
+  },
+  "devDependencies": {
+    "vscode": "^0.11.0"
+  }
+}
