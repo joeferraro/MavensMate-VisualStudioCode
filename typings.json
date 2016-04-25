@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "sinon": "registry:npm/sinon#1.16.0+20160309002336"
+  }
+}
