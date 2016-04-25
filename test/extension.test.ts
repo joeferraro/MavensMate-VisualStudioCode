@@ -5,14 +5,21 @@ import * as vscode from 'vscode';
 import * as myExtension from '../src/extension';
 
 suite("Extension Tests", () => {
-    suite("Hello World", () => {
-       
-       test("sends 'hello world' to showInformationMessage", () => {
-          var showInformationMessage = sinon.spy(vscode.window, 'showInformationMessage'); 
-          vscode.commands.executeCommand('extension.sayHello').then(() => {
-            assert(showInformationMessage.calledOnce);
-            showInformationMessage.restore(); 
-          });
-       });
+  suite("Hello World", () => {      
+    let showInformationMessage;
+    
+    setup(() => {
+      showInformationMessage = sinon.spy(vscode.window, 'showInformationMessage'); 
     });
+    
+    teardown(() => {
+      showInformationMessage.restore(); 
+    });
+      
+    test("sends 'hello world' to showInformationMessage", () => {
+      return vscode.commands.executeCommand('extension.sayHello').then(() => {
+        assert(showInformationMessage.calledOnce);
+      });
+    });
+  });
 });
