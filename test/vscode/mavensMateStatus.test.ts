@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 
-import { MavensMateClient } from '../../src/mavensmate/client';
+import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
 
 import * as vscode from 'vscode';

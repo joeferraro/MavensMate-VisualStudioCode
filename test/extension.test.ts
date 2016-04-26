@@ -1,25 +1,38 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 
-import * as vscode from 'vscode';
-import * as myExtension from '../src/extension';
+import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
+import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
 
-suite("Extension Tests", () => {
-  suite("Hello World", () => {      
-    let showInformationMessage;
+import * as vscode from 'vscode';
+
+suite("MavensMate Extension", () => {
+    let mavensMateExtension : vscode.Extension<any>;
+    let mavensMateClient;
+    let mavensMateClientCreateStub : sinon.SinonStub;
+    let mavensMateStatus;
+    let mavensMateStatusCreateStub : sinon.SinonStub;
     
     setup(() => {
-      showInformationMessage = sinon.spy(vscode.window, 'showInformationMessage'); 
+        mavensMateClient = {};
+        
+        mavensMateClientCreateStub = sinon.stub(MavensMateClient, "Create");
+        mavensMateClientCreateStub.returns(mavensMateClient);
+        
+        mavensMateStatus = {};
+        mavensMateStatus.updateAppStatus = sinon.stub();
+        
+        mavensMateStatusCreateStub = sinon.stub(MavensMateStatus, "Create");
+        mavensMateStatusCreateStub.returns(mavensMateStatus);
+        
+        mavensMateExtension = vscode.extensions.getExtension("DavidHelmer.mavensmate");
+        assert.notEqual(undefined, mavensMateExtension); 
     });
     
-    teardown(() => {
-      showInformationMessage.restore(); 
+    test("activates", () => {
+        return mavensMateExtension.activate()
+            .then(() => {
+                assert(mavensMateStatus.updateAppStatus.calledOnce);
+            });
     });
-      
-    test("sends 'hello world' to showInformationMessage", () => {
-      return vscode.commands.executeCommand('extension.sayHello').then(() => {
-        assert(showInformationMessage.calledOnce);
-      });
-    });
-  });
 });

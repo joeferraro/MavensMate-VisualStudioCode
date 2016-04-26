@@ -1,10 +1,14 @@
 'use strict';
 import { window, StatusBarAlignment, StatusBarItem } from 'vscode';
-import { MavensMateClient } from '../../src/mavensmate/client';
+import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 
 export class MavensMateStatus {
     statusBarItem: StatusBarItem;
     client: MavensMateClient;
+    
+    static Create(client: MavensMateClient){
+        return new MavensMateStatus(client);
+    }
     
     constructor(client: MavensMateClient){
         this.statusBarItem = window.createStatusBarItem(StatusBarAlignment.Left);

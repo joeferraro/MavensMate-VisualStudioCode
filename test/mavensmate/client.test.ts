@@ -2,7 +2,7 @@ import * as expect from 'expect.js';
 import * as nock from 'nock';
 
 import * as vscode from 'vscode';
-import { MavensMateClient } from '../../src/mavensmate/client';
+import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 
 suite("MavensMate Client", () => {
     let mavensMateClientOptions = {

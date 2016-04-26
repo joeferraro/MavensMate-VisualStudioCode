@@ -5,6 +5,10 @@ import * as urlJoin from 'url-join';
 export class MavensMateClient{
     options: any;
     
+    static Create(options: any){
+        return new MavensMateClient(options);
+    }
+    
     constructor(options: any){
         this.options = options;
     }
