@@ -13,15 +13,15 @@ suite("MavensMate Client", () => {
         suite("server is up", () => {
             setup(() => {
                 nock(mavensMateClientOptions.baseURL)
-                .get('/app/home/index')
-                .reply(200, 'OK');
+                    .get('/app/home/index')
+                    .reply(200, 'OK');
             });
 
             test("returns true", () => {
                 return mavensMateClient.isAppAvailable()
-                .then((isAvailable) =>{
-                    expect(isAvailable).to.be.true;
-                });
+                    .then((isAvailable) =>{
+                        expect(isAvailable).to.be.true;
+                    });
             });
         });
 
