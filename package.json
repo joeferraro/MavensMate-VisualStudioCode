@@ -28,6 +28,7 @@
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "dependencies": {
+    "bluebird": "3.3.5",
     "path": "0.12.7",
     "request-promise": "2.0.1",
     "url-join": "1.1.0"
