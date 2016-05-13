@@ -1,0 +1,111 @@
+import * as assert from 'assert';
+import * as sinon from 'sinon';
+
+import * as operatingSystem from  '../../src/workspace/operatingSystem';
+import * as jsonFile from '../../src/workspace/jsonFile';
+
+import * as mavensMateAppConfig from '../../src/mavensmate/mavensMateAppConfig';
+
+suite('mavensMate App Config', () => {
+    process.env.USERPROFILE = 'userprofiletest';
+    process.env.HOME = 'hometest';
+    
+    let isLinuxStub : sinon.SinonStub;
+    let isMacStub : sinon.SinonStub;
+    let isWindowsStub : sinon.SinonStub;
+    
+    let windowsJson = { isWindows: true };
+    let nonWindowsJson = { isWindows: false };
+    let openStub : sinon.SinonStub;
+    
+    setup(() => {
+        openStub = sinon.stub(jsonFile, 'open');
+        openStub.withArgs('userprofiletest/.mavensmate-config.json').returns(windowsJson);
+        openStub.withArgs('hometest/.mavensmate-config.json').returns(nonWindowsJson); 
+    });
+    
+    teardown(() => {
+        openStub.restore();
+    });
+    
+    suite('when on a mac', () => {
+        setup(() => {
+            isLinuxStub = sinon.stub(operatingSystem, 'isLinux').returns(false);
+            isMacStub = sinon.stub(operatingSystem, 'isMac').returns(true);
+            isWindowsStub = sinon.stub(operatingSystem, 'isWindows').returns(false);
+        });
+        
+        test('it uses home', () => {
+            mavensMateAppConfig.getConfig();
+            
+            sinon.assert.calledWith(openStub, 'hometest/.mavensmate-config.json');
+            sinon.assert.neverCalledWith(openStub, 'userprofiletest/.mavensmate-config.json');
+        });
+        
+        test('it parses correct json', () => {
+            let returnedJson = mavensMateAppConfig.getConfig();
+            
+            assert.equal(returnedJson.isWindows, false);
+        });
+        
+        teardown(() => {
+            isLinuxStub.restore();
+            isMacStub.restore();
+            isWindowsStub.restore();
+        });
+    });
+    
+    suite('when on windows', () => {
+        setup(() => {
+            isLinuxStub = sinon.stub(operatingSystem, 'isLinux').returns(false);
+            isMacStub = sinon.stub(operatingSystem, 'isMac').returns(false);
+            isWindowsStub = sinon.stub(operatingSystem, 'isWindows').returns(true);
+        });
+        
+        test('it uses userprofile', () => {
+            mavensMateAppConfig.getConfig();
+            
+            sinon.assert.calledWith(openStub, 'userprofiletest/.mavensmate-config.json');
+            sinon.assert.neverCalledWith(openStub, 'hometest/.mavensmate-config.json');
+        });
+        
+        test('it parses correct json', () => {
+            let returnedJson = mavensMateAppConfig.getConfig();
+            
+            assert.equal(returnedJson.isWindows, true);
+        });
+        
+        teardown(() => {
+            isLinuxStub.restore();
+            isMacStub.restore();
+            isWindowsStub.restore();
+        });
+    });
+    
+    suite('when on linux', () => {
+        setup(() => {
+            isLinuxStub = sinon.stub(operatingSystem, 'isLinux').returns(true);
+            isMacStub = sinon.stub(operatingSystem, 'isMac').returns(false);
+            isWindowsStub = sinon.stub(operatingSystem, 'isWindows').returns(false);
+        });
+        
+        test('it uses home', () => {
+            mavensMateAppConfig.getConfig();
+            
+            sinon.assert.calledWith(openStub, 'hometest/.mavensmate-config.json');
+            sinon.assert.neverCalledWith(openStub, 'userprofiletest/.mavensmate-config.json');
+        });
+        
+        test('it parses correct json', () => {
+            let returnedJson = mavensMateAppConfig.getConfig();
+            
+            assert.equal(returnedJson.isWindows, false);
+        });
+        
+        teardown(() => {
+            isLinuxStub.restore();
+            isMacStub.restore();
+            isWindowsStub.restore();
+        });
+    });
+});
