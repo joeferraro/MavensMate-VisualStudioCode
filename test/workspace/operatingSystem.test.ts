@@ -7,7 +7,7 @@ import * as operatingSystem from  '../../src/workspace/operatingSystem';
 
 
 suite('operatingSystem', () => {
-    let platformStub : any;
+    let platformStub : sinon.SinonStub;
     suite("when on a mac (darwin)", () => {
         setup(() => {
             platformStub = sinon.stub(os, 'platform');
