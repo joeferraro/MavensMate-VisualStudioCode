@@ -14,6 +14,9 @@ suite('operatingSystem', () => {
             platformStub.returns('darwin');
         });
         
+        test('platform is darwin', () => {
+           assert.equal(operatingSystem.platform(), 'darwin'); 
+        });
         test("isMac is true", () => {
             assert.equal(operatingSystem.isMac(), true);
         });
@@ -35,6 +38,9 @@ suite('operatingSystem', () => {
             platformStub.returns('linux');
         });
         
+        test('platform is darwin', () => {
+           assert.equal(operatingSystem.platform(), 'linux'); 
+        });
         test("isMac is false", () => {
             assert.equal(operatingSystem.isMac(), false);
         });
@@ -56,6 +62,9 @@ suite('operatingSystem', () => {
             platformStub.returns('win32');
         });
         
+        test('platform is darwin', () => {
+           assert.equal(operatingSystem.platform(), 'win32'); 
+        });
         test("isMac is false", () => {
             assert.equal(operatingSystem.isMac(), false);
         });

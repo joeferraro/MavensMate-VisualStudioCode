@@ -2,6 +2,10 @@
 
 import os = require('os');
 
+export function platform(){
+    return os.platform();
+}
+
 export function isWindows(){
     return os.platform().startsWith('win');
 } 
