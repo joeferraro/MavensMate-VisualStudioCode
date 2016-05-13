@@ -2,14 +2,18 @@
 import * as request from 'request-promise';
 import * as urlJoin from 'url-join';
 
+interface Options {
+    baseURL: string;
+} 
+
 export class MavensMateClient{
-    options: any;
+    options: Options;
     
-    static Create(options: any){
+    static Create(options: Options){
         return new MavensMateClient(options);
     }
     
-    constructor(options: any){
+    constructor(options: Options){
         this.options = options;
     }
     
