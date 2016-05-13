@@ -7,8 +7,8 @@ import * as jsonFile from '../../src/workspace/jsonFile';
 import * as mavensMateAppConfig from '../../src/mavensmate/mavensMateAppConfig';
 
 suite('mavensMate App Config', () => {
-    process.env.USERPROFILE = 'userprofiletest';
-    process.env.HOME = 'hometest';
+    let originalUserProfile = process.env.USERPROFILE;
+    let originalHome = process.env.HOME;
     
     let isLinuxStub : sinon.SinonStub;
     let isMacStub : sinon.SinonStub;
@@ -19,12 +19,17 @@ suite('mavensMate App Config', () => {
     let openStub : sinon.SinonStub;
     
     setup(() => {
+        process.env.USERPROFILE = 'userprofiletest';
+        process.env.HOME = 'hometest';
+        
         openStub = sinon.stub(jsonFile, 'open');
         openStub.withArgs('userprofiletest/.mavensmate-config.json').returns(windowsJson);
         openStub.withArgs('hometest/.mavensmate-config.json').returns(nonWindowsJson); 
     });
     
     teardown(() => {
+        process.env.USERPROFILE = originalUserProfile;
+        process.env.HOME = originalHome;
         openStub.restore();
     });
     
