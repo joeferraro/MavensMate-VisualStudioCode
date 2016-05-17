@@ -3,6 +3,11 @@ declare module "request-promise" {
     export = requestPromise;
 }
 
+declare module "fs-promise" {
+    var fsPromise: any;
+    export = fsPromise;
+}
+
 declare module "url-join" {
     var urlJoin: any;
     export = urlJoin;
