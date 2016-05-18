@@ -14,24 +14,23 @@ interface appConfig {
     mm_workspace: string[];
 }
 
-export function getListAsync() : Promise<any> {
+export function promiseList() : Promise<any> {
     let projects : Promise<any>[] = [];
     let config : appConfig = mavensMateAppConfig.getConfig();
     
     for(var workspace of config.mm_workspace){
-        let listProjectsInWorkplace = (fileList) => {
-            return listProjectsInWorkspaceFileList(workspace, fileList); 
-        };
-        let listProjectsInWorkplaceIfExists = fs.stat(workspace)
-            .then((directoryInfo) => {
-                if(directoryInfo.isDirectory()){
-                    return fs.readdir(workspace).then(listProjectsInWorkplace);
-                }
-            });
+        let listProjectsInWorkplace = fs.readdir(workspace)
+            .then((fileList) => {
+                return listProjectsInWorkspaceFileList(workspace, fileList);
+            }, logErrorToConsole);
         
-        projects.push(listProjectsInWorkplaceIfExists);
+        projects.push(listProjectsInWorkplace);
     }
     return Promise.all(projects).then(flattenToListOfProjects);
+}
+
+function logErrorToConsole(error) {
+    console.log(error);
 }
 
 function listProjectsInWorkspaceFileList(workspace, fileList) : Promise<any> {
@@ -52,40 +51,22 @@ function notHiddenFile(fileName){
 
 function getProjectFromFileName(workspace, fileName){
     let projectPath = path.join(workspace, fileName);
-    return fs.stat(projectPath)
-        .then((fileInfo) => {
-            if(fileInfo.isDirectory()){
-                return hasProjectSettings(projectPath).then((hasSettings) => {
-                    if(hasSettings){
-                        return { name: fileName, path: projectPath, workspace: baseName(workspace) };
-                    }
-                });
-            }
-        });
-}
-
-function hasProjectSettings(projectPath){
-    let settingsPath = path.join(projectPath, 'config', '.settings');
-    return fileExists(settingsPath);
-}
-
-function fileExists(filePath){
-    return fs.stat(filePath)
-        .then(returnTrue, returnFalse);
-}
-
-function returnTrue(){
-    return true;
-}
-
-function returnFalse(){
-    return false;
-}
-
-function flattenToListOfProjects(listsOfProjects){
-    return Array.prototype.concat.apply([], listsOfProjects); // http://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
+    let returnProjectInfo = () => {
+        return { name: fileName, path: projectPath, workspace: baseName(workspace) };
+    };
+    return hasProjectSettings(projectPath)
+        .then(returnProjectInfo, logErrorToConsole);
 }
 
 function baseName(path){
     return path.split(/[\\/]/).pop();
+}
+
+function hasProjectSettings(projectPath){
+    let settingsPath = path.join(projectPath, 'config', '.settings');
+    return fs.stat(settingsPath);
+}
+
+function flattenToListOfProjects(listsOfProjects){
+    return Array.prototype.concat.apply([], listsOfProjects); // http://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
 }
