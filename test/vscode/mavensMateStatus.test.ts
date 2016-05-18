@@ -1,10 +1,10 @@
-import * as assert from 'assert';
-import * as sinon from 'sinon';
+import assert = require('assert');
+import sinon = require('sinon');
 
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
 
-import * as vscode from 'vscode';
+import vscode = require('vscode');
 
 let mavensMateClientOptions = {
     baseURL: 'http://localhost:55555'
