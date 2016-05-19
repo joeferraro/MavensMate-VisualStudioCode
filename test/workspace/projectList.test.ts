@@ -50,9 +50,6 @@ suite('projectList', () => {
             })
             .done(testDone, console.log);
     });
-    
-
-    
 });
 
 function assertIsProject(project, name, path, workspace){
