@@ -17,12 +17,12 @@ interface appConfig {
 export function promiseList() : Promise<any> {
     let projects : Promise<any>[] = [];
     let config : appConfig = mavensMateAppConfig.getConfig();
-    
-    for(var workspace of config.mm_workspace){
+    for(let workspace of config.mm_workspace){
+        let listProjects = (fileList) => {
+            return listProjectsInWorkspaceFileList(workspace, fileList);
+        };
         let listProjectsInWorkplace = fs.readdir(workspace)
-            .then((fileList) => {
-                return listProjectsInWorkspaceFileList(workspace, fileList);
-            }, logErrorToConsole);
+            .then(listProjects, logErrorToConsole);
         
         projects.push(listProjectsInWorkplace);
     }
@@ -35,8 +35,7 @@ function logErrorToConsole(error) {
 
 function listProjectsInWorkspaceFileList(workspace, fileList) : Promise<any> {
     let projects : Promise<any>[] = [];
-    for(var fileIndex in fileList){
-        let fileName = fileList[fileIndex];
+    for(let fileName of fileList){
         if(notHiddenFile(fileName)){
             projects.push(getProjectFromFileName(workspace, fileName));
         }
@@ -59,7 +58,11 @@ function getProjectFromFileName(workspace, fileName){
 }
 
 function baseName(path){
-    return path.split(/[\\/]/).pop();
+    return path.split(/[\\/]/).filter(notBlank).pop();
+}
+
+function notBlank(string: String){
+    return string != null && string.length > 0
 }
 
 function hasProjectSettings(projectPath){
@@ -68,5 +71,5 @@ function hasProjectSettings(projectPath){
 }
 
 function flattenToListOfProjects(listsOfProjects){
-    return Array.prototype.concat.apply([], listsOfProjects); // http://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
+    return Array.prototype.concat.apply([], listsOfProjects).filter(project => project); // http://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
 }
