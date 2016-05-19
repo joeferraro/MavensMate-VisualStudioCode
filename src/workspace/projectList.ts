@@ -7,7 +7,8 @@ import mavensMateAppConfig = require('../mavensmate/mavensMateAppConfig');
 
 export interface projectDirectory {
     name: string,
-    path: string
+    path: string,
+    workspace: string
 }
 
 interface appConfig {
