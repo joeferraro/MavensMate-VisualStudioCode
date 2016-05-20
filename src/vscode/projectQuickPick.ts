@@ -4,13 +4,10 @@ import Promise = require('bluebird');
 import { window, QuickPickItem } from 'vscode';
 import { promiseList, projectDirectory } from '../../src/workspace/projectList';
 
-export function showProjectQuickPick() : Promise<any>{
+export function showProjectQuickPick() : Thenable<any>{
     return promiseList().then((projects) => {
         return Promise.map(projects, buildQuickPickProject)
-            .then((quickPickProjects) => {
-                console.log('inside');
-                return window.showQuickPick(quickPickProjects);
-            });
+            .then(window.showQuickPick);
     });
 }
 
