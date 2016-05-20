@@ -19,6 +19,10 @@
       {
         "command": "extension.sayHello",
         "title": "Hello World"
+      },
+      {
+        "command": "mavensmate.openProject",
+        "title": "Open Project"
       }
     ]
   },
