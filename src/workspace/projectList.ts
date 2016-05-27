@@ -72,5 +72,5 @@ function hasProjectSettings(projectPath){
 }
 
 function flattenToListOfProjects(listsOfProjects){
-    return Array.prototype.concat.apply([], listsOfProjects).filter(project => project); // http://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
+    return Array.prototype.concat.apply([], listsOfProjects).filter(project => project);
 }
