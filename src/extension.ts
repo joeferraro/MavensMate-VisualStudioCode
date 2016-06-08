@@ -16,11 +16,13 @@ export function activate(context: vscode.ExtensionContext) {
     
     mavensMateStatus.updateAppStatus();
 
-    let disposable = vscode.commands.registerCommand('mavensmate.openProject', () => {
-        showProjectQuickPick().then(openProject);
-    });
+    let disposable = vscode.commands.registerCommand('mavensmate.openProject', showProjectListAndOpen);
 
     context.subscriptions.push(disposable);
+}
+
+function showProjectListAndOpen(){
+    showProjectQuickPick().then(openProject);
 }
 
 export function deactivate() {
