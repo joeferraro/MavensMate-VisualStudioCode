@@ -9,6 +9,8 @@ let mavensMateClientOptions = {
     baseURL: 'http://localhost:56248'
 }; 
 
+let registerCommand = vscode.commands.registerCommand;
+
 export function activate(context: vscode.ExtensionContext) {
     console.log('MavensMate is activating');
     let mavensMateClient = MavensMateClient.Create(mavensMateClientOptions);
@@ -16,7 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
     
     mavensMateStatus.updateAppStatus();
 
-    let disposable = vscode.commands.registerCommand('mavensmate.openProject', showProjectListAndOpen);
+    let disposable = registerCommand('mavensmate.openProject', showProjectListAndOpen);
 
     context.subscriptions.push(disposable);
 }
