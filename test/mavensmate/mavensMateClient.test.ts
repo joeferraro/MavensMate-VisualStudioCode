@@ -1,7 +1,9 @@
-import * as expect from 'expect.js';
-import * as nock from 'nock';
+import expect = require('expect.js');
+import assert = require('assert');
+import nock = require('nock');
+import Promise = require('bluebird');
 
-import * as vscode from 'vscode';
+import vscode = require('vscode');
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 
 suite("MavensMate Client", () => {
@@ -37,4 +39,23 @@ suite("MavensMate Client", () => {
             });
         });
     });
+    
+    suite("sendCommand", () => {
+        test("sends command", (testDone) => {
+            let sendCommandNock : nock.Scope = nock(mavensMateClientOptions.baseURL)
+                .post('/execute', {"args":{"ui":true}})
+                .query({"command":"open-ui","async":"1"})
+                .reply(200);
+                
+            mavensMateClient.sendCommand()
+                .then(() => {
+                    sendCommandNock.done();
+                }, assertIfError)
+                .done(testDone);
+        });
+    });
 });
+
+function assertIfError(error){
+    assert.fail(null, null, error);
+}
