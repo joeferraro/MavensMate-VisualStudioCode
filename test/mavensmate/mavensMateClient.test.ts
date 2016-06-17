@@ -21,7 +21,7 @@ suite("MavensMate Client", () => {
             test("returns true", () => {
                 return mavensMateClient.isAppAvailable()
                     .then((isAvailable) =>{
-                        expect(isAvailable).to.be.true;
+                        expect(isAvailable).to.be(true);
                     });
             });
         });
@@ -40,7 +40,7 @@ suite("MavensMate Client", () => {
     });
     
     suite("sendCommand", () => {
-        test("sends command", (testDone) => {
+        test("sends synchronous command", (testDone) => {
             let sendCommandNock = nock(mavensMateClientOptions.baseURL)
                 .post('/execute', {"args":{"ui":true}})
                 .matchHeader('Content-Type', 'application/json')
@@ -50,14 +50,67 @@ suite("MavensMate Client", () => {
             let openUICommand: Command = {
                 command: 'open-ui',
                 async: false,
-                args: {
-                    ui: true
+                body: {
+                    args: {
+                        ui: true
+                    }
                 }
             };
                 
             mavensMateClient.sendCommand(openUICommand)
                 .then(() => {
                     sendCommandNock.done();
+                }, assertIfError)
+                .done(testDone);
+        });
+
+        test("sends async command", (testDone) => {
+            let pendingResponse = {
+                id: 'e14b82c0-2d98-11e6-a468-5bbc3ff5e056',
+                status: 'pending'
+            };
+            let completedResponse = {
+                id: "e14b82c0-2d98-11e6-a468-5bbc3ff5e056",
+                complete: true,
+                operation: "open-ui",
+                result: {
+                    "message": "Success"
+                }
+            }
+            let sendCommandNock = nock(mavensMateClientOptions.baseURL)
+                .post('/execute', {"args":{"ui":true}})
+                .matchHeader('Content-Type', 'application/json')
+                .matchHeader('MavensMate-Editor-Agent', 'vscode')
+                .query({"command":"open-ui","async":"1"})
+                .reply(200, pendingResponse);
+            let checkStatusPendingNock = nock(mavensMateClientOptions.baseURL)
+                .get('/status')
+                .matchHeader('MavensMate-Editor-Agent', 'vscode')
+                .query({"id": pendingResponse.id })
+                .times(2)
+                .reply(200, pendingResponse);
+            let checkStatusCompleteNock = nock(mavensMateClientOptions.baseURL)
+                .get('/status')
+                .matchHeader('MavensMate-Editor-Agent', 'vscode')
+                .query({"id": pendingResponse.id })
+                .reply(200, completedResponse);
+            
+            let openUICommand: Command = {
+                command: 'open-ui',
+                async: true,
+                body: {
+                    args: {
+                        ui: true
+                    }
+                }
+            };
+                
+            mavensMateClient.sendCommand(openUICommand)
+                .then((actualResponse) => {
+                    expect(actualResponse.complete).to.be(true);
+                    sendCommandNock.done();
+                    checkStatusPendingNock.done();
+                    checkStatusCompleteNock.done();
                 }, assertIfError)
                 .done(testDone);
         });
