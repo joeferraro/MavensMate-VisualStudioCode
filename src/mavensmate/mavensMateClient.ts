@@ -3,9 +3,17 @@ import * as request from 'request-promise';
 import * as urlJoin from 'url-join';
 import Promise = require('bluebird');
 
-interface Options {
+export interface Options {
     baseURL: string;
-} 
+}
+
+export interface Command {
+    command: string;
+    async: boolean;
+    args: {
+        ui: boolean;
+    }
+}
 
 export class MavensMateClient{
     options: Options;
@@ -26,14 +34,14 @@ export class MavensMateClient{
         return request.get(getOptions).then(function () { return true });
     }
     
-    sendCommand() : Promise<any> {
+    sendCommand(command: Command) : Promise<any> {
         let commandBody = {
-            args: {
-                ui: true
-            }
+            args: command.args
         }
+        let asyncParam: number = (command.async ? 1 : 0);
         
-        let commandURL = urlJoin(this.options.baseURL, '/execute?command=open-ui&async=1')
+        let commandParmeters = 'command=' + command.command +'&async=' + asyncParam;
+        let commandURL = urlJoin(this.options.baseURL, '/execute?' + commandParmeters);
         let commandHeaders = {
             'Content-Type': 'application/json',
             'MavensMate-Editor-Agent': 'vscode'
@@ -47,7 +55,6 @@ export class MavensMateClient{
             json: true
         };
         
-        console.log('starting request');
         return request(postOptions);
     }
 }

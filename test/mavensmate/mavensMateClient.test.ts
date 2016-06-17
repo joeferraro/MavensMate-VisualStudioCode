@@ -1,10 +1,9 @@
 import expect = require('expect.js');
-import assert = require('assert');
 import nock = require('nock');
 import Promise = require('bluebird');
 
 import vscode = require('vscode');
-import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
+import { MavensMateClient, Command } from '../../src/mavensmate/mavensMateClient';
 
 suite("MavensMate Client", () => {
     let mavensMateClientOptions = {
@@ -42,12 +41,21 @@ suite("MavensMate Client", () => {
     
     suite("sendCommand", () => {
         test("sends command", (testDone) => {
-            let sendCommandNock : nock.Scope = nock(mavensMateClientOptions.baseURL)
+            let sendCommandNock = nock(mavensMateClientOptions.baseURL)
                 .post('/execute', {"args":{"ui":true}})
-                .query({"command":"open-ui","async":"1"})
+                .matchHeader('Content-Type', 'application/json')
+                .matchHeader('MavensMate-Editor-Agent', 'vscode')
+                .query({"command":"open-ui","async":"0"})
                 .reply(200);
+            let openUICommand: Command = {
+                command: 'open-ui',
+                async: false,
+                args: {
+                    ui: true
+                }
+            };
                 
-            mavensMateClient.sendCommand()
+            mavensMateClient.sendCommand(openUICommand)
                 .then(() => {
                     sendCommandNock.done();
                 }, assertIfError)
@@ -57,5 +65,5 @@ suite("MavensMate Client", () => {
 });
 
 function assertIfError(error){
-    assert.fail(null, null, error);
+    expect().fail(error);
 }
