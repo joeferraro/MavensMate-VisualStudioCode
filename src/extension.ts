@@ -18,9 +18,21 @@ export function activate(context: vscode.ExtensionContext) {
     
     mavensMateStatus.updateAppStatus();
 
-    let disposable = registerCommand('mavensmate.openProject', showProjectListAndOpen);
+    let openProject = registerCommand('mavensmate.openProject', showProjectListAndOpen);
+    let openMavensMateUI = registerCommand('mavensmate.openUI', () => {
+        let openUICommand = {
+            command: "open-ui",
+            async: true,
+            body:{
+                args: {
+                    ui: true
+                }
+            }
+        };
+        mavensMateClient.sendCommand(openUICommand);
+    });
 
-    context.subscriptions.push(disposable);
+    context.subscriptions.push(openProject);
 }
 
 function showProjectListAndOpen(){
