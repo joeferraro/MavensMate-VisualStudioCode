@@ -27,6 +27,10 @@
       {
         "command": "mavensmate.openUI",
         "title": "Open MavensMate UI"
+      },
+      {
+        "command": "mavensmate.newProject",
+        "title": "New Project"
       }
     ]
   },
