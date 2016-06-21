@@ -39,7 +39,6 @@ export class MavensMateStatus {
     }
 
     commandStarted() {
-        console.log(this.commandStatus);
         this.commandStatus.text = "$(squirrel)";
         this.commandStatus.show();
     }
