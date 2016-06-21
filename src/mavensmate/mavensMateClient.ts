@@ -48,9 +48,8 @@ export class MavensMateClient{
 
     handlePollResponse(commandResponse){
         if(commandResponse.status && commandResponse.status == 'pending'){
-            return Promise.delay(500)
+            return Promise.delay(500, commandResponse)
                 .bind(this)
-                .then(() => { return commandResponse; })
                 .then(this.poll)
                 .then(this.handlePollResponse);
         } else {
