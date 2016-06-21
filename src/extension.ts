@@ -24,9 +24,11 @@ export function activate(context: vscode.ExtensionContext) {
     for(let command in mavensMateCommands){
         let mavensMateCommand = mavensMateCommands[command].mavensmate;
         let commandRegistration = registerCommand(command, () => {
-            console.log('sending command');
-            return mavensMateClient.sendCommand(mavensMateCommand).then((response) => {
-                console.log(response);
+            mavensMateStatus.commandStarted();
+            return mavensMateClient.sendCommand(mavensMateCommand).then(() => {
+                return mavensMateStatus.commandStopped(false);
+            }, (error) => {
+                return mavensMateStatus.commandStopped(true);
             });
         });
         context.subscriptions.push(commandRegistration);

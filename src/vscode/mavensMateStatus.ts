@@ -1,9 +1,11 @@
 'use strict';
 import { window, StatusBarAlignment, StatusBarItem } from 'vscode';
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
+import Promise = require('bluebird');
 
 export class MavensMateStatus {
-    statusBarItem: StatusBarItem;
+    appStatus: StatusBarItem;
+    commandStatus: StatusBarItem;
     client: MavensMateClient;
     
     static Create(client: MavensMateClient){
@@ -11,7 +13,8 @@ export class MavensMateStatus {
     }
     
     constructor(client: MavensMateClient){
-        this.statusBarItem = window.createStatusBarItem(StatusBarAlignment.Left);
+        this.appStatus = window.createStatusBarItem(StatusBarAlignment.Left);
+        this.commandStatus = window.createStatusBarItem(StatusBarAlignment.Left);
         this.client = client;
     }
     
@@ -26,12 +29,32 @@ export class MavensMateStatus {
     }
     
     private showAppIsAvailable(){
-        this.statusBarItem.text = "MavensMate $(check)";
-        this.statusBarItem.show();
+        this.appStatus.text = "MavensMate $(check)";
+        this.appStatus.show();
     }
     
     private showAppIsUnavailable(requestError){
-        this.statusBarItem.text = "MavensMate $(alert)";
-        this.statusBarItem.show();
+        this.appStatus.text = "MavensMate $(alert)";
+        this.appStatus.show();
+    }
+
+    commandStarted() {
+        console.log(this.commandStatus);
+        this.commandStatus.text = "$(squirrel)";
+        this.commandStatus.show();
+    }
+
+    commandStopped(withError: boolean) {
+        let statusText: string;
+        if(withError){
+            statusText = "$(thumbsdown)";
+        } else {
+            statusText = "$(thumbsup)";
+        }
+        this.commandStatus.text = statusText;
+        this.commandStatus.show();
+        return Promise.delay(3000).then(() => {
+            this.commandStatus.hide();
+        });
     }
 }
