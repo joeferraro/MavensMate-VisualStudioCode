@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
 import { showProjectQuickPick, openProject } from '../src/vscode/projectQuickPick';
-import mavensMateCommands = require('../src/mavensmate/mavensMateCommands');
+import mavensMateCommands = require('../src/mavensmate/clientCommands');
 
 let mavensMateClientOptions = {
     baseURL: 'http://localhost:56248'

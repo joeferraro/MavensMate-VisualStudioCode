@@ -1,9 +1,9 @@
 import expect = require('expect.js');
-import mavensMateCommands = require('../../src/mavensmate/mavensMateCommands');
+import clientCommands = require('../../src/mavensmate/clientCommands');
 
-suite('mavensMateCommands', () => {
+suite('clientCommands', () => {
     test('can find basic command', () => {
-        let openUICommand = mavensMateCommands['mavensmate.openUI'];
+        let openUICommand = clientCommands['mavensmate.openUI'];
 
         expect(openUICommand).to.not.be(undefined);
         expect(openUICommand.command).to.be('open-ui');
