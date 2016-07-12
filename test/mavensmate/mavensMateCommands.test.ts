@@ -6,6 +6,6 @@ suite('mavensMateCommands', () => {
         let openUICommand = mavensMateCommands['mavensmate.openUI'];
 
         expect(openUICommand).to.not.be(undefined);
-        expect(openUICommand.mavensmate.command).to.be('open-ui');
+        expect(openUICommand.command).to.be('open-ui');
     });
 });

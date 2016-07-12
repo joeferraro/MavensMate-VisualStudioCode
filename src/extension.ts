@@ -22,8 +22,8 @@ export function activate(context: vscode.ExtensionContext) {
     let openProject = registerCommand('mavensmate.openProject', showProjectListAndOpen);
 
     for(let command in mavensMateCommands){
-        let mavensMateCommand = mavensMateCommands[command].mavensmate;
         let commandRegistration = registerCommand(command, () => {
+            let mavensMateCommand = mavensMateCommands[command];
             mavensMateStatus.commandStarted();
             return mavensMateClient.sendCommand(mavensMateCommand).then(() => {
                 return mavensMateStatus.commandStopped(false);
