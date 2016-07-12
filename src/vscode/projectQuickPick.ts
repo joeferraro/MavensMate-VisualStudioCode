@@ -28,3 +28,7 @@ export function openProject(projectItem: projectQuickPickItem) {
     let projectUri = Uri.parse(projectItem.path);
     return commands.executeCommand('vscode.openFolder', projectUri).then(null, console.log);
 }
+
+export function showProjectListAndOpen(): Thenable<any>{
+    return showProjectQuickPick().then(openProject);
+}

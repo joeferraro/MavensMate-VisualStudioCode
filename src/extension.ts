@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 
 import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
-import { showProjectQuickPick, openProject } from '../src/vscode/projectQuickPick';
+import { showProjectListAndOpen } from '../src/vscode/projectQuickPick';
 import mavensMateCommands = require('../src/mavensmate/clientCommands');
 
 let mavensMateClientOptions = {
@@ -35,10 +35,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     context.subscriptions.push(openProject);
-}
-
-function showProjectListAndOpen(){
-    return showProjectQuickPick().then(openProject);
 }
 
 export function deactivate() {
