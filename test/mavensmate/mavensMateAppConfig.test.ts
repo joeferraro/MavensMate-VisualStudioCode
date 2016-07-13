@@ -1,10 +1,10 @@
-import * as assert from 'assert';
-import * as sinon from 'sinon';
+import assert = require('assert');
+import sinon = require('sinon');
 
-import * as operatingSystem from  '../../src/workspace/operatingSystem';
-import * as jsonFile from '../../src/workspace/jsonFile';
+import operatingSystem = require('../../src/workspace/operatingSystem');
+import jsonFile = require('../../src/workspace/jsonFile');
 
-import * as mavensMateAppConfig from '../../src/mavensmate/mavensMateAppConfig';
+import mavensMateAppConfig = require('../../src/mavensmate/mavensMateAppConfig');
 
 suite('mavensMate App Config', () => {
     let originalUserProfile = process.env.USERPROFILE;
