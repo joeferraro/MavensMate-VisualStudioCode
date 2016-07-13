@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
 import { showProjectListAndOpen } from '../src/vscode/projectQuickPick';
-import mavensMateCommands = require('../src/mavensmate/clientCommands');
+import clientCommands = require('../src/mavensmate/clientCommands');
 
 let mavensMateClientOptions = {
     baseURL: 'http://localhost:56248'
@@ -21,14 +21,16 @@ export function activate(context: vscode.ExtensionContext) {
 
     let openProject = registerCommand('mavensmate.openProject', showProjectListAndOpen);
 
-    for(let command in mavensMateCommands){
+    for(let command in clientCommands){
         let commandRegistration = registerCommand(command, () => {
-            let mavensMateCommand = mavensMateCommands[command];
+            let mavensMateCommand = clientCommands[command];
             mavensMateStatus.commandStarted();
             return mavensMateClient.sendCommand(mavensMateCommand).then(() => {
-                return mavensMateStatus.commandStopped(false);
+                let withError = false;
+                return mavensMateStatus.commandStopped(withError);
             }, (error) => {
-                return mavensMateStatus.commandStopped(true);
+                let withError = true;
+                return mavensMateStatus.commandStopped(withError);
             });
         });
         context.subscriptions.push(commandRegistration);
