@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 
 import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
-import { CommandRegistrar } from '../src/mavensmate/commandRegistrar';
+import { CommandRegistrar } from '../src/vscode/commandRegistrar';
 
 let mavensMateClientOptions = {
     baseURL: 'http://localhost:56248'
