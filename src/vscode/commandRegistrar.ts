@@ -1,7 +1,8 @@
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
-import { showProjectListAndOpen } from '../../src/vscode/projectQuickPick';
-import clientCommands = require('../../src/mavensmate/clientCommands');
+import ProjectQuickPick = require('../../src/vscode/projectQuickPick');
+import ClientCommands = require('../../src/mavensmate/clientCommands');
+import { CommandInvoker } from '../../src/mavensmate/commandInvoker';
 import vscode = require('vscode');
 
 let registerCommand = vscode.commands.registerCommand;
@@ -35,28 +36,22 @@ export class CommandRegistrar {
     }
 
     private registerClientCommands(){
-        for(let command in clientCommands){
+        for(let command in ClientCommands.list){
             this.registerClientCommand(command);
         }
     }
 
-    private registerClientCommand(command: string){
-        let commandRegistration = registerCommand(command, () => {
-            let clientCommand = clientCommands[command];
-            this.status.commandStarted();
-            return this.client.sendCommand(clientCommand).then(() => {
-                let withError = false;
-                return this.status.commandStopped(withError);
-            }, (error) => {
-                let withError = true;
-                return this.status.commandStopped(withError);
-            });
-        });
+    private registerClientCommand(commandKey: string){
+        let clientCommand = ClientCommands.list[commandKey];
+        let commandInvoker = CommandInvoker.Create(this.client, this.status, clientCommand);
+
+        let commandRegistration = registerCommand(commandKey, commandInvoker.invokeProxy);
         this.context.subscriptions.push(commandRegistration);
+        
     }
 
     private registerLocalCommands(){
-        let openProject = registerCommand('mavensmate.openProject', showProjectListAndOpen);
+        let openProject = registerCommand('mavensmate.openProject', ProjectQuickPick.showProjectListAndOpen);
         this.context.subscriptions.push(openProject);
     }
 }
