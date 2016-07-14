@@ -29,6 +29,10 @@
         "title": "Open MavensMate UI"
       },
       {
+        "command": "mavensmate.openGlobalSettings",
+        "title": "MavensMate: Open Global Settings"
+      },
+      {
         "command": "mavensmate.newProject",
         "title": "New Project"
       }
