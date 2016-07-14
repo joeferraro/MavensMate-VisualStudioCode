@@ -3,7 +3,7 @@ import clientCommands = require('../../src/mavensmate/clientCommands');
 
 suite('clientCommands', () => {
     test('can find basic command', () => {
-        let openUICommand = clientCommands['mavensmate.openUI'];
+        let openUICommand = clientCommands.list()['mavensmate.openUI'];
 
         expect(openUICommand).to.not.be(undefined);
         expect(openUICommand.command).to.be('open-ui');

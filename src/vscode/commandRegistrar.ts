@@ -5,7 +5,6 @@ import ClientCommands = require('../../src/mavensmate/clientCommands');
 import { CommandInvoker } from '../../src/mavensmate/commandInvoker';
 import vscode = require('vscode');
 
-let registerCommand = vscode.commands.registerCommand;
 
 interface ClientCommand {
     command: string,
@@ -36,13 +35,15 @@ export class CommandRegistrar {
     }
 
     private registerClientCommands(){
-        for(let command in ClientCommands.list){
-            this.registerClientCommand(command);
+        let commands = ClientCommands.list();
+        for(let commandKey in commands){
+            let clientCommand = commands[commandKey];
+            this.registerClientCommand(commandKey, clientCommand);
         }
     }
 
-    private registerClientCommand(commandKey: string){
-        let clientCommand = ClientCommands.list[commandKey];
+    private registerClientCommand(commandKey: string, clientCommand: any){
+        let registerCommand = vscode.commands.registerCommand;
         let commandInvoker = CommandInvoker.Create(this.client, this.status, clientCommand);
 
         let commandRegistration = registerCommand(commandKey, commandInvoker.invokeProxy);
@@ -51,6 +52,8 @@ export class CommandRegistrar {
     }
 
     private registerLocalCommands(){
+        let registerCommand = vscode.commands.registerCommand;
+        
         let openProject = registerCommand('mavensmate.openProject', ProjectQuickPick.showProjectListAndOpen);
         this.context.subscriptions.push(openProject);
     }
