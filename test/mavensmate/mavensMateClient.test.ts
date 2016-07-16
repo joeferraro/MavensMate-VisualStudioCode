@@ -3,7 +3,8 @@ import nock = require('nock');
 import Promise = require('bluebird');
 
 import vscode = require('vscode');
-import { MavensMateClient, Command } from '../../src/mavensmate/mavensMateClient';
+import Command from '../../src/mavensmate/command';
+import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 
 suite("MavensMate Client", () => {
     let mavensMateClientOptions = {

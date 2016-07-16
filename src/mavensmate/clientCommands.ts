@@ -1,4 +1,6 @@
-export function list(){
+import Command from './command';
+
+export function list(): { [id: string]: Command } {
     return  {
         'mavensmate.openUI': {
             command: 'open-ui',
@@ -21,6 +23,16 @@ export function list(){
         'mavensmate.newProject': {
             command: 'new-project',
             async: false,
+            body: {
+                args: {
+                    ui: true
+                }
+            }
+        },
+        'mavensmate.compileFile': {
+            command: 'compile-metadata',
+            async: true,
+            paths: 'active',
             body: {
                 args: {
                     ui: true

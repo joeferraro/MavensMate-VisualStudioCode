@@ -1,18 +1,10 @@
-import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
-import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
-import ProjectQuickPick = require('../../src/vscode/projectQuickPick');
-import ClientCommands = require('../../src/mavensmate/clientCommands');
-import { CommandInvoker } from '../../src/mavensmate/commandInvoker';
+import { MavensMateClient } from '../mavensmate/mavensMateClient';
+import { MavensMateStatus } from './mavensMateStatus';
+import ProjectQuickPick = require('./projectQuickPick');
+import ClientCommands = require('../mavensmate/clientCommands');
+import { CommandInvoker } from '../mavensmate/commandInvoker';
+import Command from '../mavensmate/command';
 import vscode = require('vscode');
-
-
-interface ClientCommand {
-    command: string,
-    async: boolean,
-    body: {
-        args: any
-    }
-}
 
 export class CommandRegistrar {
     client: MavensMateClient;
@@ -42,11 +34,18 @@ export class CommandRegistrar {
         }
     }
 
-    private registerClientCommand(commandKey: string, clientCommand: any){
+    private registerClientCommand(commandKey: string, clientCommand: Command){
         let registerCommand = vscode.commands.registerCommand;
+        let registerTextEditorCommand = vscode.commands.registerTextEditorCommand;
         let commandInvoker = CommandInvoker.Create(this.client, this.status, clientCommand);
 
-        let commandRegistration = registerCommand(commandKey, commandInvoker.invokeProxy);
+        let commandRegistration: vscode.Disposable;
+        
+        if(commandInvoker.isTextEditorCommand()){
+            commandRegistration = registerTextEditorCommand(commandKey, commandInvoker.invokeTextEditorProxy);
+        } else {
+            commandRegistration = registerCommand(commandKey, commandInvoker.invokeProxy);
+        }
         this.context.subscriptions.push(commandRegistration);
         
     }

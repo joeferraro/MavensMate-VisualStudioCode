@@ -2,19 +2,11 @@
 import request = require('request-promise');
 import urlJoin = require('url-join');
 import Promise = require('bluebird');
+import Command from './command';
 
 export interface Options {
     baseURL: string;
-}
-
-export interface Command {
-    command: string;
-    async: boolean;
-    body: {
-        args: {
-            ui: boolean;
-        }
-    }
+    projectId?: string;
 }
 
 export class MavensMateClient{
@@ -37,7 +29,7 @@ export class MavensMateClient{
     }
     
     sendCommand(command: Command) : Promise<any> {
-        let postOptions = getPostOptionsForCommand(command, this.options.baseURL);
+        let postOptions = this.getPostOptionsForCommand(command, this.options.baseURL);
         let promiseCommandSend = request(postOptions).promise();
         if(command.async){
             return promiseCommandSend.bind(this).then(this.handlePollResponse);
@@ -73,24 +65,31 @@ export class MavensMateClient{
         
         return request(getOptions);
     }
-}
 
-function getPostOptionsForCommand(command: Command, baseURL: string){
-    let asyncParam: number = (command.async ? 1 : 0);
-    
-    let commandParmeters = 'command=' + command.command +'&async=' + asyncParam;
-    let commandURL = urlJoin(baseURL, '/execute?' + commandParmeters);
-    let commandHeaders = {
-        'Content-Type': 'application/json',
-        'MavensMate-Editor-Agent': 'vscode'
-    };
-    
-    let postOptions = {
-        method: 'POST',
-        uri: commandURL,
-        headers: commandHeaders,
-        body: command.body,
-        json: true
-    };
-    return postOptions;
+    private getPostOptionsForCommand(command: Command, baseURL: string){
+        let asyncParam: number = (command.async ? 1 : 0);
+        
+        let commandParmeters = 'command=' + command.command +'&async=' + asyncParam;
+        if(this.hasProjectId()){
+            commandParmeters += '&pid=' + this.options.projectId; 
+        }
+        let commandURL = urlJoin(baseURL, '/execute?' + commandParmeters);
+        let commandHeaders = {
+            'Content-Type': 'application/json',
+            'MavensMate-Editor-Agent': 'vscode'
+        };
+        
+        let postOptions = {
+            method: 'POST',
+            uri: commandURL,
+            headers: commandHeaders,
+            body: command.body,
+            json: true
+        };
+        return postOptions;
+    }
+
+    private hasProjectId(){
+        return this.options.projectId && this.options.projectId != '';
+    }
 }

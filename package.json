@@ -17,16 +17,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "extension.sayHello",
-        "title": "Hello World"
-      },
-      {
         "command": "mavensmate.openProject",
-        "title": "Open Project"
+        "title": "MavensMate: Open Project"
       },
       {
         "command": "mavensmate.openUI",
-        "title": "Open MavensMate UI"
+        "title": "MavensMate: Open MavensMate UI"
       },
       {
         "command": "mavensmate.openGlobalSettings",
@@ -34,7 +30,11 @@
       },
       {
         "command": "mavensmate.newProject",
-        "title": "New Project"
+        "title": "MavensMate: New Project"
+      },
+      {
+        "command": "mavensmate.compileFile",
+        "title": "MavensMate: Compile File"
       }
     ]
   },
