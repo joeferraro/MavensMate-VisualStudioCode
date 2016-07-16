@@ -15,9 +15,9 @@ let promiseWorkspace1Projects = Promise.resolve(workspace1Projects);
 let promiseWorkspace2Projects = Promise.resolve(workspace2Projects);
 
 suite('projectList', () => {
-    let getConfigStub : sinon.SinonStub;
-    let readDirStub : sinon.SinonStub;
-    let statStub : sinon.SinonStub;
+    let getConfigStub: sinon.SinonStub;
+    let readDirStub: sinon.SinonStub;
+    let statStub: sinon.SinonStub;
     setup(() => {
         getConfigStub = sinon.stub(mavensMateAppConfig, 'getConfig').returns(appConfig);
         
