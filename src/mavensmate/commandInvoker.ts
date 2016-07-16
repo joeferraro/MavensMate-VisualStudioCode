@@ -29,29 +29,18 @@ export class CommandInvoker {
     }
 
     invoke(){
-        this.status.commandStarted();
-        return this.client.sendCommand(this.command).then(() => {
-            let withError = false;
-            return this.status.commandStopped(withError);
-        }, (error) => {
-            let withError = true;
-            return this.status.commandStopped(withError);
-        });
-    }
-
-    invokeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit){
-        this.status.commandStarted();
-
-        let preparedCommand = this.prepareCommand(this.command, textEditor);
-
         return this.sendCommand(this.command);
     }
 
-    private sendCommand(commandToSend: Command) {
-        console.log(this.command);
-        
+    invokeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit){
+        let preparedCommand = this.prepareCommand(this.command, textEditor);
+        return this.sendCommand(this.command);   
+    }
+
+    private sendCommand(commandToSend: Command) {        
+        this.status.commandStarted();
+
         return this.client.sendCommand(this.command).then((result) => {
-            console.log(result);
             let withError = false;
             return this.status.commandStopped(withError);
         }, (error) => {
