@@ -1,5 +1,3 @@
-'use strict';
-
 import path = require('path');
 import * as operatingSystem from  '../../src/workspace/operatingSystem';
 import * as jsonFile from '../../src/workspace/jsonFile';
