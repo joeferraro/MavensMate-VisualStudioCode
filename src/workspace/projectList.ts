@@ -4,6 +4,7 @@ import path = require('path');
 import fs = require('fs-promise');
 import Promise = require('bluebird');
 import mavensMateAppConfig = require('../mavensmate/mavensMateAppConfig');
+import { hasProjectSettings } from '../mavensmate/projectSettings';
 
 export interface projectDirectory {
     name: string,
@@ -64,11 +65,6 @@ function baseName(path){
 
 function notBlank(string: String){
     return string != null && string.length > 0
-}
-
-function hasProjectSettings(projectPath){
-    let settingsPath = path.join(projectPath, 'config', '.settings');
-    return fs.stat(settingsPath);
 }
 
 function flattenToListOfProjects(listsOfProjects){
