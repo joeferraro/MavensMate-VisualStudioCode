@@ -38,6 +38,29 @@ export class MavensMateClient{
         }
     }
 
+    private getPostOptionsForCommand(command: Command, baseURL: string){
+        let asyncParam: number = (command.async ? 1 : 0);
+        
+        let commandParmeters = 'command=' + command.command +'&async=' + asyncParam;
+        if(this.hasProjectId()){
+            commandParmeters += '&pid=' + this.options.projectId; 
+        }
+        let commandURL = urlJoin(baseURL, '/execute?' + commandParmeters);
+        let commandHeaders = {
+            'Content-Type': 'application/json',
+            'MavensMate-Editor-Agent': 'vscode'
+        };
+        
+        let postOptions = {
+            method: 'POST',
+            uri: commandURL,
+            headers: commandHeaders,
+            body: command.body,
+            json: true
+        };
+        return postOptions;
+    }
+
     handlePollResponse(commandResponse){
         if(commandResponse.status && commandResponse.status == 'pending'){
             return Promise.delay(500, commandResponse)
@@ -64,29 +87,6 @@ export class MavensMateClient{
         };
         
         return request(getOptions);
-    }
-
-    private getPostOptionsForCommand(command: Command, baseURL: string){
-        let asyncParam: number = (command.async ? 1 : 0);
-        
-        let commandParmeters = 'command=' + command.command +'&async=' + asyncParam;
-        if(this.hasProjectId()){
-            commandParmeters += '&pid=' + this.options.projectId; 
-        }
-        let commandURL = urlJoin(baseURL, '/execute?' + commandParmeters);
-        let commandHeaders = {
-            'Content-Type': 'application/json',
-            'MavensMate-Editor-Agent': 'vscode'
-        };
-        
-        let postOptions = {
-            method: 'POST',
-            uri: commandURL,
-            headers: commandHeaders,
-            body: command.body,
-            json: true
-        };
-        return postOptions;
     }
 
     private hasProjectId(){
