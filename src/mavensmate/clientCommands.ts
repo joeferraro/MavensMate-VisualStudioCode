@@ -29,10 +29,19 @@ export function list(): { [id: string]: Command } {
                 }
             }
         },
-        'mavensmate.compileFile': {
+        'mavensmate.compileCurrentFile': {
             command: 'compile-metadata',
             async: true,
             currentTextDocument: true,
+            body: {
+                args: {
+                    ui: true
+                }
+            }
+        },
+        'mavensmate.compileFile': {
+            command: 'compile-metadata',
+            async: true,
             body: {
                 args: {
                     ui: true

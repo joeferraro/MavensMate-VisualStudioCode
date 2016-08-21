@@ -7,7 +7,7 @@ export class CommandInvoker {
     client: MavensMateClient;
     status: MavensMateStatus;
     command: Command;
-    invokeProxy: () => Promise<any>;
+    invokeProxy: (args?: any) => Promise<any>;
     invokeTextEditorProxy: (textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) => Promise<any>;
 
     static Create(client: MavensMateClient, status: MavensMateStatus, command: any){
@@ -18,24 +18,25 @@ export class CommandInvoker {
         this.client = client;
         this.status = status;
         this.command = command;
-        this.invokeProxy = () => { return this.invoke.apply(this) }
+        this.invokeProxy = (selectedResource?: any) => {
+            return this.invoke.apply(this, [selectedResource]); 
+        }
         this.invokeTextEditorProxy = (textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) => { 
             return this.invokeTextEditor.apply(this, [textEditor, edit]); 
         }
     }
 
-    invoke(){
+    invoke(selectedResource?){
+        if(selectedResource && selectedResource.scheme === 'file'){
+            this.setCommandPath(this.command, selectedResource.path);
+        }
         return this.sendCommand(this.command);
     }
 
     invokeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit){
         let document: vscode.TextDocument = textEditor.document;
-        return this.invokeTextDocument(document);
-    }
-
-    invokeTextDocument(document: vscode.TextDocument){
         let preparedCommand = this.prepareCommand(this.command, document);
-        return this.sendCommand(this.command);   
+        return this.sendCommand(this.command);  
     }
 
     private sendCommand(commandToSend: Command) {        
@@ -52,8 +53,12 @@ export class CommandInvoker {
 
     private prepareCommand(commandToPrepare: Command, document: vscode.TextDocument): Command{
         if(commandToPrepare.currentTextDocument){
-            commandToPrepare.body.paths = [document.fileName];
+            this.setCommandPath(commandToPrepare, document.fileName);
         }
         return commandToPrepare;
+    }
+
+    private setCommandPath(commandToPrepare: Command, path: string){
+        commandToPrepare.body.paths = [path];
     }
 }

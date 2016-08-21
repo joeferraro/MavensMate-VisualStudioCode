@@ -1,0 +1,1065 @@
+{
+  "fileTypes": [
+    "apex",
+    "cls",
+    "trigger",
+    "tgr"
+  ],
+  "foldingStartMarker": "/\\*\\*|\\{\\s*$",
+  "foldingStopMarker": "\\*\\*/|^\\s*\\}",
+  "name": "Apex",
+  "patterns": [
+    {
+      "match": "\\b(?i:package|trigger|class|interface)\\b",
+      "name": "storage.type.apex"
+    },
+    {
+      "match": "\\b(?i:public|private|global|webservice|abstract|virtual|protected|static)\\b",
+      "name": "keyword.control.scope.apex"
+    },
+    {
+      "match": "\\b(?i:istest|future|deprecrated|readonly|remoteaction)\\b",
+      "name": "keyword.control.annotation.apex"
+    },
+    {
+      "match": "\\b(?i:commit|rollback)\\b",
+      "name": "keyword.control.transaction.apex"
+    },
+    {
+      "match": "\\b(?i:insert|update|delete|upsert)\\b",
+      "name": "keyword.control.trigger.dml.apex"
+    },
+    {
+      "match": "\\b(?i:try|catch|finally|throw)\\b",
+      "name": "keyword.control.catch-exception.apex"
+    },
+    {
+      "match": "\\b(?i:null|system|apex|label|apexpages|userinfo|schema)\\b",
+      "name": "keyword.control.system.apex"
+    },
+    {
+      "match": "\\=|\\!\\=|\\>|\\<|\\&\\&|\\|\\|\\+",
+      "name": "keyword.control.evaluation.apex"
+    },
+    {
+      "include": "#support-type-built-ins-apex"
+    },
+    {
+      "begin": "\\[",
+      "end": "\\]",
+      "name": "string.quoted.brackets.soql.apex"
+    },
+    {
+      "begin": "\\('",
+      "end": "'\\)",
+      "name": "string.quoted.parens.soql.apex"
+    },
+    {
+      "begin": "\\='",
+      "end": "'\\;",
+      "name": "string.quoted.var1.soql.apex"
+    },
+    {
+      "captures": {
+        "1": {
+          "name": "keyword.other.package.apex"
+        },
+        "2": {
+          "name": "storage.modifier.package.apex"
+        },
+        "3": {
+          "name": "punctuation.terminator.apex"
+        }
+      },
+      "match": "^\\s*(package)\\b(?:\\s*([^ ;$]+)\\s*(;)?)?",
+      "name": "meta.package.apex"
+    },
+    {
+      "begin": "(import static)\\b\\s*",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.other.import.static.apex"
+        }
+      },
+      "captures": {
+        "1": {
+          "name": "keyword.other.import.apex"
+        },
+        "2": {
+          "name": "storage.modifier.import.apex"
+        },
+        "3": {
+          "name": "punctuation.terminator.apex"
+        }
+      },
+      "contentName": "storage.modifier.import.apex",
+      "end": "\\s*(?:$|(;))",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.terminator.apex"
+        }
+      },
+      "name": "meta.import.apex",
+      "patterns": [
+        {
+          "match": "\\.",
+          "name": "punctuation.separator.apex"
+        },
+        {
+          "match": "\\s",
+          "name": "invalid.illegal.character_not_allowed_here.apex"
+        }
+      ]
+    },
+    {
+      "begin": "(import)\\b\\s*",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.other.import.apex"
+        }
+      },
+      "captures": {
+        "1": {
+          "name": "keyword.other.import.apex"
+        },
+        "2": {
+          "name": "storage.modifier.import.apex"
+        },
+        "3": {
+          "name": "punctuation.terminator.apex"
+        }
+      },
+      "contentName": "storage.modifier.import.apex",
+      "end": "\\s*(?:$|(;))",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.terminator.apex"
+        }
+      },
+      "name": "meta.import.apex",
+      "patterns": [
+        {
+          "match": "\\.",
+          "name": "punctuation.separator.apex"
+        },
+        {
+          "match": "\\s",
+          "name": "invalid.illegal.character_not_allowed_here.apex"
+        }
+      ]
+    },
+    {
+      "include": "#code"
+    },
+    {
+      "begin": "\\= '",
+      "end": "'\\;",
+      "name": "string.quoted.var2.soql.apex"
+    }
+  ],
+  "repository": {
+    "support-type-built-ins-apex": {
+      "match": "\\b(?i:integer|string|void|double|boolean|date|datetime|id)\\b",
+      "name": "support.type.built-ins.apex"
+    },
+    "all-types": {
+      "patterns": [
+        {
+          "include": "#primitive-arrays"
+        },
+        {
+          "include": "#primitive-types"
+        },
+        {
+          "include": "#object-types"
+        }
+      ]
+    },
+    "annotations": {
+      "patterns": [
+        {
+          "begin": "(@[^ (]+)(\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.annotation.apex"
+            },
+            "2": {
+              "name": "punctuation.definition.annotation-arguments.begin.apex"
+            }
+          },
+          "end": "(\\))",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.annotation-arguments.end.apex"
+            }
+          },
+          "name": "meta.declaration.annotation.apex",
+          "patterns": [
+            {
+              "captures": {
+                "1": {
+                  "name": "constant.other.key.apex"
+                },
+                "2": {
+                  "name": "keyword.operator.assignment.apex"
+                }
+              },
+              "match": "(\\w*)\\s*(=)"
+            },
+            {
+              "include": "#code"
+            },
+            {
+              "match": ",",
+              "name": "punctuation.seperator.property.apex"
+            }
+          ]
+        },
+        {
+          "match": "@\\w*",
+          "name": "storage.type.annotation.apex"
+        }
+      ]
+    },
+    "anonymous-classes-and-new": {
+      "begin": "\\b(?<!\\.)new\\b",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.control.new.apex"
+        }
+      },
+      "end": "(?<=\\)|\\])(?!\\s*{)|(?<=})|(?=;)",
+      "patterns": [
+        {
+          "begin": "(\\w+)\\s*(?=\\[)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.apex"
+            }
+          },
+          "end": "(})|(?=\\s*(?:,|;|\\)))",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.section.block.end.apex"
+            }
+          },
+          "patterns": [
+            {
+              "begin": "\\[",
+              "end": "\\]",
+              "patterns": [
+                {
+                  "include": "#code"
+                }
+              ]
+            },
+            {
+              "begin": "{",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.section.block.begin.apex"
+                }
+              },
+              "end": "(?=})",
+              "patterns": [
+                {
+                  "include": "#code"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "begin": "(?=\\w.*\\()",
+          "end": "(?<=\\))",
+          "patterns": [
+            {
+              "include": "#object-types"
+            },
+            {
+              "begin": "\\(",
+              "beginCaptures": {
+                "1": {
+                  "name": "storage.type.apex"
+                }
+              },
+              "end": "\\)",
+              "patterns": [
+                {
+                  "include": "#code"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "begin": "{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.inner-class.begin.apex"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.inner-class.end.apex"
+            }
+          },
+          "name": "meta.inner-class.apex",
+          "patterns": [
+            {
+              "include": "#class-body"
+            }
+          ]
+        }
+      ]
+    },
+    "assertions": {
+      "patterns": [
+        {
+          "begin": "\\b(assert)\\s",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.assert.apex"
+            }
+          },
+          "end": "$",
+          "name": "meta.declaration.assertion.apex",
+          "patterns": [
+            {
+              "match": ":",
+              "name": "keyword.operator.assert.expression-seperator.apex"
+            },
+            {
+              "include": "#code"
+            }
+          ]
+        }
+      ]
+    },
+    "class": {
+      "begin": "(?=\\w?[\\w\\s]*(?:class|(?:@)?interface|enum)\\s+\\w+)",
+      "end": "}",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.class.end.apex"
+        }
+      },
+      "name": "meta.class.apex",
+      "patterns": [
+        {
+          "include": "#storage-modifiers"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "captures": {
+            "1": {
+              "name": "storage.modifier.apex"
+            },
+            "2": {
+              "name": "entity.name.type.class.apex"
+            }
+          },
+          "match": "(class|(?:@)?interface|enum)\\s+(\\w+)",
+          "name": "meta.class.identifier.apex"
+        },
+        {
+          "begin": "extends",
+          "beginCaptures": {
+            "0": {
+              "name": "storage.modifier.extends.apex"
+            }
+          },
+          "end": "(?={|implements)",
+          "name": "meta.definition.class.inherited.classes.apex",
+          "patterns": [
+            {
+              "include": "#object-types-inherited"
+            },
+            {
+              "include": "#comments"
+            }
+          ]
+        },
+        {
+          "begin": "(implements)\\s",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.modifier.implements.apex"
+            }
+          },
+          "end": "(?=\\s*extends|\\{)",
+          "name": "meta.definition.class.implemented.interfaces.apex",
+          "patterns": [
+            {
+              "include": "#object-types-inherited"
+            },
+            {
+              "include": "#comments"
+            }
+          ]
+        },
+        {
+          "begin": "{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.class.begin.apex"
+            }
+          },
+          "end": "(?=})",
+          "name": "meta.class.body.apex",
+          "patterns": [
+            {
+              "include": "#class-body"
+            }
+          ]
+        }
+      ]
+    },
+    "class-body": {
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#class"
+        },
+        {
+          "include": "#enums"
+        },
+        {
+          "include": "#variables"
+        },
+        {
+          "include": "#methods"
+        },
+        {
+          "include": "#annotations"
+        },
+        {
+          "include": "#storage-modifiers"
+        },
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "code": {
+      "patterns": [
+        {
+          "include": "#annotations"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#class"
+        },
+        {
+          "begin": "{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.block.begin.apex"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.block.end.apex"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#code"
+            }
+          ]
+        },
+        {
+          "include": "#assertions"
+        },
+        {
+          "include": "#parens"
+        },
+        {
+          "include": "#constants-and-special-vars"
+        },
+        {
+          "include": "#anonymous-classes-and-new"
+        },
+        {
+          "include": "#keywords"
+        },
+        {
+          "include": "#storage-modifiers"
+        },
+        {
+          "include": "#method-call"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#all-types"
+        },
+        {
+          "include": "#keyword.control.dml.apex"
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "captures": {
+            "0": {
+              "name": "punctuation.definition.comment.apex"
+            }
+          },
+          "match": "/\\*\\*/",
+          "name": "comment.block.empty.apex"
+        },
+        {
+          "include": "text.html.apexdoc"
+        },
+        {
+          "include": "#comments-inline"
+        }
+      ]
+    },
+    "comments-inline": {
+      "patterns": [
+        {
+          "begin": "/\\*",
+          "captures": {
+            "0": {
+              "name": "punctuation.definition.comment.apex"
+            }
+          },
+          "end": "\\*/",
+          "name": "comment.block.apex"
+        },
+        {
+          "begin": "(^[ \\t]+)?(?=//)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.apex"
+            }
+          },
+          "end": "(?!\\G)",
+          "patterns": [
+            {
+              "begin": "//",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.definition.comment.apex"
+                }
+              },
+              "end": "\\n",
+              "name": "comment.line.double-slash.apex"
+            }
+          ]
+        }
+      ]
+    },
+    "constants-and-special-vars": {
+      "patterns": [
+        {
+          "match": "\\b(true|false|null|select|from|where|limit|order by|like|in|not in|includes|excludes)\\b",
+          "name": "constant.language.apex"
+        },
+        {
+          "match": "\\b(this|super)\\b",
+          "name": "variable.language.apex"
+        },
+        {
+          "match": "\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)([LlFfUuDd]|UL|ul)?\\b",
+          "name": "constant.numeric.apex"
+        },
+        {
+          "captures": {
+            "1": {
+              "name": "keyword.operator.dereference.apex"
+            }
+          },
+          "match": "(\\.)?\\b([A-Z][A-Z0-9_]+)(?!<|\\.class|\\s*\\w+\\s*=)\\b",
+          "name": "constant.other.apex"
+        }
+      ]
+    },
+    "enums": {
+      "begin": "^(?=\\s*[A-Z0-9_]+\\s*({|\\(|,))",
+      "end": "(?=;|})",
+      "patterns": [
+        {
+          "begin": "\\w+",
+          "beginCaptures": {
+            "0": {
+              "name": "constant.other.enum.apex"
+            }
+          },
+          "end": "(?=,|;|})",
+          "name": "meta.enum.apex",
+          "patterns": [
+            {
+              "include": "#parens"
+            },
+            {
+              "begin": "{",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.section.enum.begin.apex"
+                }
+              },
+              "end": "}",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.enum.end.apex"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#class-body"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "match": "\\b(try|catch|finally|throw)\\b",
+          "name": "keyword.control.catch-exception.apex"
+        },
+        {
+          "match": "\\?|:",
+          "name": "keyword.control.ternary.apex"
+        },
+        {
+          "match": "\\b(return|break|case|continue|default|do|while|for|switch|if|else)\\b",
+          "name": "keyword.control.apex"
+        },
+        {
+          "match": "\\b(instanceof)\\b",
+          "name": "keyword.operator.apex"
+        },
+        {
+          "match": "(<<|>>>?|~|\\^)",
+          "name": "keyword.operator.bitwise.apex"
+        },
+        {
+          "match": "((&|\\^|\\||<<|>>>?)=)",
+          "name": "keyword.operator.assignment.bitwise.apex"
+        },
+        {
+          "match": "(===?|!=|<=|>=|<>|<|>)",
+          "name": "keyword.operator.comparison.apex"
+        },
+        {
+          "match": "([+*/%-]=)",
+          "name": "keyword.operator.assignment.arithmetic.apex"
+        },
+        {
+          "match": "(=)",
+          "name": "keyword.operator.assignment.apex"
+        },
+        {
+          "match": "(\\-\\-|\\+\\+)",
+          "name": "keyword.operator.increment-decrement.apex"
+        },
+        {
+          "match": "(\\-|\\+|\\*|\\/|%)",
+          "name": "keyword.operator.arithmetic.apex"
+        },
+        {
+          "match": "(!|&&|\\|\\|)",
+          "name": "keyword.operator.logical.apex"
+        },
+        {
+          "match": "(\\||&)",
+          "name": "keyword.operator.bitwise.apex"
+        },
+        {
+          "match": "(?<=\\S)\\.(?=\\S)",
+          "name": "keyword.operator.dereference.apex"
+        },
+        {
+          "match": ";",
+          "name": "punctuation.terminator.apex"
+        },
+        {
+          "match": "\\b(?i:insert|update|delete|upsert)\\b",
+          "name": "keyword.control.dml.apex"
+        }
+      ]
+    },
+    "method-call": {
+      "begin": "([\\w$]+)(\\()",
+      "beginCaptures": {
+        "1": {
+          "name": "meta.method.apex"
+        },
+        "2": {
+          "name": "punctuation.definition.method-parameters.begin.apex"
+        }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.method-parameters.end.apex"
+        }
+      },
+      "name": "meta.method-call.apex",
+      "patterns": [
+        {
+          "match": ",",
+          "name": "punctuation.definition.seperator.parameter.apex"
+        },
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "methods": {
+      "begin": "(?!new)(?=[\\w<].*\\s+)(?=([^=/]|/(?!/))+\\()",
+      "end": "(})|(?=;)",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.section.method.end.apex"
+        }
+      },
+      "name": "meta.method.apex",
+      "patterns": [
+        {
+          "include": "#storage-modifiers"
+        },
+        {
+          "begin": "(\\w+)\\s*\\(",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.function.apex"
+            }
+          },
+          "end": "\\)",
+          "name": "meta.method.identifier.apex",
+          "patterns": [
+            {
+              "include": "#parameters"
+            }
+          ]
+        },
+        {
+          "begin": "<",
+          "end": ">",
+          "name": "storage.type.token.apex",
+          "patterns": [
+            {
+              "include": "#object-types"
+            },
+            {
+              "begin": "<",
+              "comment": "This is just to support <>'s with no actual type prefix",
+              "end": ">|[^\\w\\s,\\[\\]<]",
+              "name": "storage.type.generic.apex"
+            }
+          ]
+        },
+        {
+          "begin": "(?=\\w.*\\s+\\w+\\s*\\()",
+          "end": "(?=\\w+\\s*\\()",
+          "name": "meta.method.return-type.apex",
+          "patterns": [
+            {
+              "include": "#all-types"
+            }
+          ]
+        },
+        {
+          "include": "#throws"
+        },
+        {
+          "begin": "{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.method.begin.apex"
+            }
+          },
+          "end": "(?=})",
+          "name": "meta.method.body.apex",
+          "patterns": [
+            {
+              "include": "#code"
+            }
+          ]
+        },
+        {
+          "include": "#comments"
+        }
+      ]
+    },
+    "object-types": {
+      "patterns": [
+        {
+          "begin": "\\b((?:[a-z]\\w*\\.)*[A-Z]+\\w*)<",
+          "end": ">|[^\\w\\s,\\?<\\[\\]]",
+          "name": "storage.type.generic.apex",
+          "patterns": [
+            {
+              "include": "#object-types"
+            },
+            {
+              "begin": "<",
+              "comment": "This is just to support <>'s with no actual type prefix",
+              "end": ">|[^\\w\\s,\\[\\]<]",
+              "name": "storage.type.generic.apex"
+            }
+          ]
+        },
+        {
+          "begin": "\\b((?:[a-z]\\w*\\.)*[A-Z]+\\w*)(?=\\[)",
+          "end": "(?=[^\\]\\s])",
+          "name": "storage.type.object.array.apex",
+          "patterns": [
+            {
+              "begin": "\\[",
+              "end": "\\]",
+              "patterns": [
+                {
+                  "include": "#code"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "captures": {
+            "1": {
+              "name": "keyword.operator.dereference.apex"
+            }
+          },
+          "match": "\\b(?:[a-z]\\w*(\\.))*[A-Z]+\\w*\\b",
+          "name": "storage.type.apex"
+        }
+      ]
+    },
+    "object-types-inherited": {
+      "patterns": [
+        {
+          "begin": "\\b((?:[a-z]\\w*\\.)*[A-Z]+\\w*)<",
+          "end": ">|[^\\w\\s,<]",
+          "name": "entity.other.inherited-class.apex",
+          "patterns": [
+            {
+              "include": "#object-types"
+            },
+            {
+              "begin": "<",
+              "comment": "This is just to support <>'s with no actual type prefix",
+              "end": ">|[^\\w\\s,<]",
+              "name": "storage.type.generic.apex"
+            }
+          ]
+        },
+        {
+          "captures": {
+            "1": {
+              "name": "keyword.operator.dereference.apex"
+            }
+          },
+          "match": "\\b(?:[a-z]\\w*(\\.))*[A-Z]+\\w*",
+          "name": "entity.other.inherited-class.apex"
+        }
+      ]
+    },
+    "parameters": {
+      "patterns": [
+        {
+          "match": "final",
+          "name": "storage.modifier.apex"
+        },
+        {
+          "include": "#annotations"
+        },
+        {
+          "include": "#primitive-arrays"
+        },
+        {
+          "include": "#primitive-types"
+        },
+        {
+          "include": "#object-types"
+        },
+        {
+          "match": "\\w+",
+          "name": "variable.parameter.apex"
+        }
+      ]
+    },
+    "parens": {
+      "begin": "\\(",
+      "end": "\\)",
+      "patterns": [
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "primitive-arrays": {
+      "patterns": [
+        {
+          "match": "\\b(?:void|long|double|blob|date|datetime|decimal|id|integer|Object|string)(\\[\\])*\\b",
+          "name": "storage.type.primitive.array.apex"
+        }
+      ]
+    },
+    "primitive-types": {
+      "patterns": [
+        {
+          "match": "\\b(?:void|long|double|blob|date|datetime|decimal|id|integer|Object|string)\\b",
+          "name": "storage.type.primitive.apex"
+        }
+      ]
+    },
+    "storage-modifiers": {
+      "captures": {
+        "1": {
+          "name": "storage.modifier.apex"
+        }
+      },
+      "match": "\\b(global|public|private|protected|static|final|native|synchronized|abstract|threadsafe|transient)\\b"
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.apex"
+            }
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.apex"
+            }
+          },
+          "name": "string.quoted.double.apex",
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.apex"
+            }
+          ]
+        },
+        {
+          "begin": "'",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.apex"
+            }
+          },
+          "end": "'",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.apex"
+            }
+          },
+          "name": "string.quoted.single.apex",
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.apex"
+            }
+          ]
+        }
+      ]
+    },
+    "throws": {
+      "begin": "throws",
+      "beginCaptures": {
+        "0": {
+          "name": "storage.modifier.apex"
+        }
+      },
+      "end": "(?={|;)",
+      "name": "meta.throwables.apex",
+      "patterns": [
+        {
+          "include": "#object-types"
+        }
+      ]
+    },
+    "values": {
+      "patterns": [
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#object-types"
+        },
+        {
+          "include": "#constants-and-special-vars"
+        }
+      ]
+    },
+    "variables": {
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "begin": "(?x:(?=\n                        (?:\n                            (?:private|protected|public|global|native|synchronized|abstract|threadsafe|transient|static|final) # visibility/modifier\n                                |\n                            (?:def)\n                                |\n                            (?:void|boolean|byte|char|short|int|float|long|double)\n                                |\n                            (?:(?:[a-z]\\w*\\.)*[A-Z]+\\w*) # object type\n                        )\n                        \\s+\n                        (?!private|protected|public|global|native|synchronized|abstract|threadsafe|transient|static|final|def|void|boolean|byte|char|short|int|float|long|double)\n                        [\\w\\d_<>\\[\\],\\?][\\w\\d_<>\\[\\],\\? \\t]*\n                        (?:=|$)\n                        \n\t\t\t\t\t))",
+          "end": "(?=;)",
+          "name": "meta.definition.variable.apex",
+          "patterns": [
+            {
+              "match": "\\s"
+            },
+            {
+              "captures": {
+                "1": {
+                  "name": "constant.variable.apex"
+                }
+              },
+              "match": "([A-Z_0-9]+)\\s+(?=\\=)"
+            },
+            {
+              "captures": {
+                "1": {
+                  "name": "meta.definition.variable.name.apex"
+                }
+              },
+              "match": "(\\w[^\\s,]*)\\s+(?=\\=)"
+            },
+            {
+              "begin": "=",
+              "beginCaptures": {
+                "0": {
+                  "name": "keyword.operator.assignment.apex"
+                }
+              },
+              "end": "(?=;)",
+              "patterns": [
+                {
+                  "include": "#code"
+                }
+              ]
+            },
+            {
+              "captures": {
+                "1": {
+                  "name": "meta.definition.variable.name.apex"
+                }
+              },
+              "match": "(\\w[^\\s=]*)(?=\\s*;)"
+            },
+            {
+              "include": "#code"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "scopeName": "source.apex"
+}
