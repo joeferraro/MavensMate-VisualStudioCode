@@ -17,6 +17,7 @@ let status = MavensMateStatus.Create(client);
 let context : vscode.ExtensionContext = new TestExtensionContext();
 let command1 = { command: '1' };
 let command2 = { command: '2' };
+let command3 = { command: '3', paths: 'active' };
 let commandList = {
     'command1': command1,
     'command2': command2

@@ -21,6 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     return hasProjectSettings()
         .then(instantiateWithProject, instantiate)
+        .then(subscribeToEvents)
         .then(activateMavensMate);
 }
 
@@ -40,6 +41,13 @@ function activateMavensMate(){
     commandRegistrar.registerCommands();
     return mavensMateStatus.updateAppStatus();
 }
+
+function subscribeToEvents(){
+    vscode.workspace.onDidSaveTextDocument(() => {
+        vscode.commands.executeCommand('mavensmate.compileFile');
+    });
+}
+
 
 export function deactivate() {
 }
