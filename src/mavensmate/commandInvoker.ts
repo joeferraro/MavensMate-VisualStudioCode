@@ -24,16 +24,17 @@ export class CommandInvoker {
         }
     }
 
-    isTextEditorCommand(){
-        return this.command.paths && this.command.paths == 'active';
-    }
-
     invoke(){
         return this.sendCommand(this.command);
     }
 
     invokeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit){
-        let preparedCommand = this.prepareCommand(this.command, textEditor);
+        let document: vscode.TextDocument = textEditor.document;
+        return this.invokeTextDocument(document);
+    }
+
+    invokeTextDocument(document: vscode.TextDocument){
+        let preparedCommand = this.prepareCommand(this.command, document);
         return this.sendCommand(this.command);   
     }
 
@@ -49,9 +50,9 @@ export class CommandInvoker {
         });
     }
 
-    private prepareCommand(commandToPrepare: Command, textEditor: vscode.TextEditor): Command{
-        if(commandToPrepare.paths == 'active'){
-            commandToPrepare.body.paths = [textEditor.document.fileName];
+    private prepareCommand(commandToPrepare: Command, document: vscode.TextDocument): Command{
+        if(commandToPrepare.currentTextDocument){
+            commandToPrepare.body.paths = [document.fileName];
         }
         return commandToPrepare;
     }

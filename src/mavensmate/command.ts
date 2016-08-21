@@ -1,7 +1,7 @@
 interface Command {
     command: string,
     async: boolean,
-    paths?: string,
+    currentTextDocument?: boolean,
     body?: {
         paths?: string[]
         args: {

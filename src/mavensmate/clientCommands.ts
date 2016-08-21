@@ -32,7 +32,7 @@ export function list(): { [id: string]: Command } {
         'mavensmate.compileFile': {
             command: 'compile-metadata',
             async: true,
-            paths: 'active',
+            currentTextDocument: true,
             body: {
                 args: {
                     ui: true

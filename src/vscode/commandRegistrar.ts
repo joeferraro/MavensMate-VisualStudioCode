@@ -41,7 +41,7 @@ export class CommandRegistrar {
 
         let commandRegistration: vscode.Disposable;
         
-        if(commandInvoker.isTextEditorCommand()){
+        if(clientCommand.currentTextDocument){
             commandRegistration = registerTextEditorCommand(commandKey, commandInvoker.invokeTextEditorProxy);
         } else {
             commandRegistration = registerCommand(commandKey, commandInvoker.invokeProxy);

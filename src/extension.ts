@@ -43,9 +43,10 @@ function activateMavensMate(){
 }
 
 function subscribeToEvents(){
-    vscode.workspace.onDidSaveTextDocument(() => {
+    let saveEvent = vscode.workspace.onDidSaveTextDocument(() => {
         vscode.commands.executeCommand('mavensmate.compileFile');
     });
+    mavensMateContext.subscriptions.push(saveEvent);
 }
 
 
