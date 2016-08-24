@@ -18,7 +18,7 @@ export class CommandInvoker {
         this.client = client;
         this.status = status;
         this.command = command;
-        this.invokeProxy = (selectedResource?: any) => {
+        this.invokeProxy = (selectedResource?: vscode.Uri) => {
             return this.invoke.apply(this, [selectedResource]); 
         }
         this.invokeTextEditorProxy = (textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) => { 
@@ -26,17 +26,15 @@ export class CommandInvoker {
         }
     }
 
-    invoke(selectedResource?){
-        if(selectedResource && selectedResource.scheme === 'file'){
-            this.setCommandPath(this.command, selectedResource.path);
-        }
-        return this.sendCommand(this.command);
+    invoke(selectedResource?: vscode.Uri){
+        let preparedCommand = this.prepareCommand(this.command, selectedResource);
+        return this.sendCommand(preparedCommand);
     }
 
     invokeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit){
-        let document: vscode.TextDocument = textEditor.document;
-        let preparedCommand = this.prepareCommand(this.command, document);
-        return this.sendCommand(this.command);  
+        let documentUri: vscode.Uri = textEditor.document.uri;
+        let preparedCommand = this.prepareCommand(this.command, documentUri);
+        return this.sendCommand(preparedCommand);  
     }
 
     private sendCommand(commandToSend: Command) {        
@@ -51,9 +49,9 @@ export class CommandInvoker {
         });
     }
 
-    private prepareCommand(commandToPrepare: Command, document: vscode.TextDocument): Command{
-        if(commandToPrepare.currentTextDocument){
-            this.setCommandPath(commandToPrepare, document.fileName);
+    private prepareCommand(commandToPrepare: Command, documentUri: vscode.Uri): Command{
+        if(documentUri && documentUri.scheme === 'file'){
+            this.setCommandPath(this.command, documentUri.fsPath);
         }
         return commandToPrepare;
     }

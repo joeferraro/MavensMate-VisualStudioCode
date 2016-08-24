@@ -135,21 +135,23 @@
       }
     ],
     "menus": {
-        "explorer/context": [{
-            "when": "resourceLangId == 'apex'",
-            "command": "mavensmate.compileFile",
-            "group": "mavensmate"
+      "explorer/context": [
+        {
+          "when": "resourceLangId == 'apex'",
+          "command": "mavensmate.compileFile",
+          "group": "mavensmate"
         },
         {
-            "when": "resourceLangId == 'visualforce'",
-            "command": "mavensmate.compileFile",
-            "group": "mavensmate"
+          "when": "resourceLangId == 'visualforce'",
+          "command": "mavensmate.compileFile",
+          "group": "mavensmate"
         },
         {
-            "when": "resourceLangId == 'metadata'",
-            "command": "mavensmate.compileFile",
-            "group": "mavensmate"
-        }]
+          "when": "resourceLangId == 'metadata'",
+          "command": "mavensmate.compileFile",
+          "group": "mavensmate"
+        }
+      ]
     }
   },
   "scripts": {
