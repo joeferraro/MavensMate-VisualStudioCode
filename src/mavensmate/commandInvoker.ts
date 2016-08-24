@@ -33,8 +33,7 @@ export class CommandInvoker {
 
     invokeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit){
         let documentUri: vscode.Uri = textEditor.document.uri;
-        let preparedCommand = this.prepareCommand(this.command, documentUri);
-        return this.sendCommand(preparedCommand);  
+        return this.invoke(documentUri);
     }
 
     private sendCommand(commandToSend: Command) {        

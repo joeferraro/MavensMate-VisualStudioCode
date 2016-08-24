@@ -29,100 +29,130 @@ suite('commandInvoker', () => {
     });
     
     suite('invoke', () => {
-        suite('invokes with Error',() => {
-            setup(withAFailureResponse);
+        suite('with Uri', () => {
+            setup(withAValidTestDocument);
 
-            teardown(restoreTheStubs);
+            suite('invokes with Error',() => {
+                let expectedWithError = true;
+                setup(withAFailureResponse);
 
-            test('calls stubs', (testDone) => {
-                
-                commandInvoker.invoke().then(() => {
-                    assertStubsCalled(testCommand);
-                    sinon.assert.calledWithExactly(commandStoppedStub, true);
-                    testDone();
-                }).catch((error) => {
-                    console.log(error);
+                teardown(restoreTheStubs);
+
+                test('calls stubs', (testDone) => {
+                    commandInvoker.invoke(testDocument.uri).then(() => { 
+                        assertStubsCalled(testCommand, expectedWithError);
+                    }).then(testDone);
+
                 });
 
-            });
-
-            test('proxy calls stubs', (testDone) => {
-                commandInvoker.invokeProxy().then(() => {
-                    assertStubsCalled(testCommand);
-                    sinon.assert.calledWithExactly(commandStoppedStub, true);
-                    testDone();
+                test('proxy calls stubs', (testDone) => {
+                    commandInvoker.invokeProxy(testDocument.uri).then(() => {
+                        assertStubsCalled(testCommand, expectedWithError);
+                    }).then(testDone);
                 });
             });
-        });
-        
-        suite('invokes with no Error',() => {
-            setup(withASuccessResponse);
+            
+            suite('invokes with no Error',() => {
+                let expectedWithError = false;
+                setup(withASuccessResponse);
 
-            teardown(restoreTheStubs);
+                teardown(restoreTheStubs);
 
-            test('calls stubs', (testDone) => {
-                commandInvoker.invoke().then(() => {
-                    assertStubsCalled(testCommand);
-                    sinon.assert.calledWithExactly(commandStoppedStub, false);
-                    testDone();
+                test('calls stubs', (testDone) => {
+                    commandInvoker.invoke(testDocument.uri).then(() => { 
+                        assertStubsCalled(testCommand, expectedWithError);
+                    }).then(testDone);
                 });
-            });
 
-            test('proxy calls stubs', (testDone) => {
-                commandInvoker.invokeProxy().then(() => {
-                    assertStubsCalled(testCommand);
-                    sinon.assert.calledWithExactly(commandStoppedStub, false);
-                    testDone();
+                test('proxy calls stubs', (testDone) => {
+                    commandInvoker.invokeProxy(testDocument.uri).then(() => {
+                        assertStubsCalled(testCommand, expectedWithError);
+                    }).then(testDone);
                 });
             });
         });
-    });
+
+        suite('without Uri', () => {
+            suite('invokes with Error',() => {
+                let expectedWithError = true;
+                setup(withAFailureResponse);
+
+                teardown(restoreTheStubs);
+
+                test('calls stubs', (testDone) => {
+                    commandInvoker.invoke().then(() => { 
+                        assertStubsCalled(testCommand, expectedWithError);
+                    }).then(testDone);
+                });
+
+                test('proxy calls stubs', (testDone) => {
+                    commandInvoker.invokeProxy().then(() => {
+                        assertStubsCalled(testCommand, expectedWithError);
+                    }).then(testDone);
+                });
+            });
+            
+            suite('invokes with no Error',() => {
+                let expectedWithError = false;
+                setup(withASuccessResponse);
+
+                teardown(restoreTheStubs);
+
+                test('calls stubs', (testDone) => {
+                    commandInvoker.invoke().then(() => { 
+                        assertStubsCalled(testCommand, expectedWithError);
+                    }).then(testDone);
+                });
+
+                test('proxy calls stubs', (testDone) => {
+                    commandInvoker.invokeProxy().then(() => {
+                        assertStubsCalled(testCommand, expectedWithError);
+                    }).then(testDone);
+                });
+            });
+        });
+    }); 
 
     suite('invokeTextEditor', () => {
         setup(withAValidTestDocument);
+
         suite('invokes with Error',() => {
+            let expectedWithError = true;
             setup(withAFailureResponse);
 
             teardown(restoreTheStubs);
 
             test('calls stubs', (testDone) => {
                 console.log(testEditor);
-                commandInvoker.invokeTextEditor(testEditor, null).then(() => {
-                    assertStubsCalled(testCommand);
-                    sinon.assert.calledWithExactly(commandStoppedStub, true);
-                    testDone();
-                });
+                commandInvoker.invokeTextEditor(testEditor, null).then(() => { 
+                    assertStubsCalled(testCommand, expectedWithError);
+                }).then(testDone);
 
             });
 
             test('proxy calls stubs', (testDone) => {
-                commandInvoker.invokeTextEditorProxy(testEditor, null).then(() => {
-                    assertStubsCalled(testCommand);
-                    sinon.assert.calledWithExactly(commandStoppedStub, true);
-                    testDone();
-                });
+                commandInvoker.invokeTextEditorProxy(testEditor, null).then(() => { 
+                    assertStubsCalled(testCommand, expectedWithError);
+                }).then(testDone);
             });
         });
         
         suite('invokes with no Error',() => {
+            let expectedWithError = false;
             setup(withASuccessResponse);
 
             teardown(restoreTheStubs);
 
             test('calls stubs', (testDone) => {
-                commandInvoker.invokeTextEditor(testEditor, null).then(() => {
-                    assertStubsCalled(testCommand);
-                    sinon.assert.calledWithExactly(commandStoppedStub, false);
-                    testDone();
-                });
+                commandInvoker.invokeTextEditor(testEditor, null).then(() => { 
+                    assertStubsCalled(testCommand, expectedWithError);
+                }).then(testDone);
             });
 
             test('proxy calls stubs', (testDone) => {
-                commandInvoker.invokeTextEditorProxy(testEditor, null).then(() => {
-                    assertStubsCalled(testCommand);
-                    sinon.assert.calledWithExactly(commandStoppedStub, false);
-                    testDone();
-                });
+                commandInvoker.invokeTextEditorProxy(testEditor, null).then(() => { 
+                    assertStubsCalled(testCommand, expectedWithError);
+                }).then(testDone);
             });
         });
     });
@@ -162,9 +192,10 @@ function restoreTheStubs(){
     commandStoppedStub.restore();
 }
 
-function assertStubsCalled(expectedCommand: Command) {
+function assertStubsCalled(expectedCommand: Command, withError: boolean) {
     sinon.assert.calledOnce(commandStartedStub);
     sinon.assert.calledOnce(sendCommandStub);
     sinon.assert.calledWithExactly(sendCommandStub, expectedCommand);
     sinon.assert.calledOnce(commandStoppedStub);
+    sinon.assert.calledWithExactly(commandStoppedStub, withError);
 }
