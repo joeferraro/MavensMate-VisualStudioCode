@@ -4,7 +4,7 @@ interface Command {
     currentTextDocument?: boolean,
     body?: {
         paths?: string[]
-        args: {
+        args?: {
             ui: boolean
         }
     }
