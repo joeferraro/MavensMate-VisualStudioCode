@@ -7,12 +7,15 @@ suite('ClientCommandEventHandler interface', () => {
         let testHandler: ClientCommandEventHandler = {
             onStart: (command: Command) => {
                 console.log(command);
+                return null;
             },
             onSuccess: (command: Command, response: any) => {
                 console.log(command);
+                return null;
             },
             onError: (command: Command, response: any) => {
                 console.log(command);
+                return null;
             }
         }
 
