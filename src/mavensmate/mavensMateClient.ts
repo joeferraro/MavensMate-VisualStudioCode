@@ -31,6 +31,7 @@ export class MavensMateClient{
     sendCommand(command: Command) : Promise<any> {
         let postOptions = this.getPostOptionsForCommand(command, this.options.baseURL);
         let promiseCommandSend = request(postOptions).promise();
+        
         if(command.async){
             return promiseCommandSend.bind(this).then(this.handlePollResponse);
         } else {
@@ -73,8 +74,7 @@ export class MavensMateClient{
     }
 
     poll(commandResponse){
-        let statusParameters = 'id=' + commandResponse.id;
-        let statusURL = urlJoin(this.options.baseURL, '/status?' + statusParameters);
+        let statusURL = urlJoin(this.options.baseURL, '/execute/' + commandResponse.id);
         let statusHeaders = {
             'MavensMate-Editor-Agent': 'vscode'
         };

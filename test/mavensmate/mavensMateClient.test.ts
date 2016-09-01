@@ -71,7 +71,7 @@ suite("MavensMate Client", () => {
                 status: 'pending'
             };
             let completedResponse = {
-                id: "e14b82c0-2d98-11e6-a468-5bbc3ff5e056",
+                id: 'e14b82c0-2d98-11e6-a468-5bbc3ff5e056',
                 complete: true,
                 operation: "open-ui",
                 result: {
@@ -85,15 +85,13 @@ suite("MavensMate Client", () => {
                 .query({"command":"open-ui","async":"1"})
                 .reply(200, pendingResponse);
             let checkStatusPendingNock = nock(mavensMateClientOptions.baseURL)
-                .get('/status')
+                .get('/execute/'+pendingResponse.id)
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
-                .query({"id": pendingResponse.id })
                 .times(2)
                 .reply(200, pendingResponse);
             let checkStatusCompleteNock = nock(mavensMateClientOptions.baseURL)
-                .get('/status')
+                .get('/execute/'+pendingResponse.id)
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
-                .query({"id": pendingResponse.id })
                 .reply(200, completedResponse);
             
             let openUICommand: Command = {

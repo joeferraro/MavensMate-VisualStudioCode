@@ -2,6 +2,9 @@ import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
 import vscode = require('vscode');
 import Command from './command';
+import ClientCommands = require('../mavensmate/clientCommands');
+
+let clientCommands = ClientCommands.list();
 
 export class CommandInvoker {
     client: MavensMateClient;
@@ -31,23 +34,6 @@ export class CommandInvoker {
         return this.sendCommand(preparedCommand);
     }
 
-    invokeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit){
-        let documentUri: vscode.Uri = textEditor.document.uri;
-        return this.invoke(documentUri);
-    }
-
-    private sendCommand(commandToSend: Command) {        
-        this.status.commandStarted();
-
-        return this.client.sendCommand(this.command).then((result) => {
-            let withError = false;
-            return this.status.commandStopped(withError);
-        }, (error) => {
-            let withError = true;
-            return this.status.commandStopped(withError);
-        });
-    }
-
     private prepareCommand(commandToPrepare: Command, documentUri: vscode.Uri): Command{
         if(documentUri && documentUri.scheme === 'file'){
             this.setCommandPath(this.command, documentUri.fsPath);
@@ -57,5 +43,31 @@ export class CommandInvoker {
 
     private setCommandPath(commandToPrepare: Command, path: string){
         commandToPrepare.body.paths = [path];
+    }
+
+    private sendCommand(commandToSend: Command) {        
+        this.status.commandStarted();
+        
+        return this.client.sendCommand(this.command).then((result) => {
+            let withError = false;
+            return this.status.commandStopped(withError);
+        }, (error) => {
+            console.error(error);
+            if(error && error.statusCode === 500){
+                this.sendoAuthProjectCommand();
+            }
+            let withError = true;
+            return this.status.commandStopped(withError);
+        });
+    }
+
+    private sendoAuthProjectCommand(){
+        let oauthCommand = ClientCommands.list()['mavensmate.oAuthProject'];
+        this.sendCommand(oauthCommand);
+    }
+
+    invokeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit){
+        let documentUri: vscode.Uri = textEditor.document.uri;
+        return this.invoke(documentUri);
     }
 }

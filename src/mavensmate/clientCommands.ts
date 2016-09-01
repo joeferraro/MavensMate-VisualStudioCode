@@ -29,6 +29,15 @@ export function list(): { [id: string]: Command } {
                 }
             }
         },
+        'mavensmate.oAuthProject': {
+            command: 'oauth-project',
+            async: false,
+            body: {
+                args: {
+                    ui: true
+                }
+            }
+        },
         'mavensmate.compileCurrentFile': {
             command: 'compile-metadata',
             async: true,
