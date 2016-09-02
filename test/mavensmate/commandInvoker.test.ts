@@ -141,7 +141,6 @@ function withAValidTestDocument(done){
 }
 
 function withStubbedEventHandlers(): ClientCommandEventHandler[] {
-
     eventHandler1 = {
         onStart: (command: Command) => {
             console.error('eventHandler1.onStart was not stubbed');
@@ -154,7 +153,8 @@ function withStubbedEventHandlers(): ClientCommandEventHandler[] {
         onError: (command: Command, response: any) => {
             console.error('eventHandler1.onError was not stubbed');
             return null;
-        }
+        },
+        dispose: () => {}
     }
     onStartStub1 = sinon.stub(eventHandler1, 'onStart').returns(Promise.resolve());
     onSuccessStub1 = sinon.stub(eventHandler1, 'onSuccess').returns(Promise.resolve());
@@ -172,7 +172,8 @@ function withStubbedEventHandlers(): ClientCommandEventHandler[] {
         onError: (command: Command, response: any) => {
             console.error('eventHandler2.onError was not stubbed');
             return null;
-        }
+        },
+        dispose: () => {}
     }
     onStartStub2 = sinon.stub(eventHandler2, 'onStart').returns(Promise.resolve());
     onSuccessStub2 = sinon.stub(eventHandler2, 'onSuccess').returns(Promise.resolve());

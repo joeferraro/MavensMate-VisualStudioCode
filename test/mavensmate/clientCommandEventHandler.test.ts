@@ -16,7 +16,8 @@ suite('ClientCommandEventHandler interface', () => {
             onError: (command: Command, response: any) => {
                 console.log(command);
                 return null;
-            }
+            },
+            dispose: () => {}
         }
 
         assert.equal('function', typeof(testHandler.onStart));

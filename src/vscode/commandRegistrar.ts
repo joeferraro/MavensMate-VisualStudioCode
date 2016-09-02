@@ -1,24 +1,26 @@
 import { MavensMateClient } from '../mavensmate/mavensMateClient';
-import { MavensMateStatus } from './mavensMateStatus';
 import ProjectQuickPick = require('./projectQuickPick');
 import ClientCommands = require('../mavensmate/clientCommands');
+import ClientCommandEventHandler from '../mavensmate/clientCommandEventHandler';
 import { CommandInvoker } from '../mavensmate/commandInvoker';
 import Command from '../mavensmate/command';
 import vscode = require('vscode');
 
 export class CommandRegistrar {
     client: MavensMateClient;
-    status: MavensMateStatus;
+    eventHandlers: ClientCommandEventHandler[];
     context: vscode.ExtensionContext;
 
-    static Create(client: MavensMateClient, status: MavensMateStatus, context: vscode.ExtensionContext){
-        return new CommandRegistrar(client, status, context);
+    static Create(client: MavensMateClient, context: vscode.ExtensionContext, 
+        eventHandlers: ClientCommandEventHandler[]){
+        return new CommandRegistrar(client, context, eventHandlers);
     }
 
-    constructor(client: MavensMateClient, status: MavensMateStatus, context: vscode.ExtensionContext){
+    constructor(client: MavensMateClient, context: vscode.ExtensionContext, 
+        eventHandlers: ClientCommandEventHandler[]){
         this.client = client;
-        this.status = status;
         this.context = context;
+        this.eventHandlers = eventHandlers;
     }
 
     registerCommands(){
@@ -37,7 +39,7 @@ export class CommandRegistrar {
     private registerClientCommand(commandKey: string, clientCommand: Command){
         let registerCommand = vscode.commands.registerCommand;
         let registerTextEditorCommand = vscode.commands.registerTextEditorCommand;
-        let commandInvoker = CommandInvoker.Create(this.client, clientCommand, []);
+        let commandInvoker = CommandInvoker.Create(this.client, clientCommand, this.eventHandlers);
         let commandRegistration: vscode.Disposable;
         
         if(clientCommand.currentTextDocument){

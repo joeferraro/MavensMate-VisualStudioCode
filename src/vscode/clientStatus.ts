@@ -14,15 +14,12 @@ export class ClientStatus implements ClientCommandEventHandler {
     
     constructor(){
         this.commandStatus = window.createStatusBarItem(StatusBarAlignment.Left);
-        console.log('constructor');
-        console.log(this.commandStatus);
     }
 
     onStart(command: Command) {
         return Promise.resolve().then(() => {
             this.commandStatus.text = "$(squirrel)";
             this.commandStatus.show();
-            console.log('on start is done');
         });
     }
 
@@ -47,5 +44,9 @@ export class ClientStatus implements ClientCommandEventHandler {
         }).delay(3000).then(() => {
             this.commandStatus.hide();
         });
+    }
+
+    dispose(){
+        this.commandStatus.dispose();
     }
 }
