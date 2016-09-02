@@ -1,5 +1,6 @@
 import assert = require('assert');
 import sinon = require('sinon');
+import Promise = require('bluebird');
 
 import { ClientStatus } from '../../src/vscode/clientStatus';
 
@@ -38,23 +39,25 @@ suite("ClientStatus", () => {
     test('onSuccess sets text to thumbsUp and shows', (testDone) => {
         clientStatus.onSuccess(null, null)
             .then(() => {
-                assert(statusBarItem.hide.calledOnce);
+                assert(statusBarItem.hide.calledOnce);  
             })
             .done(testDone);
-
-        assert.equal(statusBarItem.text, "$(thumbsup)");
-        assert(statusBarItem.show.calledOnce);                
+        Promise.delay(500).then(() => {
+            assert(statusBarItem.show.calledOnce);   
+            assert.equal(statusBarItem.text, "$(thumbsup)");  
+        });         
     });
 
-    test('onError sets text to thumbsUp and shows', (testDone) => {
+    test('onError sets text to thumbsDown and shows', (testDone) => {
         
         clientStatus.onError(null, null)
             .then(() => {
                 assert(statusBarItem.hide.calledOnce);
             })
             .done(testDone);
-
-        assert.equal(statusBarItem.text, "$(thumbsdown)");
-        assert(statusBarItem.show.calledOnce);                
+        Promise.delay(500).then(() => {
+            assert(statusBarItem.show.calledOnce);   
+            assert.equal(statusBarItem.text, "$(thumbsdown)");  
+        });          
     });
 });

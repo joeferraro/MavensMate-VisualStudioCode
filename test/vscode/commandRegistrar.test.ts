@@ -15,15 +15,15 @@ let clientOptions: Options = null;
 let client = MavensMateClient.Create(clientOptions);
 let status = MavensMateStatus.Create(client);
 let context : vscode.ExtensionContext = new TestExtensionContext();
-let command1 = { command: '1' };
-let command2 = { command: '2' };
-let command3 = { command: '3', paths: 'active' };
+let command1 = { command: '1', async: false };
+let command2 = { command: '2', async: false };
+let command3 = { command: '3', async: false, paths: 'active' };
 let commandList = {
     'command1': command1,
     'command2': command2
 };
-let commandInvoker1 = CommandInvoker.Create(null, null, command1);
-let commandInvoker2 = CommandInvoker.Create(null, null, command2);
+let commandInvoker1 = CommandInvoker.Create(null, command1, null);
+let commandInvoker2 = CommandInvoker.Create(null, command2, null);
 let commandRegistration1 = new vscode.Disposable(() => {});
 let commandRegistration2 = new vscode.Disposable(() => {});
 let commandRegistration3 = new vscode.Disposable(() => {});
@@ -39,8 +39,8 @@ suite('commandRegistrar', () => {
     setup(() => {
         commandListStub = sinon.stub(ClientCommands, 'list').returns(commandList);
         createInvokerStub = sinon.stub(CommandInvoker, 'Create');
-        createInvokerStub.withArgs(client, status, command1).returns(commandInvoker1);
-        createInvokerStub.withArgs(client, status, command2).returns(commandInvoker2);
+        createInvokerStub.withArgs(client, command1, []).returns(commandInvoker1);
+        createInvokerStub.withArgs(client, command2, []).returns(commandInvoker2);
         registerCommandStub = sinon.stub(vscode.commands, 'registerCommand');
         registerCommandStub.onFirstCall().returns(commandRegistration1);
         registerCommandStub.onSecondCall().returns(commandRegistration2);
@@ -58,8 +58,8 @@ suite('commandRegistrar', () => {
 
         sinon.assert.calledOnce(commandListStub);
         sinon.assert.calledTwice(createInvokerStub);
-        sinon.assert.calledWith(createInvokerStub ,client, status, command1);
-        sinon.assert.calledWith(createInvokerStub ,client, status, command2);
+        sinon.assert.calledWith(createInvokerStub ,client, command1, []);
+        sinon.assert.calledWith(createInvokerStub ,client, command2, []);
         sinon.assert.calledThrice(registerCommandStub);
         sinon.assert.calledWith(registerCommandStub, 'command1', commandInvoker1.invokeProxy);
         sinon.assert.calledWith(registerCommandStub, 'command2', commandInvoker2.invokeProxy);

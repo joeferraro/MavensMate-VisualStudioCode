@@ -37,8 +37,7 @@ export class CommandRegistrar {
     private registerClientCommand(commandKey: string, clientCommand: Command){
         let registerCommand = vscode.commands.registerCommand;
         let registerTextEditorCommand = vscode.commands.registerTextEditorCommand;
-        let commandInvoker = CommandInvoker.Create(this.client, this.status, clientCommand);
-
+        let commandInvoker = CommandInvoker.Create(this.client, clientCommand, []);
         let commandRegistration: vscode.Disposable;
         
         if(clientCommand.currentTextDocument){

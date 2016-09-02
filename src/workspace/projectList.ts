@@ -36,7 +36,7 @@ function logErrorToConsole(error) {
 }
 
 function listProjectsInWorkspaceFileList(workspace, fileList) : Promise<any> {
-    let projects : Promise<any>[] = [];
+    let projects: Promise<any>[] = [];
     for(let fileName of fileList){
         if(notHiddenFile(fileName)){
             projects.push(getProjectFromFileName(workspace, fileName));

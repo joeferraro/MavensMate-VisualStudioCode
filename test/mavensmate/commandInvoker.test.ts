@@ -5,6 +5,7 @@ import Command from '../../src/mavensmate/command';
 
 import { MavensMateClient, Options } from '../../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
+import ClientCommandEventHandler from '../../src/mavensmate/clientCommandEventHandler';
 
 import { CommandInvoker } from '../../src/mavensmate/commandInvoker';
 
@@ -18,14 +19,22 @@ let commandInvoker: CommandInvoker;
 let testDocument: vscode.TextDocument;
 let testEditor: vscode.TextEditor;
 
-let commandStartedStub : sinon.SinonStub;
 let sendCommandStub : sinon.SinonStub;
-let commandStoppedStub : sinon.SinonStub;
+let onStartStub1 : sinon.SinonStub;
+let onStartStub2 : sinon.SinonStub;
+let onSuccessStub1 : sinon.SinonStub;
+let onSuccessStub2 : sinon.SinonStub;
+let onErrorStub1 : sinon.SinonStub;
+let onErrorStub2 : sinon.SinonStub;
+
+let eventHandler1: ClientCommandEventHandler;
+let eventHandler2: ClientCommandEventHandler;
 
 suite('commandInvoker', () => {
     setup((setupDone) => {
          testCommand = { command: 'test command', async: false };
-         commandInvoker = CommandInvoker.Create(client, status, testCommand);
+         let eventHandlers = withStubbedEventHandlers();
+         commandInvoker = CommandInvoker.Create(client, testCommand, eventHandlers);
          withAValidTestDocument(setupDone);
     });
     
@@ -131,28 +140,73 @@ function withAValidTestDocument(done){
         .then(done);
 }
 
+function withStubbedEventHandlers(): ClientCommandEventHandler[] {
+
+    eventHandler1 = {
+        onStart: (command: Command) => {
+            console.error('eventHandler1.onStart was not stubbed');
+            return null;
+        },
+        onSuccess: (command: Command, response: any) => {
+            console.error('eventHandler1.onSuccess was not stubbed');
+            return null;
+        },
+        onError: (command: Command, response: any) => {
+            console.error('eventHandler1.onError was not stubbed');
+            return null;
+        }
+    }
+    onStartStub1 = sinon.stub(eventHandler1, 'onStart').returns(Promise.resolve());
+    onSuccessStub1 = sinon.stub(eventHandler1, 'onSuccess').returns(Promise.resolve());
+    onErrorStub1 = sinon.stub(eventHandler1, 'onError').returns(Promise.resolve());
+
+    eventHandler2 = {
+        onStart: (command: Command) => {
+            console.error('eventHandler2.onStart was not stubbed');
+            return null;
+        },
+        onSuccess: (command: Command, response: any) => {
+            console.error('eventHandler2.onSuccess was not stubbed');
+            return null;
+        },
+        onError: (command: Command, response: any) => {
+            console.error('eventHandler2.onError was not stubbed');
+            return null;
+        }
+    }
+    onStartStub2 = sinon.stub(eventHandler2, 'onStart').returns(Promise.resolve());
+    onSuccessStub2 = sinon.stub(eventHandler2, 'onSuccess').returns(Promise.resolve());
+    onErrorStub2 = sinon.stub(eventHandler2, 'onError').returns(Promise.resolve());
+
+    return [eventHandler1, eventHandler2];
+}
+
 function withAFailureResponse(){
-    commandStartedStub = sinon.stub(status, 'commandStarted');
     sendCommandStub = sinon.stub(client, 'sendCommand').returns(Promise.reject(null));
-    commandStoppedStub = sinon.stub(status, 'commandStopped');
 }
 
 function withASuccessResponse(){
-    commandStartedStub = sinon.stub(status, 'commandStarted');
     sendCommandStub = sinon.stub(client, 'sendCommand').returns(Promise.resolve());
-    commandStoppedStub = sinon.stub(status, 'commandStopped');
 }
 
 function restoreTheStubs(){
-    commandStartedStub.restore();
     sendCommandStub.restore();
-    commandStoppedStub.restore();
 }
 
 function assertStubsCalled(expectedCommand: Command, withError: boolean) {
-    sinon.assert.calledOnce(commandStartedStub);
     sinon.assert.calledOnce(sendCommandStub);
     sinon.assert.calledWithExactly(sendCommandStub, expectedCommand);
-    sinon.assert.calledOnce(commandStoppedStub);
-    sinon.assert.calledWithExactly(commandStoppedStub, withError);
+    sinon.assert.calledOnce(onStartStub1);
+    sinon.assert.calledOnce(onStartStub2);
+    if(withError){
+        sinon.assert.calledOnce(onErrorStub1);
+        sinon.assert.calledOnce(onErrorStub2);
+        sinon.assert.notCalled(onSuccessStub1);
+        sinon.assert.notCalled(onSuccessStub2);
+    } else {
+        sinon.assert.notCalled(onErrorStub1);
+        sinon.assert.notCalled(onErrorStub2);
+        sinon.assert.calledOnce(onSuccessStub1);
+        sinon.assert.calledOnce(onSuccessStub2);
+    }
 }

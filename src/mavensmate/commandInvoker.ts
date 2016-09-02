@@ -1,25 +1,26 @@
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
-import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
 import vscode = require('vscode');
 import Command from './command';
 import ClientCommands = require('../mavensmate/clientCommands');
+import ClientCommandEventHandler from './clientCommandEventHandler';
+import Promise = require('bluebird');
 
 let clientCommands = ClientCommands.list();
 
 export class CommandInvoker {
     client: MavensMateClient;
-    status: MavensMateStatus;
+    eventHandlers: ClientCommandEventHandler[];
     command: Command;
     invokeProxy: (args?: any) => Promise<any>;
     invokeTextEditorProxy: (textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) => Promise<any>;
 
-    static Create(client: MavensMateClient, status: MavensMateStatus, command: any){
-        return new CommandInvoker(client, status, command);
+    static Create(client: MavensMateClient, command: Command, eventHandlers: ClientCommandEventHandler[]){
+        return new CommandInvoker(client, command, eventHandlers);
     }
 
-    constructor(client: MavensMateClient, status: MavensMateStatus, command: any){
+    constructor(client: MavensMateClient, command: Command, eventHandlers: ClientCommandEventHandler[]){
         this.client = client;
-        this.status = status;
+        this.eventHandlers = eventHandlers;
         this.command = command;
         this.invokeProxy = (selectedResource?: vscode.Uri) => {
             return this.invoke.apply(this, [selectedResource]); 
@@ -46,20 +47,45 @@ export class CommandInvoker {
     }
 
     private sendCommand(commandToSend: Command) {        
-        this.status.commandStarted();
+        this.handleOnStart(commandToSend);
         
         return this.client.sendCommand(this.command).then((result) => {
-            let withError = false;
-            return this.status.commandStopped(withError);
-        }, (error) => {
-            console.error(error);
-            if(error && error.statusCode === 500){
-                this.sendoAuthProjectCommand();
-            }
-            let withError = true;
-            return this.status.commandStopped(withError);
+            return this.handleOnSuccess(this.command, result);
+        }, (result) => {
+            return this.handleOnError(this.command, result);
         });
     }
+
+    private handleOnStart(command: Command){
+        let onStartPromises: Promise<any>[] = [];
+
+        for(let eventHandler of this.eventHandlers){
+            onStartPromises.push(eventHandler.onStart(command));
+        }
+
+        return Promise.all(onStartPromises);
+    }
+
+    private handleOnSuccess(command: Command, result){
+        let onSuccessPromises: Promise<any>[] = [];
+
+        for(let eventHandler of this.eventHandlers){
+            onSuccessPromises.push(eventHandler.onSuccess(command, result));
+        }
+
+        return Promise.all(onSuccessPromises);
+    }
+
+    private handleOnError(command: Command, result){
+        let onErrorPromises: Promise<any>[] = [];
+
+        for(let eventHandler of this.eventHandlers){
+            onErrorPromises.push(eventHandler.onError(command, result));
+        }
+
+        return Promise.all(onErrorPromises);
+    }
+
 
     private sendoAuthProjectCommand(){
         let oauthCommand = ClientCommands.list()['mavensmate.oAuthProject'];

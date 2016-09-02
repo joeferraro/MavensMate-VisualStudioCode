@@ -19,10 +19,11 @@ export class ClientStatus implements ClientCommandEventHandler {
     }
 
     onStart(command: Command) {
-        this.commandStatus.text = "$(squirrel)";
-        this.commandStatus.show();
-
-        return Promise.resolve();
+        return Promise.resolve().then(() => {
+            this.commandStatus.text = "$(squirrel)";
+            this.commandStatus.show();
+            console.log('on start is done');
+        });
     }
 
     onSuccess(command: Command, result){
@@ -34,15 +35,16 @@ export class ClientStatus implements ClientCommandEventHandler {
     }
 
     private commandStopped(withError: boolean) {
-        let statusText: string;
-        if(withError){
-            statusText = "$(thumbsdown)";
-        } else {
-            statusText = "$(thumbsup)";
-        }
-        this.commandStatus.text = statusText;
-        this.commandStatus.show();
-        return Promise.delay(3000).then(() => {
+        return Promise.resolve().then(() => {
+            let statusText: string;
+            if(withError){
+                statusText = "$(thumbsdown)";
+            } else {
+                statusText = "$(thumbsup)";
+            }
+            this.commandStatus.text = statusText;
+            this.commandStatus.show();
+        }).delay(3000).then(() => {
             this.commandStatus.hide();
         });
     }
