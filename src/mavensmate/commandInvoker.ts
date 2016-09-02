@@ -36,7 +36,6 @@ export class CommandInvoker {
     }
 
     private prepareCommand(commandToPrepare: Command, documentUri: vscode.Uri): Command{
-        console.log(documentUri);
         if(documentUri && documentUri.scheme === 'file'){
             this.setCommandPath(this.command, documentUri.fsPath);
         }
@@ -94,9 +93,6 @@ export class CommandInvoker {
     }
 
     invokeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit){
-        console.log('invokeTextEditor');
-        console.log(textEditor);
-        console.log(textEditor.document);
         let documentUri: vscode.Uri = textEditor.document.uri;
         return this.invoke(documentUri);
     }
