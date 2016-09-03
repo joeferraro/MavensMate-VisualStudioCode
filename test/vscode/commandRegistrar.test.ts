@@ -62,7 +62,7 @@ suite('commandRegistrar', () => {
         sinon.assert.calledTwice(createInvokerStub);
         sinon.assert.calledWith(createInvokerStub ,client, command1, eventHandlers);
         sinon.assert.calledWith(createInvokerStub ,client, command2, eventHandlers);
-        sinon.assert.calledThrice(registerCommandStub);
+        sinon.assert.callCount(registerCommandStub, 4);
         sinon.assert.calledWith(registerCommandStub, 'command1', commandInvoker1.invokeProxy);
         sinon.assert.calledWith(registerCommandStub, 'command2', commandInvoker2.invokeProxy);
         sinon.assert.calledWith(registerCommandStub, 'mavensmate.openProject', ProjectQuickPick.showProjectListAndOpen);

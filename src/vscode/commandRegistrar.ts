@@ -60,7 +60,6 @@ export class CommandRegistrar {
         let openProject = registerCommand('mavensmate.openProject', ProjectQuickPick.showProjectListAndOpen);
         this.context.subscriptions.push(openProject);
 
-        console.log(this.channel);
         let toggleChannel = registerCommand('mavensmate.toggleOutput', this.channel.toggle, this.channel);
         this.context.subscriptions.push(toggleChannel);
     }
