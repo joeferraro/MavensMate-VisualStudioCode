@@ -89,15 +89,12 @@ export class MavensMateChannel implements ClientCommandEventHandler {
     }
 
     toggle(): Thenable<any>{
-        console.log(this.isShowing);
         if(this.isShowing){
             this.hide();
-            console.log('hiding');
             return Promise.resolve();
         } else {
             this.waitingOnCount++;
             this.show();
-            console.log('showing');
             return Promise.delay(this.waitingDelay).then(() => {
                 this.waitingOnCount--;
             });
