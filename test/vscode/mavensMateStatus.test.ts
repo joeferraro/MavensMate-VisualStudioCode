@@ -3,6 +3,7 @@ import sinon = require('sinon');
 
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
+import { MavensMateChannel } from '../../src/vscode/mavensMateChannel';
 
 import vscode = require('vscode');
 
@@ -11,6 +12,7 @@ let mavensMateClientOptions = {
 }; 
 suite("MavensMateStatus", () => {
     let mavensMateClient = new MavensMateClient(mavensMateClientOptions);
+    let mavensMateChannel = MavensMateChannel.Create();
     let mavensMateStatus;
     
     suite("updateAppStatus", () => {
@@ -24,7 +26,7 @@ suite("MavensMateStatus", () => {
             createStatusBarItemStub = sinon.stub(vscode.window, "createStatusBarItem");
             createStatusBarItemStub.returns(statusBarItem);
             
-            mavensMateStatus = new MavensMateStatus(mavensMateClient);
+            mavensMateStatus = new MavensMateStatus(mavensMateClient, mavensMateChannel);
         });
     
         teardown(() => {
@@ -83,7 +85,7 @@ suite("MavensMateStatus", () => {
             createStatusBarItemStub = sinon.stub(vscode.window, "createStatusBarItem");
             createStatusBarItemStub.onCall(1).returns(statusBarItem);
             
-            mavensMateStatus = new MavensMateStatus(mavensMateClient);
+            mavensMateStatus = new MavensMateStatus(mavensMateClient, mavensMateChannel);
         });
 
         test('sets text to SQUIRREL and shows', () => {
@@ -110,7 +112,7 @@ suite("MavensMateStatus", () => {
             createStatusBarItemStub = sinon.stub(vscode.window, "createStatusBarItem");
             createStatusBarItemStub.onCall(1).returns(statusBarItem);
             
-            mavensMateStatus = new MavensMateStatus(mavensMateClient);
+            mavensMateStatus = new MavensMateStatus(mavensMateClient, mavensMateChannel);
         });
 
         suite('without error', () => {

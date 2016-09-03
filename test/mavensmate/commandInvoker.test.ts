@@ -5,13 +5,15 @@ import Command from '../../src/mavensmate/command';
 
 import { MavensMateClient, Options } from '../../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
+import { MavensMateChannel } from '../../src/vscode/mavensMateChannel';
 import ClientCommandEventHandler from '../../src/mavensmate/clientCommandEventHandler';
 
 import { CommandInvoker } from '../../src/mavensmate/commandInvoker';
 
 let clientOptions: Options = null;
 let client = MavensMateClient.Create(clientOptions);
-let status = MavensMateStatus.Create(client);
+let channel = MavensMateChannel.Create();
+let status = MavensMateStatus.Create(client, channel);
 
 let testCommand: Command;
 let commandInvoker: CommandInvoker;

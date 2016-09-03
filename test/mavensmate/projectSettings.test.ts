@@ -13,7 +13,9 @@ let projectPath = 'someProject';
 let projectSettingsPath = path.join(projectPath, 'config', '.settings');
 
 let testSettings: projectSettings.ProjectSettings  = {
-    id: 'testid1'
+    id: 'testid1',
+    project_name: 'project name',
+    instanceUrl: 'instance'
 };
 
 import projectSettings = require('../../src/mavensmate/projectSettings');

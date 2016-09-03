@@ -10,9 +10,11 @@ import vscode = require('vscode');
 import { TestExtensionContext } from './testExtensionContext';
 
 import { CommandRegistrar } from '../../src/vscode/commandRegistrar';
+import { MavensMateChannel } from '../../src/vscode/mavensMateChannel';
 
 let clientOptions: Options = null;
 let client = MavensMateClient.Create(clientOptions);
+let channel = MavensMateChannel.Create();
 let context : vscode.ExtensionContext = new TestExtensionContext();
 let command1 = { command: '1', async: false };
 let command2 = { command: '2', async: false };
@@ -28,7 +30,7 @@ let commandRegistration2 = new vscode.Disposable(() => {});
 let commandRegistration3 = new vscode.Disposable(() => {});
 let eventHandlers = withEventHandlers();
 
-let commandRegistrar : CommandRegistrar = CommandRegistrar.Create(client, context, eventHandlers);
+let commandRegistrar : CommandRegistrar = CommandRegistrar.Create(client, context, eventHandlers, channel);
 
 suite('commandRegistrar', () => {
     let commandListStub : sinon.SinonStub;

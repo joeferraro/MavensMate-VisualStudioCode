@@ -6,6 +6,8 @@ import Promise = require('bluebird');
 
 export interface ProjectSettings {
     id: string;
+    project_name: string;
+    instanceUrl: string;
 }
 
 export function hasProjectSettings(projectPath?: string): Promise<any>{

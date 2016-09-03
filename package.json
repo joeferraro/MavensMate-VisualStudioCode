@@ -39,6 +39,10 @@
       {
         "command": "mavensmate.compileFile",
         "title": "MavensMate: Compile File"
+      },
+      {
+        "command": "mavensmate.toggleOutput",
+        "title": "MavensMate: Toggle Output"
       }
     ],
     "languages": [

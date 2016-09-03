@@ -4,23 +4,26 @@ import ClientCommands = require('../mavensmate/clientCommands');
 import ClientCommandEventHandler from '../mavensmate/clientCommandEventHandler';
 import { CommandInvoker } from '../mavensmate/commandInvoker';
 import Command from '../mavensmate/command';
+import { MavensMateChannel } from './mavensMateChannel';
 import vscode = require('vscode');
 
 export class CommandRegistrar {
     client: MavensMateClient;
     eventHandlers: ClientCommandEventHandler[];
     context: vscode.ExtensionContext;
+    channel: MavensMateChannel;
 
     static Create(client: MavensMateClient, context: vscode.ExtensionContext, 
-        eventHandlers: ClientCommandEventHandler[]){
-        return new CommandRegistrar(client, context, eventHandlers);
+        eventHandlers: ClientCommandEventHandler[], channel: MavensMateChannel){
+        return new CommandRegistrar(client, context, eventHandlers, channel);
     }
 
     constructor(client: MavensMateClient, context: vscode.ExtensionContext, 
-        eventHandlers: ClientCommandEventHandler[]){
+        eventHandlers: ClientCommandEventHandler[], channel: MavensMateChannel){
         this.client = client;
         this.context = context;
         this.eventHandlers = eventHandlers;
+        this.channel = channel;
     }
 
     registerCommands(){
@@ -56,5 +59,9 @@ export class CommandRegistrar {
         
         let openProject = registerCommand('mavensmate.openProject', ProjectQuickPick.showProjectListAndOpen);
         this.context.subscriptions.push(openProject);
+
+        console.log(this.channel);
+        let toggleChannel = registerCommand('mavensmate.toggleOutput', this.channel.toggle, this.channel);
+        this.context.subscriptions.push(toggleChannel);
     }
 }

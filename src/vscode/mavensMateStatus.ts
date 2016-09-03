@@ -1,30 +1,34 @@
 'use strict';
 import { window, StatusBarAlignment, StatusBarItem } from 'vscode';
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
+import { MavensMateChannel } from '../../src/vscode/mavensMateChannel';
 import Promise = require('bluebird');
 
 export class MavensMateStatus {
     appStatus: StatusBarItem;
-    commandStatus: StatusBarItem;
     client: MavensMateClient;
+    channel: MavensMateChannel;
     
-    static Create(client: MavensMateClient){
-        return new MavensMateStatus(client);
+    static Create(client: MavensMateClient, channel: MavensMateChannel){
+        return new MavensMateStatus(client, channel);
     }
     
-    constructor(client: MavensMateClient){
+    constructor(client: MavensMateClient, channel: MavensMateChannel){
         this.appStatus = window.createStatusBarItem(StatusBarAlignment.Left);
-        this.commandStatus = window.createStatusBarItem(StatusBarAlignment.Left);
+        this.appStatus.command = 'mavensmate.toggleOutput';
         this.client = client;
+        this.channel = channel;
     }
     
     updateAppStatus(){
         return this.client.isAppAvailable()
             .then((isAvailable) =>{
                 this.showAppIsAvailable();
+                this.channel.appendStatus(`MavensMate Desktop is available`);
             })
             .catch((requestError) => {
                 this.showAppIsUnavailable(requestError);
+                this.channel.appendError(`Could not contact local MavensMate server, please ensure MavensMate Desktop is installed and running. `);
             });
     }
     
@@ -36,24 +40,5 @@ export class MavensMateStatus {
     private showAppIsUnavailable(requestError){
         this.appStatus.text = "MavensMate $(alert)";
         this.appStatus.show();
-    }
-
-    commandStarted() {
-        this.commandStatus.text = "$(squirrel)";
-        this.commandStatus.show();
-    }
-
-    commandStopped(withError: boolean) {
-        let statusText: string;
-        if(withError){
-            statusText = "$(thumbsdown)";
-        } else {
-            statusText = "$(thumbsup)";
-        }
-        this.commandStatus.text = statusText;
-        this.commandStatus.show();
-        return Promise.delay(3000).then(() => {
-            this.commandStatus.hide();
-        });
     }
 }

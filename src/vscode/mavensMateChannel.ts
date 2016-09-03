@@ -8,6 +8,8 @@ import Promise = require('bluebird');
 export class MavensMateChannel implements ClientCommandEventHandler {
     channel: OutputChannel;
     waitingOnCount: number;
+    waitingDelay: number;
+    isShowing: boolean;
     
     static Create(){
         return new MavensMateChannel();
@@ -16,6 +18,8 @@ export class MavensMateChannel implements ClientCommandEventHandler {
     constructor(){
         this.channel = window.createOutputChannel('MavensMate');
         this.waitingOnCount = 0;
+        this.waitingDelay = 5000;
+        this.isShowing = false;
     }
 
     onStart(command: Command) {
@@ -25,7 +29,7 @@ export class MavensMateChannel implements ClientCommandEventHandler {
             if(command.body.paths){
                 statusText += ' ' + command.body.paths;
             }
-            return this.appendLine(statusText);
+            return this.appendStatus(statusText);
         });
     }
 
@@ -46,23 +50,58 @@ export class MavensMateChannel implements ClientCommandEventHandler {
             } else {
                 statusText = command.command + ': Success';
             }
-            return this.appendLine(statusText);
+            return this.appendStatus(statusText);
         });
     }
 
-    appendLine(message){
+    appendStatus(message: string){
+        return this.appendLine('STATUS', message);
+    }
+
+    appendError(message: string){
+        return this.appendLine('ERROR', message);
+    }
+
+    appendLine(level: string, message: string){
         return Promise.resolve().then(() => {
-            this.channel.appendLine(message);
-            this.channel.show();
+            let tabs = (level.length > 5 ? 1 : 2);
+            this.channel.appendLine(`[${level}]${ '\t'.repeat(tabs) }${message}`);
+            this.show();
 
             if(this.waitingOnCount == 0){
-                return Promise.delay(3000).then(() => {
-                    this.channel.hide();
+                return Promise.delay(this.waitingDelay).then(() => {
+                    this.hide();
                 });
             } else {
                 return null;
             }
         });
+    }
+
+    show(){
+        this.channel.show();
+        this.isShowing = true;
+    }
+
+    hide(){
+        this.channel.hide();
+        this.isShowing = false;
+    }
+
+    toggle(): Thenable<any>{
+        console.log(this.isShowing);
+        if(this.isShowing){
+            this.hide();
+            console.log('hiding');
+            return Promise.resolve();
+        } else {
+            this.waitingOnCount++;
+            this.show();
+            console.log('showing');
+            return Promise.delay(this.waitingDelay).then(() => {
+                this.waitingOnCount--;
+            });
+        }
     }
 
     dispose(){
