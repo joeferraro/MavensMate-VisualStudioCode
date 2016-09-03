@@ -41,6 +41,18 @@
         "title": "MavensMate: Compile File"
       },
       {
+        "command": "mavensmate.compileProject",
+        "title": "MavensMate: Compile Project"
+      },
+      {
+        "command": "mavensmate.refreshCurrentFile",
+        "title": "MavensMate: Refresh File"
+      },
+      {
+        "command": "mavensmate.refreshFile",
+        "title": "MavensMate: Refresh File"
+      },
+      {
         "command": "mavensmate.toggleOutput",
         "title": "MavensMate: Toggle Output"
       }
@@ -153,6 +165,21 @@
         {
           "when": "resourceLangId == 'metadata'",
           "command": "mavensmate.compileFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'apex'",
+          "command": "mavensmate.refreshFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'visualforce'",
+          "command": "mavensmate.refreshFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'metadata'",
+          "command": "mavensmate.refreshFile",
           "group": "mavensmate"
         }
       ]

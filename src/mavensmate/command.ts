@@ -7,6 +7,9 @@ interface Command {
         args?: {
             ui: boolean
         }
+    },
+    confirm?: {
+        message: string
     }
 }
 

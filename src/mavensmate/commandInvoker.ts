@@ -32,7 +32,17 @@ export class CommandInvoker {
 
     invoke(selectedResource?: vscode.Uri){
         let preparedCommand = this.prepareCommand(this.command, selectedResource);
-        return this.sendCommand(preparedCommand);
+        if(this.command.confirm){
+            return vscode.window.showInformationMessage(this.command.confirm.message, 'Yes').then((answer) => {
+                if(answer === 'Yes'){
+                    return this.sendCommand(preparedCommand);
+                } else {
+                    return;
+                }
+            });
+        } else {
+            return this.sendCommand(preparedCommand);
+        }
     }
 
     private prepareCommand(commandToPrepare: Command, documentUri: vscode.Uri): Command{

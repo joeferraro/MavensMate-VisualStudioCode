@@ -44,7 +44,7 @@ export function list(): { [id: string]: Command } {
             currentTextDocument: true,
             body: {
                 args: {
-                    ui: true
+                    ui: false
                 }
             }
         },
@@ -53,7 +53,38 @@ export function list(): { [id: string]: Command } {
             async: true,
             body: {
                 args: {
-                    ui: true
+                    ui: false
+                }
+            }
+        },
+        'mavensmate.compileProject': {
+            command: 'compile-project',
+            async: true,
+            body: {
+                args: {
+                    ui: false
+                }
+            },
+            confirm: {
+                message: 'Would you like to compile the project?'
+            }
+        },
+        'mavensmate.refreshCurrentFile': {
+            command: 'refresh-metadata',
+            async: true,
+            currentTextDocument: true,
+            body: {
+                args: {
+                    ui: false
+                }
+            }
+        },
+        'mavensmate.refreshFile': {
+            command: 'refresh-metadata',
+            async: true,
+            body: {
+                args: {
+                    ui: false
                 }
             }
         }
