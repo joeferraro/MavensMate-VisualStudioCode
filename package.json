@@ -156,6 +156,17 @@
           "group": "mavensmate"
         }
       ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "MavensMate configuration",
+      "properties": {
+        "mavensMateDesktop.baseURL": {
+          "type": "string",
+          "default": "http://localhost:56248",
+          "description": "The base URL of the MavensMate Desktop Server"
+        }
+      }
     }
   },
   "scripts": {

@@ -9,9 +9,7 @@ import { CommandRegistrar } from '../src/vscode/commandRegistrar';
 import { hasProjectSettings, getProjectSettings } from '../src/mavensmate/projectSettings';
 import ClientCommandEventHandler from '../src/mavensmate/ClientCommandEventHandler';
 
-let mavensMateClientOptions: Options = {
-    baseURL: 'http://localhost:56248'
-};
+let mavensMateClientOptions: Options;
 
 let mavensMateClient: MavensMateClient;
 let mavensMateStatus: MavensMateStatus;
@@ -19,12 +17,18 @@ let commandRegistrar: CommandRegistrar;
 let mavensMateContext: vscode.ExtensionContext;
 let mavensMateChannel: MavensMateChannel;
 let clientStatus: ClientStatus;
+let mavensMateConfiguration: vscode.WorkspaceConfiguration;
 
 export function activate(context: vscode.ExtensionContext) {
     mavensMateContext = context;
     mavensMateChannel = MavensMateChannel.Create();
 
     mavensMateChannel.appendStatus('MavensMate is activating');
+
+    mavensMateConfiguration = vscode.workspace.getConfiguration()
+    mavensMateClientOptions = {
+        baseURL: mavensMateConfiguration.get<string>('mavensMateDesktop.baseURL')
+    };
 
     return hasProjectSettings()
         .then(instantiateWithProject, instantiate)
