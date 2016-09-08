@@ -4,6 +4,7 @@ export function list(): { [id: string]: Command } {
     return  {
         'mavensmate.openUI': {
             command: 'open-ui',
+            name: 'Open UI',
             async: false,
             body: {
                 args: {
@@ -13,6 +14,7 @@ export function list(): { [id: string]: Command } {
         },
         'mavensmate.openGlobalSettings': {
             command: 'open-settings',
+            name: 'Open Settings',
             async: false,
             body: {
                 args: {
@@ -22,6 +24,7 @@ export function list(): { [id: string]: Command } {
         },
         'mavensmate.newProject': {
             command: 'new-project',
+            name: 'New Project',
             async: false,
             body: {
                 args: {
@@ -31,6 +34,7 @@ export function list(): { [id: string]: Command } {
         },
         'mavensmate.oAuthProject': {
             command: 'oauth-project',
+            name: 'oAuth Project',
             async: false,
             body: {
                 args: {
@@ -40,6 +44,7 @@ export function list(): { [id: string]: Command } {
         },
         'mavensmate.compileCurrentFile': {
             command: 'compile-metadata',
+            name: 'Compile Metadata',
             async: true,
             currentTextDocument: true,
             body: {
@@ -50,6 +55,7 @@ export function list(): { [id: string]: Command } {
         },
         'mavensmate.compileFile': {
             command: 'compile-metadata',
+            name: 'Compile File',
             async: true,
             body: {
                 args: {
@@ -59,6 +65,7 @@ export function list(): { [id: string]: Command } {
         },
         'mavensmate.compileProject': {
             command: 'compile-project',
+            name: 'Compile Project',
             async: true,
             body: {
                 args: {
@@ -71,6 +78,7 @@ export function list(): { [id: string]: Command } {
         },
         'mavensmate.refreshCurrentFile': {
             command: 'refresh-metadata',
+            name: 'Refresh Metadata',
             async: true,
             currentTextDocument: true,
             body: {
@@ -81,6 +89,7 @@ export function list(): { [id: string]: Command } {
         },
         'mavensmate.refreshFile': {
             command: 'refresh-metadata',
+            name: 'Refresh Metadata',
             async: true,
             body: {
                 args: {

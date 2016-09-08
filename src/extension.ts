@@ -2,6 +2,7 @@
 import * as vscode from 'vscode';
 
 import { MavensMateClient, Options } from '../src/mavensmate/mavensMateClient';
+import { CommandEventRouter } from '../src/mavensmate/commandEventRouter';
 import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
 import { ClientStatus } from '../src/vscode/clientStatus';
 import { MavensMateChannel } from '../src/vscode/mavensMateChannel';
@@ -16,6 +17,7 @@ let mavensMateStatus: MavensMateStatus;
 let commandRegistrar: CommandRegistrar;
 let mavensMateContext: vscode.ExtensionContext;
 let mavensMateChannel: MavensMateChannel;
+let commandEventRouter: CommandEventRouter;
 let clientStatus: ClientStatus;
 let mavensMateConfiguration: vscode.WorkspaceConfiguration;
 
@@ -47,23 +49,13 @@ function instantiate(){
     mavensMateChannel.appendStatus('Instantiating Supporting Extension Elements');
     mavensMateClient = MavensMateClient.Create(mavensMateClientOptions);
     mavensMateStatus = MavensMateStatus.Create(mavensMateClient, mavensMateChannel);
+    commandEventRouter = CommandEventRouter.Create(mavensMateChannel);
     clientStatus = ClientStatus.Create();
 
-    let eventHandlers = instantiateClientCommandHandlers();
-
     commandRegistrar = CommandRegistrar.Create(mavensMateClient, mavensMateContext, 
-        eventHandlers, mavensMateChannel);
+        mavensMateChannel, commandEventRouter);
 
-    mavensMateContext.subscriptions.push.apply(eventHandlers);
-}
-
-function instantiateClientCommandHandlers(){
-    let eventHandlers: ClientCommandEventHandler[] = [];
-
-    eventHandlers.push(clientStatus);
-    eventHandlers.push(mavensMateChannel);
-
-    return eventHandlers;
+    mavensMateContext.subscriptions.push(commandEventRouter);
 }
 
 function subscribeToEvents(){

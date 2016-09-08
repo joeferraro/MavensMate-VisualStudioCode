@@ -1,5 +1,6 @@
 interface Command {
     command: string,
+    name: string,
     async: boolean,
     currentTextDocument?: boolean,
     body?: {

@@ -50,6 +50,7 @@ suite("MavensMate Client", () => {
                 .reply(200);
             let openUICommand: Command = {
                 command: 'open-ui',
+                name: 'Open UI',
                 async: false,
                 body: {
                     args: {
@@ -96,6 +97,7 @@ suite("MavensMate Client", () => {
             
             let openUICommand: Command = {
                 command: 'open-ui',
+                name: 'Open UI',
                 async: true,
                 body: {
                     args: {

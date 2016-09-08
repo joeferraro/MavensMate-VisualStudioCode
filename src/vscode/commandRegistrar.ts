@@ -1,7 +1,7 @@
 import { MavensMateClient } from '../mavensmate/mavensMateClient';
 import ProjectQuickPick = require('./projectQuickPick');
 import ClientCommands = require('../mavensmate/clientCommands');
-import ClientCommandEventHandler from '../mavensmate/clientCommandEventHandler';
+import { CommandEventRouter } from '../mavensmate/commandEventRouter';
 import { CommandInvoker } from '../mavensmate/commandInvoker';
 import Command from '../mavensmate/command';
 import { MavensMateChannel } from './mavensMateChannel';
@@ -9,21 +9,21 @@ import vscode = require('vscode');
 
 export class CommandRegistrar {
     client: MavensMateClient;
-    eventHandlers: ClientCommandEventHandler[];
     context: vscode.ExtensionContext;
     channel: MavensMateChannel;
+    commandEventRouter: CommandEventRouter;
 
     static Create(client: MavensMateClient, context: vscode.ExtensionContext, 
-        eventHandlers: ClientCommandEventHandler[], channel: MavensMateChannel){
-        return new CommandRegistrar(client, context, eventHandlers, channel);
+        channel: MavensMateChannel, commandEventRouter: CommandEventRouter){
+        return new CommandRegistrar(client, context, channel, commandEventRouter);
     }
 
     constructor(client: MavensMateClient, context: vscode.ExtensionContext, 
-        eventHandlers: ClientCommandEventHandler[], channel: MavensMateChannel){
+        channel: MavensMateChannel, commandEventRouter: CommandEventRouter){
         this.client = client;
         this.context = context;
-        this.eventHandlers = eventHandlers;
         this.channel = channel;
+        this.commandEventRouter = commandEventRouter;
     }
 
     registerCommands(){
@@ -41,8 +41,8 @@ export class CommandRegistrar {
 
     private registerClientCommand(commandKey: string, clientCommand: Command){
         let registerCommand = vscode.commands.registerCommand;
-        let registerTextEditorCommand = vscode.commands.registerTextEditorCommand;
-        let commandInvoker = CommandInvoker.Create(this.client, clientCommand, this.eventHandlers);
+        let registerTextEditorCommand = vscode.commands.registerTextEditorCommand;        
+        let commandInvoker = CommandInvoker.Create(this.client, clientCommand, this.commandEventRouter);
         let commandRegistration: vscode.Disposable;
         
         if(clientCommand.currentTextDocument){

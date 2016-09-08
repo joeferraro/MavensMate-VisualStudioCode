@@ -1,11 +1,10 @@
 'use strict';
 import { window, OutputChannel, Disposable } from 'vscode';
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
-import ClientCommandEventHandler from '../../src/mavensmate/clientCommandEventHandler';
 import Command from '../../src/mavensmate/command';
 import Promise = require('bluebird');
 
-export class MavensMateChannel implements ClientCommandEventHandler {
+export class MavensMateChannel implements Disposable {
     channel: OutputChannel;
     waitingOnCount: number;
     waitingDelay: number;
@@ -20,38 +19,6 @@ export class MavensMateChannel implements ClientCommandEventHandler {
         this.waitingOnCount = 0;
         this.waitingDelay = 5000;
         this.isShowing = false;
-    }
-
-    onStart(command: Command) {
-        return Promise.resolve().then(() => {
-            this.waitingOnCount++;
-            let statusText: string = command.command + ': Starting';
-            if(command.body.paths){
-                statusText += ' ' + command.body.paths;
-            }
-            return this.appendStatus(statusText);
-        });
-    }
-
-    onSuccess(command: Command, result){
-        return this.commandStopped(command, false);
-    }
-
-    onError(command: Command, result){
-        return this.commandStopped(command, true);
-    }
-
-    private commandStopped(command: Command, result) {
-        return Promise.resolve().then(() => {
-            this.waitingOnCount--;
-            let statusText: string;
-            if(result.statusCode > 200){
-                statusText = command.command + ': Error';
-            } else {
-                statusText = command.command + ': Success';
-            }
-            return this.appendStatus(statusText);
-        });
     }
 
     appendStatus(message: string){

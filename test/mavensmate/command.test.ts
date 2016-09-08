@@ -5,6 +5,7 @@ suite('command definition', () => {
     test('it exists', () => {
         let testCommand: Command = {
             command: 'testcommand',
+            name: 'Test Command',
             async: false
         };
 
