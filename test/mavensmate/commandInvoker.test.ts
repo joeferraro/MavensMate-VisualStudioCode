@@ -23,7 +23,6 @@ let testEditor: vscode.TextEditor;
 
 let sendCommandStub : sinon.SinonStub;
 let onStartStub : sinon.SinonStub;
-let onStartStub2 : sinon.SinonStub;
 let onSuccessStub : sinon.SinonStub;
 let onErrorStub : sinon.SinonStub;
 
@@ -164,7 +163,6 @@ function assertStubsCalled(expectedCommand: Command, withError: boolean) {
     sinon.assert.calledOnce(sendCommandStub);
     sinon.assert.calledWithExactly(sendCommandStub, expectedCommand);
     sinon.assert.calledOnce(onStartStub);
-    sinon.assert.calledOnce(onStartStub2);
     if(withError){
         sinon.assert.calledOnce(onErrorStub);
         sinon.assert.notCalled(onSuccessStub);
