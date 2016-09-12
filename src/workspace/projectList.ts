@@ -52,7 +52,7 @@ function getProjectFromFileName(workspace, fileName){
         return { name: fileName, path: projectPath, workspace: baseName(workspace) };
     };
     return hasProjectSettings(projectPath)
-        .then(returnProjectInfo, logErrorToConsole);
+        .then(returnProjectInfo, console.error);
 }
 
 function baseName(path){
