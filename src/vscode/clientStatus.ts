@@ -1,11 +1,10 @@
 'use strict';
 import { window, StatusBarAlignment, StatusBarItem } from 'vscode';
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
-import ClientCommandEventHandler from '../../src/mavensmate/clientCommandEventHandler';
 import Command from '../../src/mavensmate/command';
 import Promise = require('bluebird');
 
-export class ClientStatus implements ClientCommandEventHandler {
+export class ClientStatus {
     commandStatus: StatusBarItem;
     
     static Create(){

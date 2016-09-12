@@ -9,6 +9,7 @@ export class MavensMateChannel implements Disposable {
     waitingOnCount: number;
     waitingDelay: number;
     isShowing: boolean;
+    isWaiting: boolean;
     
     static Create(){
         return new MavensMateChannel();
@@ -19,25 +20,35 @@ export class MavensMateChannel implements Disposable {
         this.waitingOnCount = 0;
         this.waitingDelay = 5000;
         this.isShowing = false;
+        this.isWaiting = false;
     }
 
     appendStatus(message: string){
-        return this.appendLine('STATUS', message);
+        return this.appendLine(message, 'STATUS');
     }
 
     appendError(message: string){
-        return this.appendLine('ERROR', message);
+        return this.appendLine(message, 'ERROR');
     }
 
-    appendLine(level: string, message: string){
+    appendLine(message: string, level?: string){
         return Promise.resolve().then(() => {
-            let tabs = (level.length > 5 ? 1 : 2);
-            this.channel.appendLine(`[${level}]${ '\t'.repeat(tabs) }${message}`);
+            let tabs = (level && level.length > 5 ? 1 : 2);
+            let formattedMessage = `${ '\t'.repeat(tabs) }${message}`;
+            if(level){
+                formattedMessage = `[${level}]${formattedMessage}`;
+            }
+            this.channel.appendLine(formattedMessage);
+            
             this.show();
 
-            if(this.waitingOnCount == 0){
+            if(this.waitingOnCount == 0 && this.isWaiting == false){
+                this.isWaiting = true;
                 return Promise.delay(this.waitingDelay).then(() => {
-                    this.hide();
+                    if(this.waitingOnCount == 0){
+                        this.hide();
+                        this.isWaiting = false;
+                    }
                 });
             } else {
                 return null;

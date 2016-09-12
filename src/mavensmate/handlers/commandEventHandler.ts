@@ -1,6 +1,6 @@
-import { MavensMateChannel } from '../vscode/mavensMateChannel';
+import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 import { Disposable } from 'vscode';
-import Command from './command';
+import Command from '../command';
 
 export class CommandEventHandler implements Disposable {
     channel: MavensMateChannel;
@@ -16,10 +16,7 @@ export class CommandEventHandler implements Disposable {
     onStart(command: Command) {
         this.channel.waitingOnCount++;
         return Promise.resolve().then(() => {
-            let statusText: string = command.command + ': Starting';
-            if(command.body.paths){
-                statusText += ' ' + command.body.paths;
-            }
+            let statusText: string = command.name + ': Starting';
             return this.channel.appendStatus(statusText);
         });
     }
@@ -34,13 +31,13 @@ export class CommandEventHandler implements Disposable {
 
     private commandStopped(command: Command, result) {
         this.channel.waitingOnCount--;
+
         return Promise.resolve().then(() => {
             let statusText: string;
             if(result.statusCode > 200){
-                statusText = command.command + ': Error';
+                statusText = command.name + ': Error';
             } else {
-                console.log(result);
-                statusText = command.command + ': Success';
+                statusText = command.name + ': Success';
             }
             return this.channel.appendStatus(statusText);
         });

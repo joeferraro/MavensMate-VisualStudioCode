@@ -8,7 +8,6 @@ import { ClientStatus } from '../src/vscode/clientStatus';
 import { MavensMateChannel } from '../src/vscode/mavensMateChannel';
 import { CommandRegistrar } from '../src/vscode/commandRegistrar';
 import { hasProjectSettings, getProjectSettings } from '../src/mavensmate/projectSettings';
-import ClientCommandEventHandler from '../src/mavensmate/ClientCommandEventHandler';
 
 let mavensMateClientOptions: Options;
 
@@ -76,3 +75,7 @@ function activateMavensMate(){
 export function deactivate() {
     mavensMateChannel.appendStatus('Deactivating');
 }
+
+process.on("unhandledRejection", function(reason, promise) {
+    console.error(reason);
+});

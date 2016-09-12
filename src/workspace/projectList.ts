@@ -24,15 +24,11 @@ export function promiseList() : Promise<any> {
             return listProjectsInWorkspaceFileList(workspace, fileList);
         };
         let listProjectsInWorkplace = fs.readdir(workspace)
-            .then(listProjects, logErrorToConsole);
+            .then(listProjects, console.error);
         
         projects.push(listProjectsInWorkplace);
     }
     return Promise.all(projects).then(flattenToListOfProjects);
-}
-
-function logErrorToConsole(error) {
-    console.log(error);
 }
 
 function listProjectsInWorkspaceFileList(workspace, fileList) : Promise<any> {

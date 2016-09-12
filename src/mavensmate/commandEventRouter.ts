@@ -1,10 +1,12 @@
-import { CommandEventHandler } from './commandEventHandler';
+import { CommandEventHandler } from './handlers/commandEventHandler';
+import { CompileEventHandler } from './handlers/compileEventHandler';
 import { MavensMateChannel } from '../vscode/mavensMateChannel';
 import Command from './command';
 import { Disposable } from 'vscode';
 
 export class CommandEventRouter implements Disposable {
     defaultHandler: CommandEventHandler;
+    compileHandler: CompileEventHandler;
 
     static Create(channel: MavensMateChannel){
         return new CommandEventRouter(channel);
@@ -16,18 +18,30 @@ export class CommandEventRouter implements Disposable {
 
     private initializeHandlers(channel: MavensMateChannel){
         this.defaultHandler = CommandEventHandler.Create(channel);
+        this.compileHandler = CompileEventHandler.Create(channel);
     }
 
     onStart(command: Command) {
-        return this.defaultHandler.onStart(command);
+        let commandHandler = this.getHandler(command);
+        return commandHandler.onStart(command).catch(console.error);
+    }
+
+    private getHandler(command: Command): CommandEventHandler {
+        if(command.command.startsWith('compile-')){
+            return this.compileHandler;
+        } else {
+            return this.defaultHandler;
+        }
     }
 
     onSuccess(command: Command, result){
-        return this.defaultHandler.onSuccess(command, result);
+        let commandHandler = this.getHandler(command);
+        return commandHandler.onSuccess(command, result).catch(console.error);
     }
 
     onError(command: Command, result){
-        return this.defaultHandler.onError(command, result);
+        let commandHandler = this.getHandler(command);
+        return commandHandler.onError(command, result).catch(console.error);
     }
 
     dispose(){

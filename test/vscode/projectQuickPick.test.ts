@@ -37,9 +37,7 @@ suite('project Quick Pick', () => {
                 sinon.assert.calledOnce(showQuickPickStub);
                 sinon.assert.calledWithExactly(showQuickPickStub, expectedQuickPickItems);
                 testDone();
-            }, (error) => {
-                console.log(error);
-            });
+            }, console.error);
         });
     });
     

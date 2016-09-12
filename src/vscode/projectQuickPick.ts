@@ -27,7 +27,7 @@ function buildQuickPickProject(project: projectDirectory) : projectQuickPickItem
 export function openProject(projectItem: projectQuickPickItem) {
     if(projectItem){
         let projectUri = Uri.parse(projectItem.path);
-        return commands.executeCommand('vscode.openFolder', projectUri).then(null, console.log);
+        return commands.executeCommand('vscode.openFolder', projectUri).then(null, console.error);
     } else {
         console.warn('No project selected');
         return;

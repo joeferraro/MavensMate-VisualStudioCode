@@ -48,7 +48,7 @@ suite('projectList', () => {
                 assertIsProject(projects[2], 'project1', 'workspace2/project1', 'workspace2');
                 assertIsProject(projects[3], 'project3', 'workspace2/project3', 'workspace2');
             })
-            .done(testDone, console.log);
+            .done(testDone, console.error);
     });
 });
 
