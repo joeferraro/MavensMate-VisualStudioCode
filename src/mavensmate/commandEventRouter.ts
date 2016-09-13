@@ -3,6 +3,7 @@ import { CompileEventHandler } from './handlers/compileEventHandler';
 import { MavensMateChannel } from '../vscode/mavensMateChannel';
 import Command from './command';
 import { Disposable } from 'vscode';
+import Promise = require('bluebird');
 
 export class CommandEventRouter implements Disposable {
     defaultHandler: CommandEventHandler;

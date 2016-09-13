@@ -1,14 +1,17 @@
-import { Diagnostic, Position, Range, DiagnosticCollection, languages, Uri, workspace, TextDocument } from 'vscode';
+import * as vscode from 'vscode';
 import { CommandEventHandler } from './commandEventHandler';
-import { getFailuresFromDetails, getSuccessesFromDetails } from './parsers/compileResultParser';
+import * as CompileResultParser from './parsers/compileResultParser';
 import { MavensMateChannel } from '../../vscode/mavensMateChannel';
-import { buildDiagnosticsByFilePath } from '../../vscode/diagnosticFactory';
+import * as DiagnosticFactory from '../../vscode/diagnosticFactory';
 import { getPathEnd } from '../../workspace/componentPath';
 import path = require('path')
 import Command from '../command';
+import Promise = require('bluebird');
+
+let compileLanguages = new Set<string>(['apex','visualforce','metadata']);
 
 export class CompileEventHandler extends CommandEventHandler {
-    diagnotics: DiagnosticCollection;
+    diagnotics: vscode.DiagnosticCollection;
 
     static Create(channel: MavensMateChannel){
         return new CompileEventHandler(channel);
@@ -17,10 +20,10 @@ export class CompileEventHandler extends CommandEventHandler {
     constructor(channel: MavensMateChannel){
         super(channel);
 
-        this.diagnotics = languages.createDiagnosticCollection('mavensmate');
+        this.diagnotics = vscode.languages.createDiagnosticCollection('mavensmate');
     }
 
-    onStart(command: Command) {
+    onStart(command: Command): Promise<any> {
         return super.onStart(command).then(() => {
             if(command.body.paths){
                 this.channel.appendLine('Paths:'); 
@@ -29,69 +32,67 @@ export class CompileEventHandler extends CommandEventHandler {
                     let baseName = path.basename(filePath);
                     this.channel.appendLine(baseName)
                 }
+            } else if(command.command !== 'compile-project'){
+                console.error('No paths and not compile-project... ' + command.command + ' is expecting paths.');
             }
         });
     }
 
-    onSuccess(command: Command, response){
+    onSuccess(command: Command, response): Promise<any>{
         let result = response.result;
+        let handlePromise: Promise<any>;
         if(result.status && result.status === 'Conflict'){
-            this.handleConflict(command, result);
+            handlePromise = this.handleConflict(command, result);
         } else {
-            this.handleSuccess(command, result);
+            handlePromise = this.handleSuccess(command, result);
         }
-        return super.onSuccess(command, result);
+        return handlePromise.then(() => {
+            super.onSuccess(command, result);
+        },(error) => {
+            console.error(error);
+            super.onError(command, result);
+        });
     }
 
     private handleConflict(command: Command, result){
-        console.error('Need to write conflict');
+        return Promise.resolve(() => {
+            console.error('Need to write conflict');
+        });
     }
 
-    private handleSuccess(command: Command, result){
-        let componentSuccesses = getSuccessesFromDetails(result);
-        let componentFailures = getFailuresFromDetails(result);
+    private handleSuccess(command: Command, result): Promise<any>{
+        let componentSuccesses = CompileResultParser.getSuccessesFromDetails(result);
+        let componentFailures = CompileResultParser.getFailuresFromDetails(result);
 
-        return this.promiseClearDiagnosticsForSuccesses(command, componentSuccesses)
+        return this.promiseClearDiagnosticsForSuccesses(componentSuccesses)
             .then(() => {
-                this.promiseDiagnosticsFromFailures(command, componentFailures)
+                return this.promiseDiagnosticsFromFailures(componentFailures)
             });
     }
 
-    private promiseClearDiagnosticsForSuccesses(command, componentSuccesses): Promise<any>{
-        let paths = command.body.paths;
-        
-        return this.promiseComponentsWithMatchingDocuments(paths, componentSuccesses)
-            .then((componentSuccesses) => {
-                this.clearDiagnostics(componentSuccesses);
-            });
+    private promiseClearDiagnosticsForSuccesses(componentSuccesses): Promise<any>{
+        return this.promiseComponentsWithMatchingDocuments(componentSuccesses)
+            .bind(this)
+            .then(this.clearDiagnostics);
     }
 
-    private promiseComponentsWithMatchingDocuments(paths: string[], components){
-        let documentPromises = [];
-
-        for(let path of paths){
-            let documentPromise = workspace.openTextDocument(path);
-            documentPromises.push(documentPromise);
-        }
-
-        return Promise.all(documentPromises)
-            .then((openedDocuments: TextDocument[]) => {
-                return this.updateComponentsWithMatchingDocuments(openedDocuments, components);
-            });
-    }
-    
-    private updateComponentsWithMatchingDocuments(documents: TextDocument[], components){
+    private promiseComponentsWithMatchingDocuments(components){
+        let promisedComponents = []; 
         for(let component of components){
             let pathEnd = getPathEnd(component.fileName);
-            for(let document of documents){
-                if(document.uri.fsPath.endsWith(pathEnd)){
+            let workspaceRoot = vscode.workspace.rootPath;
+            let documentUri = path.join(workspaceRoot, 'src', pathEnd);
+
+            let withMatchingDocument = vscode.workspace.openTextDocument(documentUri)
+                .then((document) => {
                     component.fullPath = document.uri.fsPath;
                     component.document = document;
-                    break;
-                }
-            }
+                    return component;
+                });
+            promisedComponents.push(withMatchingDocument);
         }
-        return components;
+
+        return Promise.all(promisedComponents);
     }
 
     private clearDiagnostics(componentSuccesses){
@@ -100,22 +101,21 @@ export class CompileEventHandler extends CommandEventHandler {
             filePathsToClear.add(componentSuccess.fullPath);
         }
         filePathsToClear.forEach((filePath) => {
-            let fileUri = Uri.file(filePath);
+            let fileUri = vscode.Uri.file(filePath);
             this.diagnotics.set(fileUri, []);
         });
     }
 
-    private promiseDiagnosticsFromFailures(command: Command, componentFailures){
-        return this.promiseComponentsWithMatchingDocuments(command.body.paths, componentFailures)
-            .then(buildDiagnosticsByFilePath)
-            .then((diagnosticsByFilePath) => {
-                this.updateDiagnostics(diagnosticsByFilePath);
-            });
+    private promiseDiagnosticsFromFailures(componentFailures){
+        return this.promiseComponentsWithMatchingDocuments(componentFailures)
+            .then(DiagnosticFactory.buildDiagnosticsByFilePath)
+            .bind(this)
+            .then(this.updateDiagnostics);
     }
 
     private updateDiagnostics(diagnosticsByFilePath: {}){
         for(let filePath in diagnosticsByFilePath){
-            let fileUri = Uri.file(filePath);
+            let fileUri = vscode.Uri.file(filePath);
             this.diagnotics.set(fileUri, diagnosticsByFilePath[filePath]);
         }
     }

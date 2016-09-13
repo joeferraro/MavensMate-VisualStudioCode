@@ -3,7 +3,7 @@ export function getFailuresFromDetails(result){
     let componentFailures = result.details.componentFailures;
     if(componentFailures){
         if(componentFailures instanceof Array){
-            processFailuresAsArray(failures, componentFailures);
+            processComponentsAsArray(failures, componentFailures, 'componentFailures');
         } else {
             failures.push(componentFailures);
         }
@@ -11,19 +11,19 @@ export function getFailuresFromDetails(result){
     return failures;
 }
 
-function processFailuresAsArray(failures, componentFailures){
-    for(let componentFailure of componentFailures){
-        if(componentFailure.DeployDetails){
-            pushDeploymentDetailFailures(failures, componentFailure.DeployDetails);
+function processComponentsAsArray(compileComponents, detailComponents, componentType){
+    for(let detailComponent of detailComponents){
+        if(detailComponent.DeployDetails){
+            pushDeployDetailComponents(compileComponents, detailComponent.DeployDetails[componentType]);
         } else {
-            failures.push(componentFailure);
+            compileComponents.push(detailComponent);
         }
     }
 }
 
-function pushDeploymentDetailFailures(failures, deployDetails){
-    for(let failure of deployDetails.componentFailures){
-        failures.push(failure);
+function pushDeployDetailComponents(compileComponents, deployDetailComponents){
+    for(let deployDetailComponent of deployDetailComponents){
+        compileComponents.push(deployDetailComponent);
     }
 }
 
@@ -32,26 +32,10 @@ export function getSuccessesFromDetails(result){
     let componentSuccesses = result.details.componentSuccesses;
     if(componentSuccesses){
         if(componentSuccesses instanceof Array){
-            processSuccessesAsArray(successes, componentSuccesses);
+            processComponentsAsArray(successes, componentSuccesses, 'componentSuccesses');
         } else {
             successes.push(componentSuccesses);
         }
     }
     return successes;
-}
-
-function processSuccessesAsArray(successes, componentSuccesses){
-    for(let componentSuccess of componentSuccesses){
-        if(componentSuccess.DeployDetails){
-            pushDeploymentDetailSucesses(successes, componentSuccess.DeployDetails);
-        } else {
-            successes.push(componentSuccess);
-        }
-    }
-}
-
-function pushDeploymentDetailSucesses(successes, deployDetails){
-    for(let failure of deployDetails.componentSuccesses){
-        successes.push(failure);
-    }
 }

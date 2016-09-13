@@ -1,6 +1,7 @@
 import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 import { Disposable } from 'vscode';
 import Command from '../command';
+import Promise = require('bluebird');
 
 export class CommandEventHandler implements Disposable {
     channel: MavensMateChannel;
@@ -13,7 +14,7 @@ export class CommandEventHandler implements Disposable {
         this.channel = channel;
     }
 
-    onStart(command: Command) {
+    onStart(command: Command): Promise<any> {
         this.channel.waitingOnCount++;
         return Promise.resolve().then(() => {
             let statusText: string = command.name + ': Starting';
@@ -21,15 +22,15 @@ export class CommandEventHandler implements Disposable {
         });
     }
 
-    onSuccess(command: Command, result){
+    onSuccess(command: Command, result): Promise<any>{
         return this.commandStopped(command, result);
     }
 
-    onError(command: Command, result){
+    onError(command: Command, result): Promise<any>{
         return this.commandStopped(command, result);
     }
 
-    private commandStopped(command: Command, result) {
+    private commandStopped(command: Command, result): Promise<any> {
         this.channel.waitingOnCount--;
 
         return Promise.resolve().then(() => {
