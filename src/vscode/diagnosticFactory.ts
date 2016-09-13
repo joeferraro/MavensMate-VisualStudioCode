@@ -29,7 +29,10 @@ export function buildDiagnostic(componentFailure): Diagnostic {
 
     if(componentFailure.document){
         let document: TextDocument = componentFailure.document;
-        range = document.getWordRangeAtPosition(start);
+        let wordRange = document.getWordRangeAtPosition(start); 
+        if(wordRange){
+            range = wordRange;
+        }
     }
 
     let newDiagnostic = new Diagnostic(range, componentFailure.problem);
