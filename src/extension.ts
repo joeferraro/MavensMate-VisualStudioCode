@@ -61,7 +61,7 @@ function instantiate(){
 
 function subscribeToEvents(){
     let saveEvent = vscode.workspace.onDidSaveTextDocument((textDocument) => {
-        if(textDocument.languageId in languagesToCompileOnSave){
+        if(languagesToCompileOnSave.has(textDocument.languageId)){
             vscode.commands.executeCommand('mavensmate.compileFile', textDocument.uri);
         }
     });
