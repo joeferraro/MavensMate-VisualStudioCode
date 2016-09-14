@@ -20,6 +20,8 @@ let commandEventRouter: CommandEventRouter;
 let clientStatus: ClientStatus;
 let mavensMateConfiguration: vscode.WorkspaceConfiguration;
 
+let languagesToCompileOnSave = new Set<string>(['apex', 'visualforce', 'metadata', 'xml', 'javascript']);
+
 export function activate(context: vscode.ExtensionContext) {
     mavensMateContext = context;
     mavensMateChannel = MavensMateChannel.Create();
@@ -59,7 +61,9 @@ function instantiate(){
 
 function subscribeToEvents(){
     let saveEvent = vscode.workspace.onDidSaveTextDocument((textDocument) => {
-        vscode.commands.executeCommand('mavensmate.compileFile', textDocument.uri);
+        if(textDocument.languageId in languagesToCompileOnSave){
+            vscode.commands.executeCommand('mavensmate.compileFile', textDocument.uri);
+        }
     });
     mavensMateContext.subscriptions.push(saveEvent);
 

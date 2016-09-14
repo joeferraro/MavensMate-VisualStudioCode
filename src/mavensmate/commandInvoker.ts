@@ -4,6 +4,7 @@ import Command from './command';
 import ClientCommands = require('../mavensmate/clientCommands');
 import { CommandEventRouter } from './commandEventRouter';
 import Promise = require('bluebird');
+import path = require('path');
 
 let clientCommands = ClientCommands.list();
 
@@ -49,11 +50,18 @@ export class CommandInvoker {
         if(documentUri && documentUri.scheme === 'file'){
             this.setCommandPath(this.command, documentUri.fsPath);
         }
+        if(commandToPrepare.command === 'new-project-from-existing-directory'){
+            this.setCommandOrigin(this.command, vscode.workspace.rootPath);
+        }
         return commandToPrepare;
     }
 
     private setCommandPath(commandToPrepare: Command, path: string){
         commandToPrepare.body.paths = [path];
+    }
+
+    private setCommandOrigin(commandToPrepare: Command, path: string){
+        commandToPrepare.body.args.origin = path;
     }
 
     private sendCommand(commandToSend: Command) {        

@@ -6,7 +6,8 @@ interface Command {
     body?: {
         paths?: string[]
         args?: {
-            ui: boolean
+            ui: boolean,
+            origin?: string
         }
     },
     confirm?: {

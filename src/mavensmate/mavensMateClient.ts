@@ -43,6 +43,7 @@ export class MavensMateClient{
         let asyncParam: number = (command.async ? 1 : 0);
         
         let commandParmeters = 'command=' + command.command +'&async=' + asyncParam;
+
         if(this.hasProjectId()){
             commandParmeters += '&pid=' + this.options.projectId; 
         }

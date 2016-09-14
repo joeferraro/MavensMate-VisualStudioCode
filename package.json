@@ -33,6 +33,10 @@
         "title": "MavensMate: New Project"
       },
       {
+        "command": "mavensmate.newProjectFromExistingDirectory",
+        "title": "MavensMate: Convert To MavensMate Project"
+      },
+      {
         "command": "mavensmate.compileCurrentFile",
         "title": "MavensMate: Compile File"
       },
@@ -124,11 +128,19 @@
         ]
       },
       {
+        "id": "xml",
+        "extensions": [
+          ".app",
+          ".auradoc",
+          ".cmp"
+        ]
+      },
+      {
         "id": "log",
         "extensions": [
           ".log"
         ],
-        "aliases": [
+        "aliaslint": [
           "Debug Log"
         ]
       }

@@ -32,6 +32,16 @@ export function list(): { [id: string]: Command } {
                 }
             }
         },
+        'mavensmate.newProjectFromExistingDirectory': {
+            command: 'new-project-from-existing-directory',
+            name: 'New Project From Existing Directory',
+            async: false,
+            body: {
+                args: {
+                    ui: true
+                }
+            }
+        },
         'mavensmate.oAuthProject': {
             command: 'oauth-project',
             name: 'oAuth Project',
