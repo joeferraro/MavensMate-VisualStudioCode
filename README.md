@@ -5,7 +5,7 @@
 1. Open the extension project in VS Code
 2. Open a Terminal with ```ctrl+` ```
 3. Run ```npm install```
-4. Develop!
+4. Develop! [VS Code Extensibility Reference](https://code.visualstudio.com/docs/extensionAPI/overview)
 
 # Organization
 The point of entry for the code is src/extension.ts where the extension is registered.
