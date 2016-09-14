@@ -1,6 +1,12 @@
 # MavensMate for VS Code
 [MavensMate](http://mavensmate.com/) plugin for the Visual Studio Code editor
 
+# When Cloning This For Development
+1. Open the extension project in VS Code
+2. Open a Terminal with ```ctrl+` ```
+3. Run ```npm install```
+4. Develop!
+
 # Organization
 The point of entry for the code is src/extension.ts where the extension is registered.
 ## src 
