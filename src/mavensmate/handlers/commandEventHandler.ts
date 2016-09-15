@@ -22,25 +22,24 @@ export class CommandEventHandler implements Disposable {
         });
     }
 
-    onSuccess(command: Command, result): Promise<any>{
-        return this.commandStopped(command, result);
+    onSuccess(command: Command, response): Promise<any>{
+        return this.commandStopped(command, response);
     }
 
-    onError(command: Command, result): Promise<any>{
-        return this.commandStopped(command, result);
+    onError(command: Command, response): Promise<any>{
+        return this.commandStopped(command, response);
     }
 
-    private commandStopped(command: Command, result): Promise<any> {
+    private commandStopped(command: Command, response): Promise<any> {
         this.channel.waitingOnCount--;
 
         return Promise.resolve().then(() => {
-            let statusText: string;
-            if(result.statusCode > 200){
-                statusText = command.name + ': Error';
+            if(response.error){
+                this.channel.appendError(command.name + ': ' + response.error + '\n' + response.stack);
             } else {
-                statusText = command.name + ': Success';
+                return this.channel.appendStatus(command.name + 'Done');
             }
-            return this.channel.appendStatus(statusText);
+            
         });
     }
 
