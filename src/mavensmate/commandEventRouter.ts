@@ -35,14 +35,17 @@ export class CommandEventRouter implements Disposable {
         }
     }
 
-    onSuccess(command: Command, result){
-        let commandHandler = this.getHandler(command);
-        return commandHandler.onSuccess(command, result).catch(console.error);
+    onSuccess(command: Command, result){        
+        if(result.error){
+            this.onError(command, result);
+        } else {
+            let commandHandler = this.getHandler(command);
+            return commandHandler.onSuccess(command, result).catch(console.error);
+        }
     }
 
     onError(command: Command, result){
-        let commandHandler = this.getHandler(command);
-        return commandHandler.onError(command, result).catch(console.error);
+        return this.defaultHandler.onError(command, result);
     }
 
     dispose(){
