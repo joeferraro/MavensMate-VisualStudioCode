@@ -1,0 +1,41 @@
+{
+  "name": "MavensMate Log",
+  "patterns": [
+    {
+      "match": "\\s*Result: Success",
+      "name": "markup.inserted"
+    },
+    {
+      "match": "([0-9][0-9]:[0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9]\\s)",
+      "name": "keyword"
+    },
+    {
+      "match": "\\|[\"USER_DEBUG\"]+\\|",
+      "name": "string"
+    },
+    {
+      "match": "\\|[\"EXCEPTION_THROWN\"]+\\|",
+      "name": "support.type.exception"
+    },
+    {
+      "match": "\\|[\"FATAL_ERROR\"]+\\|",
+      "name": "support.type.exception"
+    },
+    {
+      "match": "\\|[A-Z,_]+\\|",
+      "name": "variable"
+    },
+    {
+      "match": "\\[[0-9]{0,5}\\]",
+      "name": "variable.language"
+    },
+    {
+      "match": "(true|false)",
+      "name": "keyword"
+    }
+  ],
+  "fileTypes": [
+    "log"
+  ],
+  "scopeName": "source.log"
+}

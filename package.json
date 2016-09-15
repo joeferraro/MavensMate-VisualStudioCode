@@ -1,0 +1,230 @@
+{
+  "name": "mavensmate",
+  "displayName": "mavensmate",
+  "description": "MavensMate plugin for the Visual Studio Code editor",
+  "version": "0.0.1",
+  "publisher": "DavidHelmer",
+  "engines": {
+    "vscode": "^0.10.10"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "mavensmate.openProject",
+        "title": "MavensMate: Open Project"
+      },
+      {
+        "command": "mavensmate.openUI",
+        "title": "MavensMate: Open MavensMate UI"
+      },
+      {
+        "command": "mavensmate.openGlobalSettings",
+        "title": "MavensMate: Open Global Settings"
+      },
+      {
+        "command": "mavensmate.newProject",
+        "title": "MavensMate: New Project"
+      },
+      {
+        "command": "mavensmate.newProjectFromExistingDirectory",
+        "title": "MavensMate: Convert To MavensMate Project"
+      },
+      {
+        "command": "mavensmate.compileCurrentFile",
+        "title": "MavensMate: Compile File"
+      },
+      {
+        "command": "mavensmate.compileFile",
+        "title": "MavensMate: Compile File"
+      },
+      {
+        "command": "mavensmate.compileProject",
+        "title": "MavensMate: Compile Project"
+      },
+      {
+        "command": "mavensmate.refreshCurrentFile",
+        "title": "MavensMate: Refresh File"
+      },
+      {
+        "command": "mavensmate.refreshFile",
+        "title": "MavensMate: Refresh File"
+      },
+      {
+        "command": "mavensmate.toggleOutput",
+        "title": "MavensMate: Toggle Output"
+      }
+    ],
+    "languages": [
+      {
+        "id": "apex",
+        "extensions": [
+          ".apex",
+          ".cls",
+          ".trigger",
+          ".tgr"
+        ],
+        "aliases": [
+          "Apex"
+        ],
+        "configuration": "./languages/apex-language-configuration.json"
+      },
+      {
+        "id": "visualforce",
+        "extensions": [
+          ".component",
+          ".page"
+        ],
+        "aliases": [
+          "Visualforce"
+        ]
+      },
+      {
+        "id": "metadata",
+        "extensions": [
+          ".object",
+          ".layout",
+          ".resource",
+          ".remoteSite",
+          ".labels", 
+          ".app",
+          ".dashboard",
+          ".permissionset",
+          ".workflow",
+          ".email",
+          ".profile",
+          ".scf",
+          ".queue",
+          ".reportType",
+          ".report",
+          ".weblink",
+          ".tab",
+          ".letter",
+          ".role",
+          ".homePageComponent",
+          ".homePageLayout",
+          ".objectTranslation",
+          ".flow",
+          ".datacategorygroup",
+          ".snapshot",
+          ".site",
+          ".sharingRules",
+          ".settings",
+          ".callCenter",
+          ".community",
+          ".authProvider",
+          ".customApplicationComponent",
+          ".quickAction",
+          ".approvalProcess"
+        ],
+        "aliases": [
+          "Metadata"
+        ]
+      },
+      {
+        "id": "xml",
+        "extensions": [
+          ".app",
+          ".auradoc",
+          ".cmp"
+        ]
+      },
+      {
+        "id": "log",
+        "extensions": [
+          ".log"
+        ],
+        "aliaslint": [
+          "Debug Log"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "apex",
+        "scopeName": "source.apex",
+        "path": "./grammars/apex.json" 
+      },
+      {
+        "language": "visualforce",
+        "scopeName": "visualforce.text.html.basic",
+        "path": "./grammars/visualforce.json" 
+      },
+      {
+        "language": "log",
+        "scopeName": "source.log",
+        "path": "./grammars/log.json" 
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "resourceLangId == 'apex'",
+          "command": "mavensmate.compileFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'visualforce'",
+          "command": "mavensmate.compileFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'metadata'",
+          "command": "mavensmate.compileFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'apex'",
+          "command": "mavensmate.refreshFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'visualforce'",
+          "command": "mavensmate.refreshFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'metadata'",
+          "command": "mavensmate.refreshFile",
+          "group": "mavensmate"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "MavensMate configuration",
+      "properties": {
+        "mavensMateDesktop.baseURL": {
+          "type": "string",
+          "default": "http://localhost:56248",
+          "description": "The base URL of the MavensMate Desktop Server"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  },
+  "dependencies": {
+    "bluebird": "3.3.5",
+    "fs-promise": "0.5.0",
+    "path": "0.12.7",
+    "request-promise": "2.0.1",
+    "url-join": "1.1.0"
+  },
+  "devDependencies": {
+    "expect.js": "0.3.1",
+    "nock": "8.0.0",
+    "sinon": "1.17.3",
+    "typescript": "^1.8.5",
+    "vscode": "^0.11.0"
+  }
+}
