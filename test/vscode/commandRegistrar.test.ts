@@ -3,7 +3,7 @@ import sinon = require('sinon');
 
 import { MavensMateClient, Options } from '../../src/mavensmate/mavensMateClient';
 import ProjectQuickPick = require('../../src/vscode/projectQuickPick');
-import { CommandInvoker } from '../../src/mavensmate/commandInvoker';
+import { ClientCommandInvoker } from '../../src/mavensmate/clientCommandInvoker';
 import { CommandEventRouter } from '../../src/mavensmate/commandEventRouter';
 import ClientCommands = require('../../src/mavensmate/clientCommands');
 import vscode = require('vscode');
@@ -23,8 +23,8 @@ let commandList = {
     'command1': command1,
     'command2': command2
 };
-let commandInvoker1 = CommandInvoker.Create(null, command1, null);
-let commandInvoker2 = CommandInvoker.Create(null, command2, null);
+let commandInvoker1 = ClientCommandInvoker.Create(null, command1, null);
+let commandInvoker2 = ClientCommandInvoker.Create(null, command2, null);
 let commandRegistration1 = new vscode.Disposable(() => {});
 let commandRegistration2 = new vscode.Disposable(() => {});
 let commandRegistration3 = new vscode.Disposable(() => {});
@@ -40,7 +40,7 @@ suite('commandRegistrar', () => {
 
     setup(() => {
         commandListStub = sinon.stub(ClientCommands, 'list').returns(commandList);
-        createInvokerStub = sinon.stub(CommandInvoker, 'Create');
+        createInvokerStub = sinon.stub(ClientCommandInvoker, 'Create');
         createInvokerStub.withArgs(client, command1, commandEventRouter).returns(commandInvoker1);
         createInvokerStub.withArgs(client, command2, commandEventRouter).returns(commandInvoker2);
         registerCommandStub = sinon.stub(vscode.commands, 'registerCommand');

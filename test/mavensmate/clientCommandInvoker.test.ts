@@ -8,7 +8,7 @@ import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
 import { MavensMateChannel } from '../../src/vscode/mavensMateChannel';
 import { CommandEventRouter } from '../../src/mavensmate/commandEventRouter';
 
-import { CommandInvoker } from '../../src/mavensmate/commandInvoker';
+import { ClientCommandInvoker } from '../../src/mavensmate/clientCommandInvoker';
 
 let clientOptions: Options = null;
 let client = MavensMateClient.Create(clientOptions);
@@ -16,7 +16,7 @@ let channel = MavensMateChannel.Create();
 let status = MavensMateStatus.Create(client, channel);
 
 let testCommand: Command;
-let commandInvoker: CommandInvoker;
+let commandInvoker: ClientCommandInvoker;
 
 let testDocument: vscode.TextDocument;
 let testEditor: vscode.TextEditor;
@@ -32,7 +32,7 @@ suite('commandInvoker', () => {
     setup((setupDone) => {
          testCommand = { command: 'test command', name: 'test command', async: false };
          commandEventRouter = withStubbedCommandEventRouter();
-         commandInvoker = CommandInvoker.Create(client, testCommand, commandEventRouter);
+         commandInvoker = ClientCommandInvoker.Create(client, testCommand, commandEventRouter);
          withAValidTestDocument(setupDone);
     });
     

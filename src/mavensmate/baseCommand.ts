@@ -1,16 +1,13 @@
-import Command from './command';
 import { MavensMateChannel } from '../vscode/mavensMateChannel';
 import Promise = require('bluebird');
 
 export abstract class BaseCommand {
-
     label: string;
-    outputChannel: MavensMateChannel
-  
+    outputChannel: MavensMateChannel;
+
     constructor(outputChannel: MavensMateChannel) {
         this.outputChannel = outputChannel;
     }
 
-    abstract execute():Promise<any>;
-
+    abstract execute(): Thenable<any>;
 }
