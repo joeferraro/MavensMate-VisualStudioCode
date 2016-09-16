@@ -2,7 +2,7 @@ import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 import vscode = require('vscode');
 import { MavensMateChannel } from '../vscode/mavensMateChannel';
 import Promise = require('bluebird');
-import { BaseCommand } from './baseCommand';
+import { BaseCommand } from './commands/baseCommand';
 
 export class CommandInvoker {
     buildCommand: (outputChannel: MavensMateChannel) => BaseCommand;

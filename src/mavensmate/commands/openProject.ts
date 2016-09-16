@@ -1,4 +1,4 @@
-import { BaseCommand } from '../baseCommand';
+import { BaseCommand } from './baseCommand';
 import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 import ProjectQuickPick = require('../../vscode/projectQuickPick');
 
@@ -14,5 +14,5 @@ class OpenProjectCommand extends BaseCommand {
 
 exports.build = (outputChannel: MavensMateChannel): BaseCommand => {
     let command = new OpenProjectCommand(outputChannel);
-    return command
+    return command;
 }

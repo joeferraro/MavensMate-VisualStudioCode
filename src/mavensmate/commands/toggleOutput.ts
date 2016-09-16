@@ -1,4 +1,4 @@
-import { BaseCommand } from '../baseCommand';
+import { BaseCommand } from './baseCommand';
 import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 import ProjectQuickPick = require('../../vscode/projectQuickPick');
 

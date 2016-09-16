@@ -1,4 +1,4 @@
-import { MavensMateChannel } from '../vscode/mavensMateChannel';
+import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 import Promise = require('bluebird');
 
 export abstract class BaseCommand {
