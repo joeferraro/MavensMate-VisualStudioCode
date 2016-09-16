@@ -8,7 +8,6 @@ class OpenProjectCommand extends BaseCommand {
     }
 
     execute(): Thenable<any> {
-        console.log('execute openProject');
         return Promise.resolve(ProjectQuickPick.showProjectListAndOpen());
     }
 }
