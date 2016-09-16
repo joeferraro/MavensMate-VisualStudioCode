@@ -11,18 +11,26 @@ export class MavensMateChannel implements Disposable {
     isShowing: boolean;
     isWaiting: boolean;
     
-    static Create(){
-        return new MavensMateChannel();
+    private static _instance: MavensMateChannel = null;
+    static getInstance(): MavensMateChannel{
+        if(MavensMateChannel._instance == null){
+            MavensMateChannel._instance = new MavensMateChannel();
+        }
+        return MavensMateChannel._instance;
     }
     
     constructor(){
+        if(MavensMateChannel._instance){
+            throw new Error("Error: Instantiation failed. Singleton module! Use .getInstance() instead of new.");
+        }
+        MavensMateChannel._instance = this;
         this.channel = window.createOutputChannel('MavensMate');
         this.waitingOnCount = 0;
         this.waitingDelay = 5000;
         this.isShowing = false;
         this.isWaiting = false;
     }
-
+    
     appendStatus(message: string){
         return this.appendLine(message, 'STATUS');
     }

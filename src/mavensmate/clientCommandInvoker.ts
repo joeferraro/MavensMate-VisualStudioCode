@@ -66,12 +66,12 @@ export class ClientCommandInvoker {
 
     private sendCommand(commandToSend: Command) {        
         this.commandEventRouter.onStart(commandToSend);
-        
-        return this.client.sendCommand(this.command).then((result) => {
-            return this.commandEventRouter.onSuccess(this.command, result);
-        }, (result) => {
-            return this.commandEventRouter.onError(this.command, result);
-        });
+        return Promise.resolve();
+        // return this.client.sendCommand(this.command).then((result) => {
+        //     return this.commandEventRouter.onSuccess(this.command, result);
+        // }, (result) => {
+        //     return this.commandEventRouter.onError(this.command, result);
+        // });
     }
 
 

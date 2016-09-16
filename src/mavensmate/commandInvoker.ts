@@ -5,17 +5,17 @@ import Promise = require('bluebird');
 import { BaseCommand } from './commands/baseCommand';
 
 export class CommandInvoker {
-    buildCommand: (outputChannel: MavensMateChannel) => BaseCommand;
+    buildCommand: (client: MavensMateClient, outputChannel: MavensMateChannel) => BaseCommand;
     client: MavensMateClient;
     outputChannel: MavensMateChannel;
     invokeProxy: (args?: any) => Promise<any>;
     invokeTextEditorProxy: (textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) => Promise<any>;
 
-    static Create(buildCommand: (outputChannel: MavensMateChannel) => BaseCommand, client: MavensMateClient, outputChannel: MavensMateChannel){
+    static Create(buildCommand: (client: MavensMateClient, outputChannel: MavensMateChannel) => BaseCommand, client: MavensMateClient, outputChannel: MavensMateChannel){
         return new CommandInvoker(buildCommand, client, outputChannel);
     }
 
-    constructor(buildCommand: (outputChannel: MavensMateChannel) => BaseCommand, client: MavensMateClient, outputChannel: MavensMateChannel){
+    constructor(buildCommand: (client: MavensMateClient, outputChannel: MavensMateChannel) => BaseCommand, client: MavensMateClient, outputChannel: MavensMateChannel){
         this.client = client;
         this.buildCommand = buildCommand;
         this.outputChannel = outputChannel;
@@ -28,12 +28,12 @@ export class CommandInvoker {
     }
 
     invoke(selectedResource?: vscode.Uri){
-        let command = this.buildCommand(this.outputChannel);
+        let command = this.buildCommand(this.client,this.outputChannel);
         return command.execute();
     }
 
     invokeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit){
-        let command = this.buildCommand(this.outputChannel);
+        let command = this.buildCommand(this.client, this.outputChannel);
         return command.execute();
     }
 }

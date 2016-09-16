@@ -7,8 +7,13 @@ import Promise = require('bluebird');
 export class ClientStatus {
     commandStatus: StatusBarItem;
     
-    static Create(){
-        return new ClientStatus();
+    private static _instance: ClientStatus = null;
+
+    static getInstance(){
+        if(ClientStatus._instance == null){
+            ClientStatus._instance = new ClientStatus();
+        }
+        return ClientStatus._instance;
     }
     
     constructor(){

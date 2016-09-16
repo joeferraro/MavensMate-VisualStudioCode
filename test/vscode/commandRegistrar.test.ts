@@ -9,12 +9,12 @@ import ClientCommands = require('../../src/mavensmate/clientCommands');
 import vscode = require('vscode');
 import { TestExtensionContext } from './testExtensionContext';
 
-import { CommandRegistrar } from '../../src/vscode/commandRegistrar';
+import { registerCommands } from '../../src/vscode/commandRegistrar';
 import { MavensMateChannel } from '../../src/vscode/mavensMateChannel';
 
 let clientOptions: Options = null;
-let client = MavensMateClient.Create(clientOptions);
-let channel = MavensMateChannel.Create();
+let client = MavensMateClient.getInstance();
+let channel = MavensMateChannel.getInstance();
 let context : vscode.ExtensionContext = new TestExtensionContext();
 let command1 = { command: '1', name: 'command', async: false };
 let command2 = { command: '2', name: 'command', async: false };
@@ -29,8 +29,6 @@ let commandRegistration1 = new vscode.Disposable(() => {});
 let commandRegistration2 = new vscode.Disposable(() => {});
 let commandRegistration3 = new vscode.Disposable(() => {});
 let commandEventRouter: CommandEventRouter = withStubbedCommandEventRouter();
-
-let commandRegistrar : CommandRegistrar = CommandRegistrar.Create(client, context, channel, commandEventRouter);
 
 suite('commandRegistrar', () => {
     let commandListStub : sinon.SinonStub;
@@ -56,7 +54,7 @@ suite('commandRegistrar', () => {
     });
 
     test('registerCommands', () => {
-        commandRegistrar.registerCommands();
+        registerCommands(context);
 
         sinon.assert.calledOnce(commandListStub);
         sinon.assert.calledTwice(createInvokerStub);

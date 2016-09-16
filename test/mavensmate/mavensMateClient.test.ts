@@ -59,11 +59,11 @@ suite("MavensMate Client", () => {
                 }
             };
                 
-            mavensMateClient.sendCommand(openUICommand)
-                .then(() => {
-                    sendCommandNock.done();
-                }, assertIfError)
-                .done(testDone);
+            // mavensMateClient.sendCommand(openUICommand)
+            //     .then(() => {
+            //         sendCommandNock.done();
+            //     }, assertIfError)
+            //     .done(testDone);
         });
 
         test("sends async command", (testDone) => {
@@ -106,14 +106,14 @@ suite("MavensMate Client", () => {
                 }
             };
                 
-            mavensMateClient.sendCommand(openUICommand)
-                .then((actualResponse) => {
-                    expect(actualResponse.complete).to.be(true);
-                    sendCommandNock.done();
-                    checkStatusPendingNock.done();
-                    checkStatusCompleteNock.done();
-                }, assertIfError)
-                .done(testDone);
+            // mavensMateClient.sendCommand(openUICommand)
+            //     .then((actualResponse) => {
+            //         expect(actualResponse.complete).to.be(true);
+            //         sendCommandNock.done();
+            //         checkStatusPendingNock.done();
+            //         checkStatusCompleteNock.done();
+            //     }, assertIfError)
+            //     .done(testDone);
         });
     });
 });

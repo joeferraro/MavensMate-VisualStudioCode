@@ -22,7 +22,7 @@ suite("ClientStatus", () => {
         createStatusBarItemStub = sinon.stub(vscode.window, "createStatusBarItem");
         createStatusBarItemStub.returns(statusBarItem);
         
-        clientStatus = ClientStatus.Create();
+        clientStatus = ClientStatus.getInstance();
     });
     
     teardown(() => {

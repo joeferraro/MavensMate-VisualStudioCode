@@ -4,31 +4,35 @@ import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 import { MavensMateChannel } from '../../src/vscode/mavensMateChannel';
 import Promise = require('bluebird');
 
+let mavensMateChannel = MavensMateChannel.getInstance();
+let mavensMateClient = MavensMateClient.getInstance();
+
 export class MavensMateStatus {
     appStatus: StatusBarItem;
-    client: MavensMateClient;
-    channel: MavensMateChannel;
     
-    static Create(client: MavensMateClient, channel: MavensMateChannel){
-        return new MavensMateStatus(client, channel);
+    private static _instance: MavensMateStatus = null;
+
+    static getInstance(): MavensMateStatus{
+        if(MavensMateStatus._instance == null){
+            MavensMateStatus._instance = new MavensMateStatus();
+        }
+        return MavensMateStatus._instance;
     }
     
-    constructor(client: MavensMateClient, channel: MavensMateChannel){
+    constructor(){
         this.appStatus = window.createStatusBarItem(StatusBarAlignment.Left);
         this.appStatus.command = 'mavensmate.toggleOutput';
-        this.client = client;
-        this.channel = channel;
     }
     
     updateAppStatus(){
-        return this.client.isAppAvailable()
+        return mavensMateClient.isAppAvailable()
             .then((isAvailable) =>{
                 this.showAppIsAvailable();
-                this.channel.appendStatus(`MavensMate Desktop is available`);
+                mavensMateChannel.appendStatus(`MavensMate Desktop is available`);
             })
             .catch((requestError) => {
                 this.showAppIsUnavailable(requestError);
-                this.channel.appendError(`Could not contact local MavensMate server, please ensure MavensMate Desktop is installed and running. `);
+                mavensMateChannel.appendError(`Could not contact local MavensMate server, please ensure MavensMate Desktop is installed and running. `);
             });
     }
     

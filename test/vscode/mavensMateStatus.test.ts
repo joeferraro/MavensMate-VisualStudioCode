@@ -12,7 +12,7 @@ let mavensMateClientOptions = {
 }; 
 suite("MavensMateStatus", () => {
     let mavensMateClient = new MavensMateClient(mavensMateClientOptions);
-    let mavensMateChannel = MavensMateChannel.Create();
+    let mavensMateChannel = MavensMateChannel.getInstance();
     let mavensMateStatus;
     
     suite("updateAppStatus", () => {
@@ -26,7 +26,7 @@ suite("MavensMateStatus", () => {
             createStatusBarItemStub = sinon.stub(vscode.window, "createStatusBarItem");
             createStatusBarItemStub.returns(statusBarItem);
             
-            mavensMateStatus = new MavensMateStatus(mavensMateClient, mavensMateChannel);
+            mavensMateStatus = MavensMateStatus.getInstance();
         });
     
         teardown(() => {

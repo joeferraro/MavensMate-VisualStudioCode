@@ -1,13 +1,19 @@
-import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 import Promise = require('bluebird');
+import * as vscode from 'vscode';
 
-export abstract class BaseCommand {
+interface BaseCommandInterface {
+    currentTextDocument?: boolean,
+    confirm?: {
+        message: string
+    }
+}
+
+export abstract class BaseCommand implements BaseCommandInterface {
     label: string;
-    outputChannel: MavensMateChannel;
 
-    constructor(outputChannel: MavensMateChannel) {
-        this.outputChannel = outputChannel;
+    constructor(label: string) {
+        this.label = label;
     }
 
-    abstract execute(): Thenable<any>;
+    abstract execute(selectedResource?: vscode.Uri): Thenable<any>;
 }

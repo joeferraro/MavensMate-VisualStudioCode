@@ -11,9 +11,9 @@ import { CommandEventRouter } from '../../src/mavensmate/commandEventRouter';
 import { ClientCommandInvoker } from '../../src/mavensmate/clientCommandInvoker';
 
 let clientOptions: Options = null;
-let client = MavensMateClient.Create(clientOptions);
-let channel = MavensMateChannel.Create();
-let status = MavensMateStatus.Create(client, channel);
+let client = MavensMateClient.getInstance();
+let channel = MavensMateChannel.getInstance();
+let status = MavensMateStatus.getInstance();
 
 let testCommand: Command;
 let commandInvoker: ClientCommandInvoker;

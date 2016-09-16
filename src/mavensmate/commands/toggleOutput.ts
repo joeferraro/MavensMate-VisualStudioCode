@@ -1,18 +1,19 @@
 import { BaseCommand } from './baseCommand';
 import { MavensMateChannel } from '../../vscode/mavensMateChannel';
-import ProjectQuickPick = require('../../vscode/projectQuickPick');
+
+let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
 
 class ToggleOutputCommand extends BaseCommand {
-    constructor(outputChannel: MavensMateChannel) {
-        super(outputChannel);
+    constructor() {
+        super('Toggle Output');
     }
 
     execute(): Thenable<any> {
-        return this.outputChannel.toggle();
+        return mavensMateChannel.toggle();
     }
 }
 
-exports.build = (outputChannel: MavensMateChannel): BaseCommand => {
-    let command = new ToggleOutputCommand(outputChannel);
+exports.build = (): BaseCommand => {
+    let command = new ToggleOutputCommand();
     return command;
 }

@@ -1,8 +1,11 @@
 'use strict';
+import * as vscode from 'vscode';
 import request = require('request-promise');
 import urlJoin = require('url-join');
 import Promise = require('bluebird');
 import Command from './command';
+import { ClientCommandInterface } from './commands/clientCommandInterface';
+import { hasProjectSettings, ProjectSettings } from '../../src/mavensmate/projectSettings';
 
 export interface Options {
     baseURL: string;
@@ -12,8 +15,22 @@ export interface Options {
 export class MavensMateClient{
     options: Options;
     
-    static Create(options: Options){
-        return new MavensMateClient(options);
+    private static _instance: MavensMateClient = null;
+
+    static getInstance(){
+        if(MavensMateClient._instance == null){
+            let options: Options = {
+                baseURL: vscode.workspace.getConfiguration().get<string>('mavensMateDesktop.baseURL')
+            }
+            
+            let projectSettings = ProjectSettings.getProjectSettings();
+            if(projectSettings){
+                options.projectId = projectSettings.id;
+            }
+                
+            MavensMateClient._instance = new MavensMateClient(options);
+        }
+        return MavensMateClient._instance;
     }
     
     constructor(options: Options){
@@ -28,7 +45,7 @@ export class MavensMateClient{
         return request.get(getOptions).then(function () { return true });
     }
     
-    sendCommand(command: Command) : Promise<any> {
+    sendCommand(command: ClientCommandInterface) : Promise<any> {
         let postOptions = this.getPostOptionsForCommand(command, this.options.baseURL);
         let promiseCommandSend = request(postOptions).promise();
         
@@ -39,10 +56,10 @@ export class MavensMateClient{
         }
     }
 
-    private getPostOptionsForCommand(command: Command, baseURL: string){
+    private getPostOptionsForCommand(command: ClientCommandInterface, baseURL: string){
         let asyncParam: number = (command.async ? 1 : 0);
         
-        let commandParmeters = 'command=' + command.command +'&async=' + asyncParam;
+        let commandParmeters = 'command=' + command.id +'&async=' + asyncParam;
 
         if(this.hasProjectId()){
             commandParmeters += '&pid=' + this.options.projectId; 
