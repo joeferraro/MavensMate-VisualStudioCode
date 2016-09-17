@@ -10,21 +10,25 @@ import Promise = require('bluebird');
 
 let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
 
-module.exports = class CompileFileCommand extends ClientCommand implements ClientCommandInterface {
+class CompileFile extends ClientCommand implements ClientCommandInterface {
     body: {
         paths: string[],
+        force?: boolean,
         args: {
             ui: boolean
         }
     }
     compilePath: string;
 
-    static create(){
-        return new CompileFileCommand();
+    static create(label?: string){
+        if(!label){
+            label = 'Compile File';
+        }
+        return new CompileFile(label);
     }
 
-    constructor() {
-        super('Compile File');
+    constructor(label: string) {
+        super(label);
         this.id = 'compile-metadata';
         this.async = true;
         
@@ -41,7 +45,7 @@ module.exports = class CompileFileCommand extends ClientCommand implements Clien
         if(selectedResource && selectedResource.scheme === 'file'){
             this.compilePath = selectedResource.fsPath
             this.body.paths.push(this.compilePath);
-            executePromise = super.execute().then(handleCompileResponse);
+            executePromise = super.execute();
         } else {
             console.warn('Nothing to compile');
         }
@@ -60,7 +64,8 @@ module.exports = class CompileFileCommand extends ClientCommand implements Clien
         return super.onFinish(response)
             .then((response) => {
                 let refreshMessage = 'Compiled: ' + path.basename(this.compilePath) + ` (${this.compilePath})`;
-                mavensMateChannel.appendLine(refreshMessage);
+                return mavensMateChannel.appendLine(refreshMessage)
+                    .then(() => handleCompileResponse(response));
             }, (response) => {
                 let refreshMessage = 'Failed to Compile: ' + path.basename(this.compilePath) + ` (${this.compilePath})`;
                 mavensMateChannel.appendLine(refreshMessage);
@@ -72,3 +77,4 @@ module.exports = class CompileFileCommand extends ClientCommand implements Clien
         return this.execute(selectedResource);
     }
 }
+export = CompileFile;

@@ -45,6 +45,14 @@
         "title": "MavensMate: Compile File"
       },
       {
+        "command": "mavensmate.forceCompileFile.withTextEditor",
+        "title": "MavensMate: Force Compile File"
+      },
+      {
+        "command": "mavensmate.forceCompileFile",
+        "title": "MavensMate: Force Compile File"
+      },
+      {
         "command": "mavensmate.compileProject",
         "title": "MavensMate: Compile Project"
       },

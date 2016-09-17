@@ -2,12 +2,13 @@ import * as CompileResultParser from './parsers/compileResultParser';
 import { getPathEnd } from '../../workspace/componentPath';
 import * as vscode from 'vscode';
 import path = require('path');
+import Bluebird = require('bluebird');
 import { MavensMateDiagnostics } from '../../vscode/mavensMateDiagnostics';
 import * as DiagnosticFactory from '../../vscode/diagnosticFactory';
 
 let mavensMateDiagnostics: MavensMateDiagnostics = MavensMateDiagnostics.getInstance();
 
-export function handleCompileResponse(compileResponse){
+export function handleCompileResponse(compileResponse): Promise<any>{
     let result = compileResponse.result;
     let handlePromise: Promise<any>;
     if(result.status && result.status === 'Conflict'){
@@ -19,9 +20,34 @@ export function handleCompileResponse(compileResponse){
 }
 
 function handleConflict(result){
-    return Promise.resolve(() => {
-        console.error('Need to write conflict');
-    });
+    let conflictPromises: Thenable<any>[] = [];
+    let conflicts: any[] = result.details.conflicts;
+    for(let conflictFile in conflicts){
+        let conflict = conflicts[conflictFile];
+        let lastModifiedBy = conflict.remote.LastModifiedBy.Name;
+        let lastModifiedDate = conflict.remote.LastModifiedDate;
+
+        let conflictMessage = `A conflict has been detected. ${conflictFile} `
+            + `was last modified by ${lastModifiedBy} on ${lastModifiedDate}`;
+        let overwriteMessage = 'Overwrite Server Copy';
+        let conflictPromise = vscode.window.showWarningMessage(conflictMessage, overwriteMessage)
+            .then((answer) => {
+                if(answer == overwriteMessage){
+                    return forceCompileConflictFile(conflict);
+                }
+            });
+        conflictPromises.push(conflictPromise);
+    }
+
+    return Promise.all(conflictPromises);
+}
+
+function forceCompileConflictFile(conflict){
+    let fileName = conflict.local.fileName;
+    let pathEnd = getPathEnd(fileName);
+    let workspaceRoot = vscode.workspace.rootPath;
+    let documentUri = vscode.Uri.file(path.join(workspaceRoot, 'src', pathEnd));
+    return vscode.commands.executeCommand('mavensmate.forceCompileFile', documentUri);
 }
 
 function handleSuccess(result): Promise<any>{
