@@ -42,6 +42,8 @@ module.exports = class CompileFileCommand extends ClientCommand implements Clien
             
             executePromise = super.execute().then(handleCompileResponse);
             mavensMateChannel.appendLine('Compiling: ' + path.basename(compilePath));
+        } else {
+            console.warn('Nothing to compile');
         }
         return executePromise;
     }
