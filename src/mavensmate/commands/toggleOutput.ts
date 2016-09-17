@@ -3,7 +3,11 @@ import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 
 let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
 
-class ToggleOutputCommand extends BaseCommand {
+module.exports = class ToggleOutput extends BaseCommand {
+    static create(){
+        return new ToggleOutput();
+    }
+
     constructor() {
         super('Toggle Output');
     }
@@ -11,9 +15,4 @@ class ToggleOutputCommand extends BaseCommand {
     execute(): Thenable<any> {
         return mavensMateChannel.toggle();
     }
-}
-
-exports.build = (): BaseCommand => {
-    let command = new ToggleOutputCommand();
-    return command;
 }

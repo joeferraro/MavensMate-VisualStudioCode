@@ -1,7 +1,11 @@
 import { BaseCommand } from './baseCommand';
 import ProjectQuickPick = require('../../vscode/projectQuickPick');
 
-class OpenProjectCommand extends BaseCommand {
+module.exports = class OpenProject extends BaseCommand {
+    static create() {
+        return new OpenProject();
+    }
+
     constructor() {
         super('Open Project');
     }
@@ -9,9 +13,4 @@ class OpenProjectCommand extends BaseCommand {
     execute(): Thenable<any> {
         return Promise.resolve(ProjectQuickPick.showProjectListAndOpen());
     }
-}
-
-exports.build = (): BaseCommand => {
-    let command = new OpenProjectCommand();
-    return command;
 }

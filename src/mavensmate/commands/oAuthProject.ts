@@ -1,14 +1,14 @@
 import { ClientCommand } from './clientCommand';
 import { BaseCommand } from './baseCommand';
 
-module.exports = class OpenUI extends ClientCommand {
+module.exports = class OAuthProjectCommand extends ClientCommand {
     static create(): BaseCommand {
-        return new OpenUI();
+        return new OAuthProjectCommand();
     }
 
     constructor() {
-        super('Open UI');
-        this.id = 'open-ui';
+        super('oAuth Project');
+        this.id = 'oauth-project';
         this.async = false;
     }
 

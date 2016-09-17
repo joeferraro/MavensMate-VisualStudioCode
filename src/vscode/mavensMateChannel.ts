@@ -45,6 +45,8 @@ export class MavensMateChannel implements Disposable {
             let formattedMessage = `${ '\t'.repeat(tabs) }${message}`;
             if(level){
                 formattedMessage = `[${level}]${formattedMessage}`;
+            } else {
+                formattedMessage = '\t\t' + formattedMessage;
             }
             this.channel.appendLine(formattedMessage);
             

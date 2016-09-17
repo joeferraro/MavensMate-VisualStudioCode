@@ -37,7 +37,7 @@
         "title": "MavensMate: Convert To MavensMate Project"
       },
       {
-        "command": "mavensmate.compileCurrentFile",
+        "command": "mavensmate.compileFile.withTextEditor",
         "title": "MavensMate: Compile File"
       },
       {
@@ -49,7 +49,7 @@
         "title": "MavensMate: Compile Project"
       },
       {
-        "command": "mavensmate.refreshCurrentFile",
+        "command": "mavensmate.refreshFile.withTextEditor",
         "title": "MavensMate: Refresh File"
       },
       {

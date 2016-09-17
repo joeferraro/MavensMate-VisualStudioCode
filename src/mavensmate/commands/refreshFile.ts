@@ -9,25 +9,24 @@ import path = require('path');
 
 let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
 
-module.exports = class CompileFileCommand extends ClientCommand implements ClientCommandInterface {
+module.exports = class RefreshFile extends ClientCommand implements ClientCommandInterface {
     body: {
-        paths: string[],
-        args: {
+        paths?: string[],
+        args?: {
             ui: boolean
         }
     }
 
     static create(){
-        return new CompileFileCommand();
+        return new RefreshFile();
     }
 
     constructor() {
-        super('Compile File');
-        this.id = 'compile-metadata';
+        super('Refresh File');
+        this.id = 'refresh-metadata';
         this.async = true;
         
         this.body = {
-            paths: [],
             args: {
                 ui: false
             }
@@ -35,15 +34,12 @@ module.exports = class CompileFileCommand extends ClientCommand implements Clien
     }
 
     execute(selectedResource?: vscode.Uri): Thenable<any> {
-        let executePromise = null;
         if(selectedResource && selectedResource.scheme === 'file'){
             let compilePath = selectedResource.fsPath
-            this.body.paths.push(compilePath);
-            
-            executePromise = super.execute().then(handleCompileResponse);
-            mavensMateChannel.appendLine('Compiling: ' + path.basename(compilePath));
+            this.body.paths = [compilePath];
+            mavensMateChannel.appendLine('Refreshing: ' + path.basename(compilePath));
         }
-        return executePromise;
+        return super.execute().then(handleCompileResponse);
     }
 
     executeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit): Thenable<any> {
