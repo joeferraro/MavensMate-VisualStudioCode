@@ -6,6 +6,7 @@ import { handleCompileResponse } from '../handlers/compileResponseHandler';
 
 import * as vscode from 'vscode';
 import path = require('path');
+import Promise = require('bluebird');
 
 let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
 
@@ -16,6 +17,7 @@ module.exports = class RefreshFile extends ClientCommand implements ClientComman
             ui: boolean
         }
     }
+    refreshPath: string;
 
     static create(){
         return new RefreshFile();
@@ -34,12 +36,35 @@ module.exports = class RefreshFile extends ClientCommand implements ClientComman
     }
 
     execute(selectedResource?: vscode.Uri): Thenable<any> {
+        let executePromise = null;
         if(selectedResource && selectedResource.scheme === 'file'){
-            let compilePath = selectedResource.fsPath
-            this.body.paths = [compilePath];
-            mavensMateChannel.appendLine('Refreshing: ' + path.basename(compilePath));
+            this.refreshPath = selectedResource.fsPath
+            this.body.paths = [this.refreshPath];
+
+            executePromise = super.execute().then(handleCompileResponse);
+        } else {
+            console.warn('Nothing to refresh');
         }
-        return super.execute().then(handleCompileResponse);
+        return executePromise;
+    }
+
+    onStart(): Promise<any> {
+        return super.onStart()
+            .then(() => {
+                let refreshMessage = 'Refreshing: ' + path.basename(this.refreshPath) + ` (${this.refreshPath})`;
+                mavensMateChannel.appendLine(refreshMessage);
+            });
+    }
+
+    onFinish(response): Promise<any> {
+        return super.onFinish(response)
+            .then((response) => {
+                let refreshMessage = 'Refreshed: ' + path.basename(this.refreshPath) + ` (${this.refreshPath})`;
+                mavensMateChannel.appendLine(refreshMessage);
+            }, (response) => {
+                let refreshMessage = 'Failed to Refresh: ' + path.basename(this.refreshPath) + ` (${this.refreshPath})`;
+                mavensMateChannel.appendLine(refreshMessage);
+            });
     }
 
     executeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit): Thenable<any> {

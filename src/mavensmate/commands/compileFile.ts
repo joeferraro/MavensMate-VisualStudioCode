@@ -6,6 +6,7 @@ import { handleCompileResponse } from '../handlers/compileResponseHandler';
 
 import * as vscode from 'vscode';
 import path = require('path');
+import Promise = require('bluebird');
 
 let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
 
@@ -16,6 +17,7 @@ module.exports = class CompileFileCommand extends ClientCommand implements Clien
             ui: boolean
         }
     }
+    compilePath: string;
 
     static create(){
         return new CompileFileCommand();
@@ -37,15 +39,32 @@ module.exports = class CompileFileCommand extends ClientCommand implements Clien
     execute(selectedResource?: vscode.Uri): Thenable<any> {
         let executePromise = null;
         if(selectedResource && selectedResource.scheme === 'file'){
-            let compilePath = selectedResource.fsPath
-            this.body.paths.push(compilePath);
-            
+            this.compilePath = selectedResource.fsPath
+            this.body.paths.push(this.compilePath);
             executePromise = super.execute().then(handleCompileResponse);
-            mavensMateChannel.appendLine('Compiling: ' + path.basename(compilePath));
         } else {
             console.warn('Nothing to compile');
         }
         return executePromise;
+    }
+
+    onStart(): Promise<any>{
+        return super.onStart()
+            .then(() => {
+                let compileMessage = 'Compiling: ' + path.basename(this.compilePath);
+                mavensMateChannel.appendLine(compileMessage);
+            });
+    }
+
+    onFinish(response): Promise<any> {
+        return super.onFinish(response)
+            .then((response) => {
+                let refreshMessage = 'Compiled: ' + path.basename(this.compilePath) + ` (${this.compilePath})`;
+                mavensMateChannel.appendLine(refreshMessage);
+            }, (response) => {
+                let refreshMessage = 'Failed to Compile: ' + path.basename(this.compilePath) + ` (${this.compilePath})`;
+                mavensMateChannel.appendLine(refreshMessage);
+            });
     }
 
     executeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit): Thenable<any> {

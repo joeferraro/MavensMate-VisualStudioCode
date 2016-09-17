@@ -19,7 +19,7 @@ export abstract class ClientCommand extends BaseCommand implements ClientCommand
         return this.onStart()
             .bind(this)
             .then(this.sendCommand)
-            .then(this.onDone, this.onDone);
+            .then(this.onFinish, this.onFinish);
     }
 
     onStart(): Promise<any>{
@@ -34,15 +34,14 @@ export abstract class ClientCommand extends BaseCommand implements ClientCommand
         return mavensMateClient.sendCommand(this);
     }
 
-    onDone(response): Promise<any>{
+    onFinish(response): Promise<any>{
         mavensMateChannel.waitingOnCount--;
-        return Promise.resolve().then(() => {
-            if(response.error){
-                mavensMateChannel.appendError(this.label + ': ' + response.error + '\n' + response.stack);
-            } else {
-                mavensMateChannel.appendStatus(this.label + ': Finished');
-            }
-            return response;
-        });
+        if(response.error){
+            mavensMateChannel.appendError(this.label + ': ' + response.error + '\n' + response.stack);
+            return Promise.reject(response);
+        } else {
+            mavensMateChannel.appendStatus(this.label + ': Finished');
+            return Promise.resolve(response);
+        }
     }
 }
