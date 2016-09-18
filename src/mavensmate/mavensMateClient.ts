@@ -5,7 +5,10 @@ import urlJoin = require('url-join');
 import Promise = require('bluebird');
 import Command from './command';
 import { ClientCommandInterface } from './commands/clientCommandInterface';
-import { hasProjectSettings, ProjectSettings } from '../../src/mavensmate/projectSettings';
+import { hasProjectSettings, ProjectSettings } from './projectSettings';
+import { MavensMateStatus } from '../vscode/mavensMateStatus';
+
+let mavensMateStatus = MavensMateStatus.getInstance();
 
 export interface Options {
     baseURL: string;
@@ -48,7 +51,7 @@ export class MavensMateClient{
     sendCommand(command: ClientCommandInterface) : Promise<any> {
         let postOptions = this.getPostOptionsForCommand(command, this.options.baseURL);
         let promiseCommandSend = request(postOptions).promise();
-        
+        mavensMateStatus.showAppIsThinking();
         if(command.async){
             return promiseCommandSend.bind(this).then(this.handlePollResponse);
         } else {
@@ -82,6 +85,7 @@ export class MavensMateClient{
 
     handlePollResponse(commandResponse){
         if(commandResponse.status && commandResponse.status == 'pending'){
+            mavensMateStatus.showAppIsThinking();
             return Promise.delay(500, commandResponse)
                 .bind(this)
                 .then(this.poll)

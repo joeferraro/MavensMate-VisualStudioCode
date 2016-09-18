@@ -54,15 +54,14 @@ export class MavensMateChannel implements Disposable {
 
             if(this.waitingOnCount == 0 && this.isWaiting == false){
                 this.isWaiting = true;
-                return Promise.delay(this.waitingDelay).then(() => {
+                Promise.delay(this.waitingDelay).then(() => {
                     if(this.waitingOnCount == 0){
                         this.hide();
                         this.isWaiting = false;
                     }
-                });
-            } else {
-                return null;
+                }); 
             }
+            return null;
         });
     }
 

@@ -4,6 +4,7 @@ import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
 
 module.exports = class ToggleOutput extends BaseCommand {
+    static allowWithoutProject: boolean = true;
     static create(){
         return new ToggleOutput();
     }

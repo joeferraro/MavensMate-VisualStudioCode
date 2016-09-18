@@ -2,6 +2,8 @@ import { ClientCommand } from './clientCommand';
 import { BaseCommand } from './baseCommand';
 
 module.exports = class NewProject extends ClientCommand {
+    static allowWithoutProject: boolean = true;
+
     static create(): BaseCommand {
         return new NewProject();
     }

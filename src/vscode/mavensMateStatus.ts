@@ -1,14 +1,14 @@
 'use strict';
 import { window, StatusBarAlignment, StatusBarItem } from 'vscode';
-import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 import { MavensMateChannel } from '../../src/vscode/mavensMateChannel';
 import Promise = require('bluebird');
 
 let mavensMateChannel = MavensMateChannel.getInstance();
-let mavensMateClient = MavensMateClient.getInstance();
 
 export class MavensMateStatus {
     appStatus: StatusBarItem;
+    thinkingIndex: number;
+    thinkingMax: number = 5;
     
     private static _instance: MavensMateStatus = null;
 
@@ -20,29 +20,29 @@ export class MavensMateStatus {
     }
     
     constructor(){
-        this.appStatus = window.createStatusBarItem(StatusBarAlignment.Left);
+        this.appStatus = window.createStatusBarItem(StatusBarAlignment.Left,2);
         this.appStatus.command = 'mavensmate.toggleOutput';
+        this.appStatus.text = "MavensMate";
+        this.appStatus.show();
+
+        this.thinkingIndex = 0;
     }
     
-    updateAppStatus(){
-        return mavensMateClient.isAppAvailable()
-            .then((isAvailable) =>{
-                this.showAppIsAvailable();
-                mavensMateChannel.appendStatus(`MavensMate Desktop is available`);
-            })
-            .catch((requestError) => {
-                this.showAppIsUnavailable(requestError);
-                mavensMateChannel.appendError(`Could not contact local MavensMate server, please ensure MavensMate Desktop is installed and running. `);
-            });
+    showAppIsThinking(){
+        let thinkingLeftSpace = '$(dash)'.repeat(this.thinkingIndex);
+        let thinkingRightSpace = '$(dash)'.repeat(this.thinkingMax - this.thinkingIndex);
+        this.appStatus.text = `MavensMate [${thinkingLeftSpace}$(chevron-right)${thinkingRightSpace}]`;
+        this.thinkingIndex++;
+        if(this.thinkingIndex > this.thinkingMax){
+            this.thinkingIndex = 0;
+        }
     }
     
-    private showAppIsAvailable(){
+    showAppIsAvailable(){
         this.appStatus.text = "MavensMate $(check)";
-        this.appStatus.show();
     }
     
-    private showAppIsUnavailable(requestError){
+    showAppIsUnavailable(){
         this.appStatus.text = "MavensMate $(alert)";
-        this.appStatus.show();
     }
 }

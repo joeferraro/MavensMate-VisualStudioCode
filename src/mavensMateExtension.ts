@@ -34,10 +34,14 @@ export class MavensMateExtension {
     instantiateWithProject(){
         let projectSettings = ProjectSettings.getProjectSettings();
         mavensMateChannel.appendStatus(`Instantiating with Project: ${projectSettings.project_name} (${ projectSettings.instanceUrl })`);
+        let withProject = true;
+        CommandRegistrar.registerCommands(this.context, withProject);
     }
 
     instantiateWithoutProject(){
         mavensMateChannel.appendStatus(`Instantiating without Project`);
+        let withProject = false;
+        CommandRegistrar.registerCommands(this.context, withProject);
     }
 
     subscribeToEvents(){
@@ -52,9 +56,8 @@ export class MavensMateExtension {
     }
 
     activateMavensMate(){
-        CommandRegistrar.registerCommands(this.context);
+        
         mavensMateChannel.appendStatus('Commands registered');
-        return mavensMateStatus.updateAppStatus();
     }
 
     deactivate() {

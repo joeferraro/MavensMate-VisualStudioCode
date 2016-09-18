@@ -3,6 +3,7 @@ import { BaseCommand } from './baseCommand';
 import * as vscode from 'vscode';
 
 module.exports = class NewProjectFromExistingDirectory extends ClientCommand {
+    static allowWithoutProject: boolean = true;
     body: {
         args?: {
             ui: boolean,

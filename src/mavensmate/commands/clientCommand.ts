@@ -3,6 +3,9 @@ import { MavensMateClient } from '../mavensMateClient';
 import { BaseCommand } from './baseCommand';
 import Promise = require('bluebird');
 import { ClientCommandInterface } from './clientCommandInterface';
+import { MavensMateStatus } from '../../vscode/mavensMateStatus';
+
+let mavensMateStatus = MavensMateStatus.getInstance();
 
 let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
 let mavensMateClient: MavensMateClient = MavensMateClient.getInstance();
@@ -37,9 +40,11 @@ export abstract class ClientCommand extends BaseCommand implements ClientCommand
     onFinish(response): Promise<any>{
         mavensMateChannel.waitingOnCount--;
         if(response.error){
+            mavensMateStatus.showAppIsUnavailable();
             mavensMateChannel.appendError(this.label + ': ' + response.error + '\n' + response.stack);
             return Promise.reject(response);
         } else {
+            mavensMateStatus.showAppIsAvailable();
             mavensMateChannel.appendStatus(this.label + ': Finished');
             return Promise.resolve(response);
         }

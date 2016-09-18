@@ -37,6 +37,10 @@
         "title": "MavensMate: Convert To MavensMate Project"
       },
       {
+        "command": "mavensmate.editProject",
+        "title": "MavensMate: Edit Project"
+      },
+      {
         "command": "mavensmate.compileFile.withTextEditor",
         "title": "MavensMate: Compile File"
       },
@@ -63,6 +67,14 @@
       {
         "command": "mavensmate.refreshFile",
         "title": "MavensMate: Refresh File"
+      },
+      {
+        "command": "mavensmate.getCoverage.withTextEditor",
+        "title": "MavensMate: Get Apex Coverage"
+      },
+      {
+        "command": "mavensmate.getCoverage",
+        "title": "MavensMate: Get Apex Coverage"
       },
       {
         "command": "mavensmate.toggleOutput",

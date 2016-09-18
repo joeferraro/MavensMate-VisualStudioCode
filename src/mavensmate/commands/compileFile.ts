@@ -63,12 +63,12 @@ class CompileFile extends ClientCommand implements ClientCommandInterface {
     onFinish(response): Promise<any> {
         return super.onFinish(response)
             .then((response) => {
-                let refreshMessage = 'Compiled: ' + path.basename(this.compilePath) + ` (${this.compilePath})`;
-                return mavensMateChannel.appendLine(refreshMessage)
+                let message = 'Compiled: ' + path.basename(this.compilePath) + ` (${this.compilePath})`;
+                return mavensMateChannel.appendLine(message)
                     .then(() => handleCompileResponse(response));
             }, (response) => {
-                let refreshMessage = 'Failed to Compile: ' + path.basename(this.compilePath) + ` (${this.compilePath})`;
-                mavensMateChannel.appendLine(refreshMessage);
+                let message = 'Failed to Compile: ' + path.basename(this.compilePath) + ` (${this.compilePath})`;
+                mavensMateChannel.appendLine(message);
             });
     }
 

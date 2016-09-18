@@ -3,7 +3,6 @@ import sinon = require('sinon');
 
 import { MavensMateClient, Options } from '../../src/mavensmate/mavensMateClient';
 import ProjectQuickPick = require('../../src/vscode/projectQuickPick');
-import ClientCommands = require('../../src/mavensmate/clientCommands');
 import vscode = require('vscode');
 import { TestExtensionContext } from './testExtensionContext';
 
@@ -32,7 +31,6 @@ suite('commandRegistrar', () => {
     let subscriptionPushStub : sinon.SinonStub;
 
     setup(() => {
-        commandListStub = sinon.stub(ClientCommands, 'list').returns(commandList);
         registerCommandStub = sinon.stub(vscode.commands, 'registerCommand');
         registerCommandStub.onFirstCall().returns(commandRegistration1);
         registerCommandStub.onSecondCall().returns(commandRegistration2);
@@ -46,7 +44,7 @@ suite('commandRegistrar', () => {
     });
 
     test('registerCommands', () => {
-        registerCommands(context);
+        registerCommands(context, true);
 
         sinon.assert.calledOnce(commandListStub);
         sinon.assert.calledTwice(createInvokerStub);
