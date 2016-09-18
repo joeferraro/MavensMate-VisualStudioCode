@@ -231,7 +231,7 @@
           "group": "mavensmate"
         },
         {
-          "when": "resourceLangId == 'metadata'",
+          "when": "resourceLangId == 'xml'",
           "command": "mavensmate.compileFile",
           "group": "mavensmate"
         },
@@ -246,7 +246,7 @@
           "group": "mavensmate"
         },
         {
-          "when": "resourceLangId == 'metadata'",
+          "when": "resourceLangId == 'xml'",
           "command": "mavensmate.refreshFile",
           "group": "mavensmate"
         }
