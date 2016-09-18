@@ -119,6 +119,22 @@
       {
         "command": "mavensmate.flushSoql",
         "title": "MavensMate: Flush SOQL"
+      },
+      {
+        "command": "mavensmate.newApexClass",
+        "title": "MavensMate: New Apex Class"
+      },
+      {
+        "command": "mavensmate.newApexTrigger",
+        "title": "MavensMate: New Apex Trigger"
+      },
+      {
+        "command": "mavensmate.newVisualforceComponent",
+        "title": "MavensMate: New Visualforce Component"
+      },
+      {
+        "command": "mavensmate.newVisualforcePage",
+        "title": "MavensMate: New Visualforce Page"
       }
     ],
     "languages": [
