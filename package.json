@@ -45,6 +45,26 @@
         "title": "MavensMate: Deploy"
       },
       {
+        "command": "mavensmate.newLightningApp",
+        "title": "MavensMate: New Lightning App"
+      },
+      {
+        "command": "mavensmate.newLightningComponent",
+        "title": "MavensMate: New Lightning Component"
+      },
+      {
+        "command": "mavensmate.newLightningEvent",
+        "title": "MavensMate: New Lightning Event"
+      },
+      {
+        "command": "mavensmate.newLightningInterface",
+        "title": "MavensMate: New Lightning Interface"
+      },
+      {
+        "command": "mavensmate.newLightningToken",
+        "title": "MavensMate: New Lightning Token"
+      },
+      {
         "command": "mavensmate.executeApex",
         "title": "MavensMate: Execute Apex"
       },
