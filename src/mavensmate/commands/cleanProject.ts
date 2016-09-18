@@ -25,7 +25,7 @@ module.exports = class CleanProject extends ClientCommand {
 
     execute(): Thenable<any> {
         let confirmMessage = 'Confirm clean project? All local (non-server) files will be deleted and your project will be refreshed from the server';
-        return vscode.window.showInformationMessage(confirmMessage, 'Yes').then((answer) => {
+        return vscode.window.showWarningMessage(confirmMessage, 'Yes').then((answer) => {
             if(answer === 'Yes'){
                 return super.execute();
             } else {
