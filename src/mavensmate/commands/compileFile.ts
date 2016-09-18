@@ -9,7 +9,7 @@ import path = require('path');
 import Promise = require('bluebird');
 
 let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
-let languagesToCompileOnSave = new Set<string>(['apex', 'visualforce', 'metadata', 'xml', 'javascript']);
+let languagesToCompileOnSave = new Set<string>(['apex', 'visualforce', 'xml', 'javascript']);
 
 class CompileFile extends ClientCommand implements ClientCommandInterface {
     body: {
@@ -43,10 +43,12 @@ class CompileFile extends ClientCommand implements ClientCommandInterface {
 
     execute(selectedResource?: vscode.Uri): Thenable<any> {
         let executePromise = null;
-        if(selectedResource && selectedResource.scheme === 'file' && selectedResource.fsPath.indexOf('apex-scripts') === -1){
-            this.compilePath = selectedResource.fsPath
-            this.body.paths.push(this.compilePath);
-            executePromise = super.execute();
+        if(selectedResource && selectedResource.scheme === 'file'){
+            if(selectedResource.fsPath.indexOf('apex-scripts') === -1){
+                this.compilePath = selectedResource.fsPath
+                this.body.paths.push(this.compilePath);
+                executePromise = super.execute();    
+            }
         } else {
             console.warn('Nothing to compile');
         }
