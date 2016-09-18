@@ -49,6 +49,14 @@
         "title": "MavensMate: Flush Logs"
       },
       {
+        "command": "mavensmate.startLogging",
+        "title": "MavensMate: Start Logging"
+      },
+      {
+        "command": "mavensmate.stopLogging",
+        "title": "MavensMate: Stop Logging"
+      },
+      {
         "command": "mavensmate.cleanProject",
         "title": "MavensMate: Clean Project"
       },
