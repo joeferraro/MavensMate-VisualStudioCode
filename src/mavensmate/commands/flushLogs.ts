@@ -14,7 +14,7 @@ module.exports = class FlushLogs extends ClientCommand {
     constructor() {
         super('Flush Logs');
         this.id = 'flush-logs';
-        this.async = false;
+        this.async = true;
         this.body = {
             args: {
                 ui: true

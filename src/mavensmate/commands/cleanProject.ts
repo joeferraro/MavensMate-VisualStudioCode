@@ -18,7 +18,7 @@ module.exports = class CleanProject extends ClientCommand {
         this.async = true;
         this.body = {
             args: {
-                ui: true
+                ui: false
             }
         }
     }
