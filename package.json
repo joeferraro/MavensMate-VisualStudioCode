@@ -184,7 +184,10 @@
         "extensions": [
           ".app",
           ".auradoc",
-          ".cmp"
+          ".cmp",
+          ".evt",
+          ".tokens",
+          ".design"
         ]
       },
       {
