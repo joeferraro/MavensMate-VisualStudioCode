@@ -98,12 +98,20 @@ function clearDiagnostics(componentSuccesses){
 function promiseDiagnosticsFromFailures(componentFailures){
     return promiseComponentsWithMatchingDocuments(componentFailures)
         .then(DiagnosticFactory.buildDiagnosticsByFilePath)
-        .then(updateDiagnostics);
+        .then(updateDiagnostics)
+        .then(showProblemsPanel)
 }
 
 function updateDiagnostics(diagnosticsByFilePath: { [filePath: string]: vscode.Diagnostic[] }){
     for(let filePath in diagnosticsByFilePath){
         let fileUri = vscode.Uri.file(filePath);
         mavensMateDiagnostics.diagnostics.set(fileUri, diagnosticsByFilePath[filePath]);
+    }
+    return diagnosticsByFilePath;
+}
+
+function showProblemsPanel(diagnosticsByFilePath: { [filePath: string]: vscode.Diagnostic[] }){ 
+    if (Object.keys(diagnosticsByFilePath).length > 0) {
+        return vscode.commands.executeCommand('workbench.actions.view.problems');
     }
 }
