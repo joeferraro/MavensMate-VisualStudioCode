@@ -1,11 +1,9 @@
 'use strict';
-import { window, StatusBarAlignment, StatusBarItem } from 'vscode';
+import { window, StatusBarAlignment, StatusBarItem, Disposable } from 'vscode';
 import { MavensMateChannel } from '../../src/vscode/mavensMateChannel';
 import Promise = require('bluebird');
 
-let mavensMateChannel = MavensMateChannel.getInstance();
-
-export class MavensMateStatus {
+export class MavensMateStatus implements Disposable {
     appStatus: StatusBarItem;
     thinkingIndex: number;
     thinkingMax: number = 5;
@@ -44,5 +42,9 @@ export class MavensMateStatus {
     
     showAppIsUnavailable(){
         this.appStatus.text = "MavensMate $(alert)";
+    }
+
+    dispose(){
+        this.appStatus.dispose();
     }
 }

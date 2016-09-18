@@ -1,27 +1,14 @@
-import { ClientCommand } from './clientCommand';
-import { ClientCommandInterface } from './clientCommandInterface';
-import { BaseCommand } from './baseCommand';
+import { PathsCommand } from './pathsCommand';
 import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 import { handleCompileResponse } from '../handlers/compileResponseHandler';
 
 import * as vscode from 'vscode';
-import path = require('path');
 import Promise = require('bluebird');
 
-let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
 let languagesToCompileOnSave = new Set<string>(['apex', 'visualforce', 'xml', 'javascript']);
 
-class CompileFile extends ClientCommand implements ClientCommandInterface {
-    body: {
-        paths: string[],
-        force?: boolean,
-        args: {
-            ui: boolean
-        }
-    }
-    compilePath: string;
-
-    static create(label?: string){
+class CompileFile extends PathsCommand {
+    static create(label?: string): PathsCommand{
         if(!label){
             label = 'Compile File';
         }
@@ -29,57 +16,27 @@ class CompileFile extends ClientCommand implements ClientCommandInterface {
     }
 
     constructor(label: string) {
-        super(label);
-        this.id = 'compile-metadata';
-        this.async = true;
-        
-        this.body = {
-            paths: [],
-            args: {
-                ui: false
-            }
-        };
+        super(label, 'compile-metadata');
     }
 
-    execute(selectedResource?: vscode.Uri): Thenable<any> {
-        let executePromise = null;
-        if(selectedResource && selectedResource.scheme === 'file'){
-            if(selectedResource.fsPath.indexOf('apex-scripts') === -1){
-                this.compilePath = selectedResource.fsPath
-                this.body.paths.push(this.compilePath);
-                executePromise = super.execute();    
-            }
-        } else {
-            console.warn('Nothing to compile');
-        }
-        return executePromise;
-    }
-
-    onStart(): Promise<any>{
-        return super.onStart()
-            .then(() => {
-                let compileMessage = 'Compiling: ' + path.basename(this.compilePath);
-                mavensMateChannel.appendLine(compileMessage);
+    protected confirmPath(): Thenable<any> {
+        let uriToOpen = vscode.Uri.file(this.filePath);
+        let confirmPromise = vscode.workspace.openTextDocument(uriToOpen)
+            .then((textDocument) => {
+                if(!languagesToCompileOnSave.has(textDocument.languageId)){
+                    return Promise.reject(`Can not compile this file: ${this.filePath}`);
+                } else if(this.filePath.indexOf('apex-scripts') !== -1){
+                    return Promise.reject(`Local Apex Scripts can't be compiled. You can run them with Run Apex Script`);
+                } else {
+                    return super.confirmPath();
+                }
             });
+        return confirmPromise;
     }
 
-    onFinish(response): Promise<any> {
-        return super.onFinish(response)
-            .then((response) => {
-                let message = 'Compiled: ' + path.basename(this.compilePath) + ` (${this.compilePath})`;
-                return mavensMateChannel.appendLine(message)
-                    .then(() => handleCompileResponse(response));
-            }, (response) => {
-                let message = 'Failed to Compile: ' + path.basename(this.compilePath) + ` (${this.compilePath})`;
-                mavensMateChannel.appendLine(message);
-            });
-    }
-
-    executeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit): Thenable<any> {
-        if(languagesToCompileOnSave.has(textEditor.document.languageId)){
-            let selectedResource: vscode.Uri = textEditor.document.uri;
-            return this.execute(selectedResource);
-        }
+    onSuccess(response): Promise<any> {
+        return super.onSuccess(response)
+            .then(() => handleCompileResponse(response));
     }
 }
 export = CompileFile;

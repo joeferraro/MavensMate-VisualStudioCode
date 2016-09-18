@@ -3,18 +3,13 @@ import { BaseCommand } from './baseCommand';
 import * as vscode from 'vscode';
 
 module.exports = class CleanProject extends ClientCommand {
-    body: {
-        args: {
-            ui: boolean
-        }
-    }
+    
     static create(): BaseCommand {
         return new CleanProject();
     }
 
     constructor() {
-        super('Clean Project');
-        this.id = 'clean-project';
+        super('Clean Project', 'clean-project');
         this.async = true;
         this.body = {
             args: {

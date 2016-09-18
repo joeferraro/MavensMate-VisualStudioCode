@@ -1,5 +1,4 @@
-import { ClientCommand } from './clientCommand';
-import { ClientCommandInterface } from './clientCommandInterface';
+import { PathsCommand } from './pathsCommand';
 import { BaseCommand } from './baseCommand';
 import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 import { MavensMateCodeCoverage } from '../../vscode/mavensMateCodeCoverage';
@@ -8,69 +7,28 @@ import * as vscode from 'vscode';
 import path = require('path');
 import Promise = require('bluebird');
 
-let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
-let mavensMateCodeCoverage: MavensMateCodeCoverage = MavensMateCodeCoverage.getInstance();
-
-module.exports = class GetCoverage extends ClientCommand implements ClientCommandInterface {
-    body: {
-        paths: string[],
-        args: {
-            ui: boolean
-        }
-    }
-    filePath: string;
-
+module.exports = class GetCoverage extends PathsCommand {
+    mavensMateCodeCoverage: MavensMateCodeCoverage;
     static create(){
         return new GetCoverage();
     }
 
     constructor() {
-        super('Get Apex Code Coverage');
-        this.id = 'get-coverage';
-        this.async = true;
-        
-        this.body = {
-            paths: [],
-            args: {
-                ui: false
-            }
-        };
+        super('Get Apex Code Coverage', 'get-coverage')
+        this.mavensMateCodeCoverage = MavensMateCodeCoverage.getInstance();
     }
 
-    execute(selectedResource?: vscode.Uri): Thenable<any> {
-        let executePromise = null;
-        if(selectedResource && selectedResource.scheme === 'file'){
-            this.filePath = selectedResource.fsPath
-            this.body.paths.push(this.filePath);
-            executePromise = super.execute();
-        } else if(vscode.window.activeTextEditor.document) {
-            this.filePath = vscode.window.activeTextEditor.document.uri.fsPath
-            this.body.paths.push(this.filePath);
-            executePromise = super.execute();
+    protected confirmPath(): Thenable<any> {
+        if(this.filePath.indexOf('apex-scripts') === -1){
+            return super.confirmPath();
         } else {
-            console.warn('No file selected to retrieve coverage for');
+            return Promise.reject(`Local Apex Scripts can't be compiled. You can run them with Run Apex Script`);
         }
-        return executePromise;
     }
 
-    onStart(): Promise<any>{
-        return super.onStart()
-            .then(() => {
-                let compileMessage = 'Retrieving Apex Code Coverage: ' + path.basename(this.filePath);
-                mavensMateChannel.appendLine(compileMessage);
-            });
-    }
-
-    onFinish(response): Promise<any> {
-        return super.onFinish(response)
-            .then((response) => {
-                let message = 'Retrieved Apex Code Coverage: ' + path.basename(this.filePath) + ` (${this.filePath})`;
-                return mavensMateChannel.appendLine(message)
-                    .then(() => this.handleCoverageResponse(response));
-            }, (response) => {
-                let message = 'Failed to Retrieve Apex Code Coverage: ' + path.basename(this.filePath) + ` (${this.filePath})`;
-                mavensMateChannel.appendLine(message);
-            });
+    onSuccess(response): Promise<any> {
+        return super.onSuccess(response)
+            .then(() => this.handleCoverageResponse(response));
     }
 
     private handleCoverageResponse(response){
@@ -82,16 +40,11 @@ module.exports = class GetCoverage extends ClientCommand implements ClientComman
                 let coverageResult = response.result[pathEnd];
                 let uncoveredLines: number[] = coverageResult.uncoveredLines;
 
-                mavensMateCodeCoverage.report(filePath, coverageResult.percentCovered, uncoveredLines);
+                this.mavensMateCodeCoverage.report(filePath, coverageResult.percentCovered, uncoveredLines);
             }
         } else {
-            let message = 'No Apex Code Coverage Available: ' + path.basename(this.filePath) + ` (${this.filePath})`;
-            mavensMateChannel.appendLine(message);
+            let message = `No Apex Code Coverage Available: ${this.baseName} (${this.filePath})`;
+            this.mavensMateChannel.appendLine(message);
         }
-    }
-
-    executeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit): Thenable<any> {
-        let selectedResource: vscode.Uri = textEditor.document.uri;
-        return this.execute(selectedResource);
     }
 }

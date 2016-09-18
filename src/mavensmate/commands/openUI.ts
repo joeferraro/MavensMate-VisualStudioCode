@@ -8,12 +8,8 @@ module.exports = class OpenUI extends ClientCommand {
     }
 
     constructor() {
-        super('Open UI');
-        this.id = 'open-ui';
+        super('Open UI', 'open-ui');
         this.async = false;
-    }
-
-    execute(): Thenable<any> {
-        return super.execute();
+        this.body.args.ui = true;
     }
 }

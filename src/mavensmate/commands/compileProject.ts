@@ -1,35 +1,18 @@
 import { ClientCommand } from './clientCommand';
-import { ClientCommandInterface } from './clientCommandInterface';
-import { BaseCommand } from './baseCommand';
-import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 import { handleCompileResponse } from '../handlers/compileResponseHandler';
 
 import * as vscode from 'vscode';
 import path = require('path');
 
-let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
-
-module.exports = class CompileProject extends ClientCommand implements ClientCommandInterface {
-    body: {
-        args: {
-            ui: boolean
-        }
-    }
-
-    static create(){
+module.exports = class CompileProject extends ClientCommand {
+    static create(): CompileProject{
         return new CompileProject();
     }
 
     constructor() {
-        super('Compile Project');
-        this.id = 'compile-project';
+        super('Compile Project', 'compile-project');
         this.async = true;
-        
-        this.body = {
-            args: {
-                ui: false
-            }
-        };
+        this.body.args.ui = false;
     }
 
     execute(selectedResource?: vscode.Uri): Thenable<any> {

@@ -85,16 +85,8 @@
         "title": "MavensMate: Clean Project"
       },
       {
-        "command": "mavensmate.compileFile.withTextEditor",
-        "title": "MavensMate: Compile File"
-      },
-      {
         "command": "mavensmate.compileFile",
         "title": "MavensMate: Compile File"
-      },
-      {
-        "command": "mavensmate.forceCompileFile.withTextEditor",
-        "title": "MavensMate: Force Compile File"
       },
       {
         "command": "mavensmate.forceCompileFile",
@@ -105,16 +97,8 @@
         "title": "MavensMate: Compile Project"
       },
       {
-        "command": "mavensmate.refreshFile.withTextEditor",
-        "title": "MavensMate: Refresh File"
-      },
-      {
         "command": "mavensmate.refreshFile",
         "title": "MavensMate: Refresh File"
-      },
-      {
-        "command": "mavensmate.getCoverage.withTextEditor",
-        "title": "MavensMate: Get Apex Coverage"
       },
       {
         "command": "mavensmate.getCoverage",
@@ -123,10 +107,6 @@
       {
         "command": "mavensmate.toggleOutput",
         "title": "MavensMate: Toggle Output"
-      },
-      {
-        "command": "mavensmate.runApexScript.withTextEditor",
-        "title": "MavensMate: Run Apex Script"
       },
       {
         "command": "mavensmate.runApexScript",

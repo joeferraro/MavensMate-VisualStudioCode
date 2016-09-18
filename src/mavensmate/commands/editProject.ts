@@ -12,17 +12,8 @@ module.exports = class EditProject extends ClientCommand {
     }
 
     constructor() {
-        super('Edit Project');
-        this.id = 'edit-project';
+        super('Edit Project', 'edit-project');
         this.async = false;
-        this.body = {
-            args: {
-                ui: true
-            }
-        }
-    }
-
-    execute(): Thenable<any> {
-        return super.execute();
+        this.body.args.ui = true;
     }
 }

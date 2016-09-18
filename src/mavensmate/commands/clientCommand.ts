@@ -1,52 +1,78 @@
-import { MavensMateChannel } from '../../vscode/mavensMateChannel';
-import { MavensMateClient } from '../mavensMateClient';
 import { BaseCommand } from './baseCommand';
 import Promise = require('bluebird');
-import { ClientCommandInterface } from './clientCommandInterface';
 import { MavensMateStatus } from '../../vscode/mavensMateStatus';
+import { MavensMateClient } from '../mavensMateClient';
 
-let mavensMateStatus = MavensMateStatus.getInstance();
-
-let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
-let mavensMateClient: MavensMateClient = MavensMateClient.getInstance();
-
-export abstract class ClientCommand extends BaseCommand implements ClientCommandInterface {
+export abstract class ClientCommand extends BaseCommand {
     id: string;
     async: boolean;
+    mavensMateStatus: MavensMateStatus;
+    mavensMateClient: MavensMateClient;
+    body: {
+        name?: string,
+        paths?: string[],
+        force?: boolean,
+        soql?: string,
+        args: {
+            ui?: boolean,
+            type?: string,
+            origin?: string
+        }
+    }
 
-    constructor(label: string) {
+    constructor(label: string, id: string) {
         super(label);
+        this.id = id;
+        this.body = {
+            args: {}
+        };
+
+        this.mavensMateStatus = MavensMateStatus.getInstance();
+        this.mavensMateClient = MavensMateClient.getInstance();
     }
 
     execute(): Thenable<any> {
         return this.onStart()
             .bind(this)
             .then(this.sendCommand)
-            .then(this.onFinish, this.onFinish);
+            .then(this.onSuccess, this.onFailure);
     }
 
     onStart(): Promise<any>{
-        mavensMateChannel.waitingOnCount++;
+        this.mavensMateChannel.waitingOnCount++;
         return Promise.resolve().then(() => {
-            let statusText: string = this.label + ': Starting';
-            return mavensMateChannel.appendStatus(statusText);
+            let statusText: string = `${this.label}: Starting`;
+            return this.mavensMateChannel.appendStatus(statusText);
         });
     }
 
     sendCommand(): Promise<any>{
-        return mavensMateClient.sendCommand(this);
+        if(this.async === undefined){
+            this.async = true;
+        }
+        if(this.body.args.ui === undefined){
+            this.body.args.ui = false;
+        }
+
+        return this.mavensMateClient.sendCommand(this);
     }
 
-    onFinish(response): Promise<any>{
-        mavensMateChannel.waitingOnCount--;
+    onSuccess(response): Promise<any>{
+        this.mavensMateChannel.waitingOnCount--;
+        if(this.mavensMateChannel.waitingOnCount === 0){
+            this.mavensMateStatus.showAppIsAvailable();
+        }        
+        return this.mavensMateChannel.appendStatus(`${this.label}: Finished`);
+    }
+
+    onFailure(response): Promise<any>{
+        this.mavensMateChannel.waitingOnCount--;
         if(response.error){
-            mavensMateStatus.showAppIsUnavailable();
-            mavensMateChannel.appendError(this.label + ': ' + response.error + '\n' + response.stack);
-            return Promise.reject(response);
+            this.mavensMateChannel.appendError(`${this.label}: ${response.error}\n${response.stack}`);
         } else {
-            mavensMateStatus.showAppIsAvailable();
-            mavensMateChannel.appendStatus(this.label + ': Finished');
-            return Promise.resolve(response);
+            this.mavensMateChannel.appendError(`${this.label}: Failed\n${response}`);   
         }
+        this.mavensMateStatus.showAppIsUnavailable();
+        return Promise.reject(response);
     }
 }

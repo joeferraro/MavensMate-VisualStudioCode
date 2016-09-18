@@ -1,25 +1,12 @@
-import { ClientCommand } from './clientCommand';
-import { ClientCommandInterface } from './clientCommandInterface';
-import { BaseCommand } from './baseCommand';
-import { MavensMateChannel } from '../../vscode/mavensMateChannel';
-import { handleCompileResponse } from '../handlers/compileResponseHandler';
+import { PathsCommand } from './pathsCommand';
 
 import * as vscode from 'vscode';
-import path = require('path');
 import Promise = require('bluebird');
+import path = require('path');
 
-let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
 let languagesToRun = new Set<string>(['apex']);
 
-class RunApexScript extends ClientCommand implements ClientCommandInterface {
-    body: {
-        paths: string[],
-        args: {
-            ui: boolean
-        }
-    }
-    filePath: string;
-
+class RunApexScript extends PathsCommand {
     static create(label?: string){
         if(!label){
             label = 'Run Apex Script';
@@ -28,55 +15,52 @@ class RunApexScript extends ClientCommand implements ClientCommandInterface {
     }
 
     constructor(label: string) {
-        super(label);
-        this.id = 'run-apex-script';
-        this.async = true;
-        
-        this.body = {
-            paths: [],
-            args: {
-                ui: false
-            }
-        };
+        super(label, 'run-apex-script');
     }
 
-    execute(selectedResource?: vscode.Uri): Thenable<any> {
-        let executePromise = null;
-        if(selectedResource && selectedResource.scheme === 'file' && selectedResource.fsPath.indexOf('apex-scripts') !== -1){
-            this.filePath = selectedResource.fsPath
-            this.body.paths.push(this.filePath);
-            executePromise = super.execute();
+    protected confirmPath(): Thenable<any> {
+        if(this.filePath.indexOf('apex-scripts') !== -1){
+            return super.confirmPath();
         } else {
-            console.warn('Nothing to run');
+            return Promise.reject(`Local Apex Scripts can't be compiled. You can run them with Run Apex Script`);
         }
-        return executePromise;
     }
 
-    onStart(): Promise<any>{
-        return super.onStart()
-            .then(() => {
-                let message = 'Running Apex Script: ' + path.basename(this.filePath);
-                mavensMateChannel.appendLine(message);
-            });
-    }
 
-    onFinish(response): Promise<any> {
-        return super.onFinish(response)
+    onSuccess(response): Promise<any> {
+        return super.onSuccess(response)
             .then((response) => {
                 for(let scriptName in response.result){
                     let scriptResult = response.result[scriptName];
                     if(scriptResult.success == true && scriptResult.compiled == true){
                         let message = 'Sucessfully Ran Apex Script: ' + scriptName;
-                        mavensMateChannel.appendLine(message);
+                        this.mavensMateChannel.appendLine(message);
                     } else if(!scriptResult.success || scriptResult.success == false){
-                        handleFailedRun(scriptResult);
+                        this.handleFailedRun(scriptResult);
                     }
                 }
-                
-            }, (response) => {
-                let message = 'Failed to Run Apex Script: ' + path.basename(this.filePath) + ` (${this.filePath})`;
-                mavensMateChannel.appendLine(message);
             });
+    }
+
+    private handleFailedRun(scriptResult){
+        let compileProblem = scriptResult.compileProblem;
+        if(compileProblem && compileProblem != null){
+            let lineNumber = scriptResult.line;
+            let column = scriptResult.column;
+            
+            let message = `[Line: ${lineNumber}, Column: ${column}] ${compileProblem}`;
+            this.mavensMateChannel.appendLine(message);
+        }
+
+        let exceptionMessage = scriptResult.exceptionMessage;
+        if(exceptionMessage && exceptionMessage != null){
+            this.mavensMateChannel.appendLine(exceptionMessage);
+        }
+
+        let exceptionStackTrace = scriptResult.exceptionStackTrace;
+        if(exceptionStackTrace && exceptionStackTrace != null){
+            this.mavensMateChannel.appendLine(exceptionStackTrace);
+        }
     }
 
     executeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit): Thenable<any> {
@@ -87,24 +71,3 @@ class RunApexScript extends ClientCommand implements ClientCommandInterface {
     }
 }
 export = RunApexScript;
-
-function handleFailedRun(scriptResult){
-    let compileProblem = scriptResult.compileProblem;
-    if(compileProblem && compileProblem != null){
-        let lineNumber = scriptResult.line;
-        let column = scriptResult.column;
-        
-        let message = `[Line: ${lineNumber}, Column: ${column}] ${compileProblem}`;
-        mavensMateChannel.appendLine(message);
-    }
-
-    let exceptionMessage = scriptResult.exceptionMessage;
-    if(exceptionMessage && exceptionMessage != null){
-        mavensMateChannel.appendLine(exceptionMessage);
-    }
-
-    let exceptionStackTrace = scriptResult.exceptionStackTrace;
-    if(exceptionStackTrace && exceptionStackTrace != null){
-        mavensMateChannel.appendLine(exceptionStackTrace);
-    }
-}

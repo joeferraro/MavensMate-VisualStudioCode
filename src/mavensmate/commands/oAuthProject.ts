@@ -7,12 +7,8 @@ module.exports = class OAuthProjectCommand extends ClientCommand {
     }
 
     constructor() {
-        super('oAuth Project');
-        this.id = 'oauth-project';
+        super('oAuth Project', 'oauth-project');
         this.async = false;
-    }
-
-    execute(): Thenable<any> {
-        return super.execute();
+        this.body.args.ui = true;
     }
 }

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export class MavensMateCodeCoverage {
+export class MavensMateCodeCoverage implements vscode.Disposable {
     decorationType: vscode.TextEditorDecorationType;
     uncoveredRangesByPath: { [fsPath: string]: vscode.Range[]}
     percentCoveredByPath: { [fsPath: string]: number}
@@ -39,8 +39,13 @@ export class MavensMateCodeCoverage {
     }
 
     private onDidChangeActiveTextEditor(textEditor: vscode.TextEditor){
-        this.refreshUncoveredDecorations();
-        this.refreshActivePercentCovered();
+        if(textEditor.document.languageId === 'apex'){
+            this.refreshUncoveredDecorations();
+            this.refreshActivePercentCovered();
+            this.coverageStatus.show();
+        } else {
+            this.coverageStatus.hide();
+        }
     }
 
     report(fsPath, percentCovered: number, uncoveredLines: number[]){
@@ -70,6 +75,10 @@ export class MavensMateCodeCoverage {
                 this.coverageStatus.text = `Get Test Coverage`;
             }
         }
+    }
+
+    dispose(){
+        this.coverageStatus.dispose();
     }
 }
 

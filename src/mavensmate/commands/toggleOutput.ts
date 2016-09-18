@@ -1,8 +1,6 @@
 import { BaseCommand } from './baseCommand';
 import { MavensMateChannel } from '../../vscode/mavensMateChannel';
 
-let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
-
 module.exports = class ToggleOutput extends BaseCommand {
     static allowWithoutProject: boolean = true;
     static create(){
@@ -14,6 +12,6 @@ module.exports = class ToggleOutput extends BaseCommand {
     }
 
     execute(): Thenable<any> {
-        return mavensMateChannel.toggle();
+        return this.mavensMateChannel.toggle();
     }
 }

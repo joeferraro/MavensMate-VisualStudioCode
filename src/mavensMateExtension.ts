@@ -6,15 +6,17 @@ import { MavensMateChannel } from '../src/vscode/mavensMateChannel';
 import { hasProjectSettings, ProjectSettings } from '../src/mavensmate/projectSettings';
 import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
+import { MavensMateCodeCoverage } from '../src/vscode/mavensMateCodeCoverage';
 import * as CommandRegistrar from '../src/vscode/commandRegistrar';
 
-let mavensMateChannel: MavensMateChannel;
-let mavensMateStatus: MavensMateStatus;
-let mavensMateClient: MavensMateClient;
 
 
 export class MavensMateExtension {
     context: vscode.ExtensionContext;
+    mavensMateChannel: MavensMateChannel;
+    mavensMateStatus: MavensMateStatus;
+    mavensMateClient: MavensMateClient;
+    mavensMateCodeCoverage: MavensMateCodeCoverage;
 
     constructor(context: vscode.ExtensionContext){
         this.context = context;
@@ -22,10 +24,11 @@ export class MavensMateExtension {
 
     activate(context: vscode.ExtensionContext) {
 
-        mavensMateChannel = MavensMateChannel.getInstance();
-        mavensMateStatus = MavensMateStatus.getInstance();
-        mavensMateClient = MavensMateClient.getInstance();
-        mavensMateChannel.appendStatus('MavensMate is activating');
+        this.mavensMateChannel = MavensMateChannel.getInstance();
+        this.mavensMateStatus = MavensMateStatus.getInstance();
+        this.mavensMateClient = MavensMateClient.getInstance();
+        this.mavensMateCodeCoverage = MavensMateCodeCoverage.getInstance();
+        this.mavensMateChannel.appendStatus('MavensMate is activating');
 
         return Promise.resolve().bind(this)
             .then(() => {
@@ -34,19 +37,19 @@ export class MavensMateExtension {
             .then(this.instantiateWithProject, this.instantiateWithoutProject)
             .then(this.subscribeToEvents)
             .then(() => {
-                mavensMateClient.isAppAvailable();
+                this.mavensMateClient.isAppAvailable();
             });
     }
 
     instantiateWithProject(){
         let projectSettings = ProjectSettings.getProjectSettings();
-        mavensMateChannel.appendStatus(`Instantiating with Project: ${projectSettings.projectName} (${ projectSettings.instanceUrl })`);
+        this.mavensMateChannel.appendStatus(`Instantiating with Project: ${projectSettings.projectName} (${ projectSettings.instanceUrl })`);
         let withProject = true;
         CommandRegistrar.registerCommands(this.context, withProject);
     }
 
     instantiateWithoutProject(){
-        mavensMateChannel.appendStatus(`Instantiating without Project`);
+        this.mavensMateChannel.appendStatus(`Instantiating without Project`);
         let withProject = false;
         CommandRegistrar.registerCommands(this.context, withProject);
     }
@@ -57,11 +60,15 @@ export class MavensMateExtension {
         });
         this.context.subscriptions.push(saveEvent);
 
-        mavensMateChannel.appendStatus('Subscribed to events');
+        this.mavensMateChannel.appendStatus('Subscribed to events');
     }
 
     deactivate() {
-        mavensMateChannel.appendStatus('Deactivating');
-        mavensMateChannel.dispose();
+        this.mavensMateChannel.appendStatus('Deactivating');
+        this.mavensMateChannel.dispose();
+        this.mavensMateClient.dispose();
+        this.mavensMateStatus.dispose();
+        this.mavensMateCodeCoverage.dispose();
+        console.info('Finished Deactivating');
     }
 }

@@ -4,19 +4,18 @@ import request = require('request-promise');
 import urlJoin = require('url-join');
 import Promise = require('bluebird');
 import Command from './command';
-import { ClientCommandInterface } from './commands/clientCommandInterface';
+import { ClientCommand } from './commands/clientCommand';
 import { hasProjectSettings, ProjectSettings } from './projectSettings';
 import { MavensMateStatus } from '../vscode/mavensMateStatus';
-
-let mavensMateStatus = MavensMateStatus.getInstance();
 
 export interface Options {
     baseURL: string;
     projectId?: string;
 }
 
-export class MavensMateClient{
+export class MavensMateClient implements vscode.Disposable {
     options: Options;
+    mavensMateStatus: MavensMateStatus;
     
     private static _instance: MavensMateClient = null;
 
@@ -38,6 +37,7 @@ export class MavensMateClient{
     
     constructor(options: Options){
         this.options = options;
+        this.mavensMateStatus = MavensMateStatus.getInstance();
     }
     
     isAppAvailable(){
@@ -46,16 +46,16 @@ export class MavensMateClient{
             uri: isAvailableURL
         };
         return request.get(getOptions).then(() => {
-            mavensMateStatus.showAppIsAvailable();
+            this.mavensMateStatus.showAppIsAvailable();
         }, () => {
-            mavensMateStatus.showAppIsUnavailable();
+            this.mavensMateStatus.showAppIsUnavailable();
         });
     }
     
-    sendCommand(command: ClientCommandInterface) : Promise<any> {
+    sendCommand(command: ClientCommand) : Promise<any> {
         let postOptions = this.getPostOptionsForCommand(command, this.options.baseURL);
         let promiseCommandSend = request(postOptions).promise();
-        mavensMateStatus.showAppIsThinking();
+        this.mavensMateStatus.showAppIsThinking();
         if(command.async){
             return promiseCommandSend.bind(this).then(this.handlePollResponse);
         } else {
@@ -63,7 +63,7 @@ export class MavensMateClient{
         }
     }
 
-    private getPostOptionsForCommand(command: ClientCommandInterface, baseURL: string){
+    private getPostOptionsForCommand(command: ClientCommand, baseURL: string){
         let asyncParam: number = (command.async ? 1 : 0);
         
         let commandParmeters = 'command=' + command.id +'&async=' + asyncParam;
@@ -89,7 +89,7 @@ export class MavensMateClient{
 
     handlePollResponse(commandResponse){
         if(commandResponse.status && commandResponse.status == 'pending'){
-            mavensMateStatus.showAppIsThinking();
+            this.mavensMateStatus.showAppIsThinking();
             return Promise.delay(500, commandResponse)
                 .bind(this)
                 .then(this.poll)
@@ -117,5 +117,9 @@ export class MavensMateClient{
 
     private hasProjectId(){
         return this.options.projectId && this.options.projectId != '';
+    }
+
+    dispose(){
+        
     }
 }

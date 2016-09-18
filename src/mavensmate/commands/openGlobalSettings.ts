@@ -8,12 +8,8 @@ module.exports = class OpenGlobalSettings extends ClientCommand {
     }
 
     constructor() {
-        super('Open Settings');
-        this.id = 'open-settings';
+        super('Open Settings', 'open-settings');
         this.async = false;
-    }
-
-    execute(): Thenable<any> {
-        return super.execute();
+        this.body.args.ui = true;
     }
 }
