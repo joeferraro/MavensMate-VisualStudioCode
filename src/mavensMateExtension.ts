@@ -4,13 +4,13 @@ import Promise = require('bluebird');
 
 import { MavensMateChannel } from '../src/vscode/mavensMateChannel';
 import { hasProjectSettings, ProjectSettings } from '../src/mavensmate/projectSettings';
-import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
 import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
+import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
 import * as CommandRegistrar from '../src/vscode/commandRegistrar';
 
-let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
-let mavensMateStatus: MavensMateStatus = MavensMateStatus.getInstance();
-let mavensMateClient: MavensMateClient = MavensMateClient.getInstance();
+let mavensMateChannel: MavensMateChannel;
+let mavensMateStatus: MavensMateStatus;
+let mavensMateClient: MavensMateClient;
 
 
 export class MavensMateExtension {
@@ -21,6 +21,10 @@ export class MavensMateExtension {
     }
 
     activate(context: vscode.ExtensionContext) {
+
+        mavensMateChannel = MavensMateChannel.getInstance();
+        mavensMateStatus = MavensMateStatus.getInstance();
+        mavensMateClient = MavensMateClient.getInstance();
         mavensMateChannel.appendStatus('MavensMate is activating');
 
         return Promise.resolve().bind(this)
@@ -29,7 +33,9 @@ export class MavensMateExtension {
             })
             .then(this.instantiateWithProject, this.instantiateWithoutProject)
             .then(this.subscribeToEvents)
-            .then(mavensMateClient.isAppAvailable);
+            .then(() => {
+                mavensMateClient.isAppAvailable();
+            });
     }
 
     instantiateWithProject(){
