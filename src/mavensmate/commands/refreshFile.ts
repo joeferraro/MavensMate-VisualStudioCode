@@ -40,8 +40,14 @@ module.exports = class RefreshFile extends ClientCommand implements ClientComman
         if(selectedResource && selectedResource.scheme === 'file'){
             this.refreshPath = selectedResource.fsPath
             this.body.paths = [this.refreshPath];
-
-            executePromise = super.execute().then(handleCompileResponse);
+            let confirmMessage = 'Would you like to refresh this file from server?';
+            executePromise = vscode.window.showInformationMessage(confirmMessage, 'Yes').then((answer) => {
+                if(answer === 'Yes'){
+                    return super.execute();
+                } else {
+                    return;
+                }
+            }); 
         } else {
             console.warn('Nothing to refresh');
         }
