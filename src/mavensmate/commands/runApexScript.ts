@@ -19,10 +19,10 @@ class RunApexScript extends PathsCommand {
     }
 
     protected confirmPath(): Thenable<any> {
-        if(this.filePath.indexOf('apex-scripts') !== -1){
+        if(this.filePath.includes('apex-scripts')){
             return super.confirmPath();
         } else {
-            return Promise.reject(`Local Apex Scripts can't be compiled. You can run them with Run Apex Script`);
+            return Promise.reject(`Run Apex Script is only for running local Apex scripts.`);
         }
     }
 

@@ -25,7 +25,7 @@ class CompileFile extends PathsCommand {
             .then((textDocument) => {
                 if(!languagesToCompileOnSave.has(textDocument.languageId)){
                     return Promise.reject(`Can not compile this file: ${this.filePath}`);
-                } else if(this.filePath.indexOf('apex-scripts') !== -1){
+                } else if(this.filePath.includes('apex-scripts')){
                     return Promise.reject(`Local Apex Scripts can't be compiled. You can run them with Run Apex Script`);
                 } else {
                     return super.confirmPath();
