@@ -219,6 +219,10 @@
       }
     ],
     "menus": {
+      "editor/title": [{
+        "command": "mavensmate.newProject",
+        "group": "mavensmate"
+      }],
       "explorer/context": [
         {
           "when": "resourceLangId == 'apex'",
