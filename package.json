@@ -143,6 +143,22 @@
       {
         "command": "mavensmate.flushSoql",
         "title": "MavensMate: Flush SOQL"
+      },
+      {
+        "command": "mavensmate.newApexClass",
+        "title": "MavensMate: New Apex Class"
+      },
+      {
+        "command": "mavensmate.newApexTrigger",
+        "title": "MavensMate: New Apex Trigger"
+      },
+      {
+        "command": "mavensmate.newVisualforceComponent",
+        "title": "MavensMate: New Visualforce Component"
+      },
+      {
+        "command": "mavensmate.newVisualforcePage",
+        "title": "MavensMate: New Visualforce Page"
       }
     ],
     "languages": [
@@ -243,6 +259,10 @@
       }
     ],
     "menus": {
+      "editor/title": [{
+        "command": "mavensmate.newProject",
+        "group": "mavensmate"
+      }],
       "explorer/context": [
         {
           "when": "resourceLangId == 'apex'",
@@ -255,7 +275,7 @@
           "group": "mavensmate"
         },
         {
-          "when": "resourceLangId == 'metadata'",
+          "when": "resourceLangId == 'xml'",
           "command": "mavensmate.compileFile",
           "group": "mavensmate"
         },
@@ -270,7 +290,7 @@
           "group": "mavensmate"
         },
         {
-          "when": "resourceLangId == 'metadata'",
+          "when": "resourceLangId == 'xml'",
           "command": "mavensmate.refreshFile",
           "group": "mavensmate"
         }
