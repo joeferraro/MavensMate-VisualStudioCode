@@ -45,7 +45,7 @@ export class MavensMateClient{
         let getOptions = {
             uri: isAvailableURL
         };
-        return request.get(getOptions).then(function () { return true });
+        return request.get(getOptions).then(mavensMateStatus.showAppIsAvailable, mavensMateStatus.showAppIsUnavailable);
     }
     
     sendCommand(command: ClientCommandInterface) : Promise<any> {

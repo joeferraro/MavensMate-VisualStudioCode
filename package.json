@@ -79,6 +79,10 @@
       {
         "command": "mavensmate.toggleOutput",
         "title": "MavensMate: Toggle Output"
+      },
+      {
+        "command": "mavensmate.newApexScript",
+        "title": "MavensMate: New Apex Script"
       }
     ],
     "languages": [

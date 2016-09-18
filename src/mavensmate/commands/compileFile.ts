@@ -9,6 +9,7 @@ import path = require('path');
 import Promise = require('bluebird');
 
 let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
+let languagesToCompileOnSave = new Set<string>(['apex', 'visualforce', 'metadata', 'xml', 'javascript']);
 
 class CompileFile extends ClientCommand implements ClientCommandInterface {
     body: {
@@ -42,7 +43,7 @@ class CompileFile extends ClientCommand implements ClientCommandInterface {
 
     execute(selectedResource?: vscode.Uri): Thenable<any> {
         let executePromise = null;
-        if(selectedResource && selectedResource.scheme === 'file'){
+        if(selectedResource && selectedResource.scheme === 'file' && selectedResource.fsPath.indexOf('apex-scripts') === -1){
             this.compilePath = selectedResource.fsPath
             this.body.paths.push(this.compilePath);
             executePromise = super.execute();
@@ -73,8 +74,10 @@ class CompileFile extends ClientCommand implements ClientCommandInterface {
     }
 
     executeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit): Thenable<any> {
-        let selectedResource: vscode.Uri = textEditor.document.uri;
-        return this.execute(selectedResource);
+        if(languagesToCompileOnSave.has(textEditor.document.languageId)){
+            let selectedResource: vscode.Uri = textEditor.document.uri;
+            return this.execute(selectedResource);
+        }
     }
 }
 export = CompileFile;

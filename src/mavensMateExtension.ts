@@ -5,12 +5,13 @@ import Promise = require('bluebird');
 import { MavensMateChannel } from '../src/vscode/mavensMateChannel';
 import { hasProjectSettings, ProjectSettings } from '../src/mavensmate/projectSettings';
 import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
+import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
 import * as CommandRegistrar from '../src/vscode/commandRegistrar';
 
 let mavensMateChannel: MavensMateChannel = MavensMateChannel.getInstance();
 let mavensMateStatus: MavensMateStatus = MavensMateStatus.getInstance();
+let mavensMateClient: MavensMateClient = MavensMateClient.getInstance();
 
-let languagesToCompileOnSave = new Set<string>(['apex', 'visualforce', 'metadata', 'xml', 'javascript']);
 
 export class MavensMateExtension {
     context: vscode.ExtensionContext;
@@ -28,7 +29,7 @@ export class MavensMateExtension {
             })
             .then(this.instantiateWithProject, this.instantiateWithoutProject)
             .then(this.subscribeToEvents)
-            .then(this.activateMavensMate);
+            .then(mavensMateClient.isAppAvailable);
     }
 
     instantiateWithProject(){
@@ -46,18 +47,11 @@ export class MavensMateExtension {
 
     subscribeToEvents(){
         let saveEvent = vscode.workspace.onDidSaveTextDocument((textDocument) => {
-            if(languagesToCompileOnSave.has(textDocument.languageId)){
-                vscode.commands.executeCommand('mavensmate.compileFile', textDocument.uri);
-            }
+            vscode.commands.executeCommand('mavensmate.compileFile', textDocument.uri);
         });
         this.context.subscriptions.push(saveEvent);
 
         mavensMateChannel.appendStatus('Subscribed to events');
-    }
-
-    activateMavensMate(){
-        
-        mavensMateChannel.appendStatus('Commands registered');
     }
 
     deactivate() {
