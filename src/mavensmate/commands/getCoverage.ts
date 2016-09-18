@@ -74,7 +74,6 @@ module.exports = class GetCoverage extends ClientCommand implements ClientComman
     }
 
     private handleCoverageResponse(response){
-        console.log(response);
         if(response.result && response.result != []) {
             for(let pathEnd in response.result){
                 let workspaceRoot = vscode.workspace.rootPath;
