@@ -146,7 +146,7 @@
         ]
       },
       {
-        "id": "metadata",
+        "id": "xml",
         "extensions": [
           ".object",
           ".layout",
@@ -181,21 +181,14 @@
           ".authProvider",
           ".customApplicationComponent",
           ".quickAction",
-          ".approvalProcess"
-        ],
-        "aliases": [
-          "Metadata"
-        ]
-      },
-      {
-        "id": "xml",
-        "extensions": [
+          ".approvalProcess",
           ".app",
           ".auradoc",
           ".cmp",
           ".evt",
           ".tokens",
-          ".design"
+          ".design",
+          ".object"
         ]
       },
       {
