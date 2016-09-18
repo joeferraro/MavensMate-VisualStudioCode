@@ -81,6 +81,14 @@
         "title": "MavensMate: Toggle Output"
       },
       {
+        "command": "mavensmate.runApexScript.withTextEditor",
+        "title": "MavensMate: Run Apex Script"
+      },
+      {
+        "command": "mavensmate.runApexScript",
+        "title": "MavensMate: Run Apex Script"
+      },
+      {
         "command": "mavensmate.newApexScript",
         "title": "MavensMate: New Apex Script"
       }

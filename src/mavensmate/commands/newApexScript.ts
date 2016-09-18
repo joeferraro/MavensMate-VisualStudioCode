@@ -25,9 +25,11 @@ module.exports = class EditProject extends ClientCommand {
     }
 
     execute(): Thenable<any> {
-        let inputBox = vscode.window.showInputBox({
-            prompt: 'Provide a name for the Apex Script'
-        }).then((apexScriptName) => {
+        let inputBoxOptions = {
+            prompt: 'Provide a name for the Apex Script',
+            ignoreFocusOut: true
+        };
+        let inputBox = vscode.window.showInputBox(inputBoxOptions).then((apexScriptName) => {
             this.body.name = apexScriptName;
             return super.execute();
         });
