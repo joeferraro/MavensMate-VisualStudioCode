@@ -45,6 +45,10 @@
         "title": "MavensMate: Execute Apex"
       },
       {
+        "command": "mavensmate.flushLogs",
+        "title": "MavensMate: Flush Logs"
+      },
+      {
         "command": "mavensmate.compileFile.withTextEditor",
         "title": "MavensMate: Compile File"
       },
