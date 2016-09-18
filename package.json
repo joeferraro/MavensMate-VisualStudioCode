@@ -41,6 +41,10 @@
         "title": "MavensMate: Edit Project"
       },
       {
+        "command": "mavensmate.deploy",
+        "title": "MavensMate: Deploy"
+      },
+      {
         "command": "mavensmate.executeApex",
         "title": "MavensMate: Execute Apex"
       },
