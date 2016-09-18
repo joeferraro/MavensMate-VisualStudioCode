@@ -99,6 +99,14 @@
       {
         "command": "mavensmate.newApexScript",
         "title": "MavensMate: New Apex Script"
+      },
+      {
+        "command": "mavensmate.executeSoql",
+        "title": "MavensMate: Execute SOQL"
+      },
+      {
+        "command": "mavensmate.flushSoql",
+        "title": "MavensMate: Flush SOQL"
       }
     ],
     "languages": [
