@@ -6,7 +6,7 @@ import Promise = require('bluebird');
 
 export class ProjectSettings {
     id: string;
-    project_name: string;
+    projectName: string;
     instanceUrl: string;
 
     private static _instances: { [projectPath:string]: ProjectSettings } = {};

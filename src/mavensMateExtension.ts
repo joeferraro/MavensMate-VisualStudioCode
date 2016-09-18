@@ -40,7 +40,7 @@ export class MavensMateExtension {
 
     instantiateWithProject(){
         let projectSettings = ProjectSettings.getProjectSettings();
-        mavensMateChannel.appendStatus(`Instantiating with Project: ${projectSettings.project_name} (${ projectSettings.instanceUrl })`);
+        mavensMateChannel.appendStatus(`Instantiating with Project: ${projectSettings.projectName} (${ projectSettings.instanceUrl })`);
         let withProject = true;
         CommandRegistrar.registerCommands(this.context, withProject);
     }

@@ -15,7 +15,7 @@ let projectSettingsPath = path.join(projectPath, 'config', '.settings');
 
 let testSettings: ProjectSettings  = {
     id: 'testid1',
-    project_name: 'project name',
+    projectName: 'project name',
     instanceUrl: 'instance'
 };
 

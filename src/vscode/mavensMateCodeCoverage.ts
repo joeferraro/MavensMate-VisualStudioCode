@@ -61,12 +61,14 @@ export class MavensMateCodeCoverage {
     }
 
     private refreshActivePercentCovered(){
-        let activePath = vscode.window.activeTextEditor.document.uri.fsPath;
-        if(this.percentCoveredByPath[activePath] != undefined){
-            let percentCovered = this.percentCoveredByPath[activePath];
-            this.coverageStatus.text = `${percentCovered}% Covered`;
-        } else {
-            this.coverageStatus.text = `Get Test Coverage`;
+        if(vscode.window.activeTextEditor && vscode.window.activeTextEditor.document){
+            let activePath = vscode.window.activeTextEditor.document.uri.fsPath;
+            if(this.percentCoveredByPath[activePath] != undefined){
+                let percentCovered = this.percentCoveredByPath[activePath];
+                this.coverageStatus.text = `${percentCovered}% Covered`;
+            } else {
+                this.coverageStatus.text = `Get Test Coverage`;
+            }
         }
     }
 }

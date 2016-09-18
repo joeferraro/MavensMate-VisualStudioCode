@@ -49,6 +49,10 @@
         "title": "MavensMate: Flush Logs"
       },
       {
+        "command": "mavensmate.cleanProject",
+        "title": "MavensMate: Clean Project"
+      },
+      {
         "command": "mavensmate.compileFile.withTextEditor",
         "title": "MavensMate: Compile File"
       },
