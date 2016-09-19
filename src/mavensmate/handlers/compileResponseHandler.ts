@@ -19,6 +19,7 @@ export function handleCompileResponse(compileResponse): Promise<any>{
             handlePromise = handleSuccess(result);
         }
     } else {
+        console.error(compileResponse);
         return Promise.reject(compileResponse.error);
     }
     return handlePromise;
