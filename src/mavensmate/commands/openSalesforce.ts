@@ -7,7 +7,7 @@ module.exports = class EditProject extends ClientCommand {
     }
 
     constructor() {
-        super('Edit Project', 'edit-project');
+        super('Open Salesforce', 'open-sfdc');
         this.async = false;
         this.body.args.ui = true;
     }

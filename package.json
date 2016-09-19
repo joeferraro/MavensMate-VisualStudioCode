@@ -41,6 +41,10 @@
         "title": "MavensMate: Edit Project"
       },
       {
+        "command": "mavensmate.openSalesforce",
+        "title": "MavensMate: Open Salesforce"
+      },
+      {
         "command": "mavensmate.deploy",
         "title": "MavensMate: Deploy"
       },
@@ -284,6 +288,41 @@
           "type": "string",
           "default": "http://localhost:56248",
           "description": "The base URL of the MavensMate Desktop Server"
+        },
+        "mavensMateDesktop.Path.osx": {
+          "type": "string",
+          "default": "/Applications/MavensMate.app",
+          "description": "The absolute path to MavensMate Desktop when running OS X"
+        },
+        "mavensMateDesktop.Path.windows": {
+          "type": "string",
+          "default": "C:\\Program Files\\MavensMate.exe",
+          "description": "The absolute path to MavensMate Desktop when running Windows"
+        },
+        "mavensMateDesktop.Path.linux": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute path to MavensMate Desktop when running Linux"
+        },
+        "mavensMate.hideOutputOnSuccess": {
+          "type": "boolean",
+          "default": "true",
+          "description": "If true, MavensMate will automatically hide the Output upon a successful operation"
+        },
+        "mavensMate.hideOutputDelay": {
+          "type": "number",
+          "default": "0",
+          "description": "The amount of time (in seconds)"
+        },
+        "mavensMate.startMavensMateApp": {
+          "type": "boolean",
+          "default": "false",
+          "description": "If true, MavensMate will automatically start MavensMate Desktop when VS Code opens"
+        },
+        "mavensMate.pingMavensMateOnStartUp": {
+          "type": "boolean",
+          "default": "false",
+          "description": "If true, MavensMate will ping MavensMate Desktop when VS Code opens to check it's availability"
         }
       }
     }

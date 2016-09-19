@@ -10,7 +10,7 @@ module.exports = class NewProjectFromExistingDirectory extends ClientCommand {
     }
 
     constructor() {
-        super('Open UI', 'open-ui');
+        super('Convert To MavensMate Project', 'new-project-from-existing-directory');
         this.async = false;
         this.body.args.ui = true;
         this.body.args.origin = vscode.workspace.rootPath;

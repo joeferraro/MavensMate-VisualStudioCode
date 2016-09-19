@@ -10,11 +10,16 @@ let mavensMateDiagnostics: MavensMateDiagnostics = MavensMateDiagnostics.getInst
 
 export function handleCompileResponse(compileResponse): Promise<any>{
     let result = compileResponse.result;
+    
     let handlePromise: Promise<any>;
-    if(result.status && result.status === 'Conflict'){
-        handlePromise = handleConflict(result);
+    if(result){
+        if(result.status && result.status === 'Conflict'){
+            handlePromise = handleConflict(result);
+        } else {
+            handlePromise = handleSuccess(result);
+        }
     } else {
-        handlePromise = handleSuccess(result);
+        return Promise.reject(compileResponse.error);
     }
     return handlePromise;
 }

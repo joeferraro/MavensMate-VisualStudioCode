@@ -8,7 +8,7 @@ import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
 import { MavensMateCodeCoverage } from '../src/vscode/mavensMateCodeCoverage';
 import * as CommandRegistrar from '../src/vscode/commandRegistrar';
-
+import { getConfiguration } from './vscode/mavensMateConfiguration';
 
 
 export class MavensMateExtension {
@@ -35,9 +35,12 @@ export class MavensMateExtension {
                 return hasProjectSettings();
             })
             .then(this.instantiateWithProject, this.instantiateWithoutProject)
-            .then(this.subscribeToEvents)
             .then(() => {
-                this.mavensMateClient.isAppAvailable();
+                if(getConfiguration<boolean>('mavensMate.pingMavensMateOnStartUp')){
+                    this.mavensMateClient.isAppAvailable();
+                } else {
+                    console.log('Not pinging MavensMate on Startup, controlled by mavensMate.pingMavensMateOnStartUp');
+                }
             });
     }
 
@@ -46,6 +49,7 @@ export class MavensMateExtension {
         this.mavensMateChannel.appendStatus(`Instantiating with Project: ${projectSettings.projectName} (${ projectSettings.instanceUrl })`);
         let withProject = true;
         CommandRegistrar.registerCommands(this.context, withProject);
+        return this.subscribeToEvents();
     }
 
     instantiateWithoutProject(){
@@ -57,7 +61,7 @@ export class MavensMateExtension {
     subscribeToEvents(){
         let saveEvent = vscode.workspace.onDidSaveTextDocument((textDocument) => {
             if(!textDocument.fileName.includes('apex-scripts')){
-                vscode.commands.executeCommand('mavensmate.compileFile', textDocument.uri);
+                return vscode.commands.executeCommand('mavensmate.compileFile', textDocument.uri);
             } else {
                 console.info('silently ignoring the saving of a local apex script, ok you got me, this isn\'t necessarily silence');
             }
