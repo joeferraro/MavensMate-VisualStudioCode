@@ -1,7 +1,7 @@
 import { ClientCommand } from './clientCommand';
 import { BaseCommand } from './baseCommand';
 
-module.exports = class OpenUI extends ClientCommand {
+class OpenUI extends ClientCommand {
     static allowWithoutProject: boolean = true;
     static create(): BaseCommand {
         return new OpenUI();
@@ -13,3 +13,5 @@ module.exports = class OpenUI extends ClientCommand {
         this.body.args.ui = true;
     }
 }
+
+export = OpenUI;

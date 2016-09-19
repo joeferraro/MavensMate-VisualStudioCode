@@ -1,7 +1,7 @@
 'use strict';
 import { window, OutputChannel, Disposable } from 'vscode';
-import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
-import Command from '../../src/mavensmate/command';
+import { MavensMateClient } from '../mavensmate/mavensMateClient';
+import { getConfiguration } from './mavensMateConfiguration';
 import Promise = require('bluebird');
 
 export class MavensMateChannel implements Disposable {
@@ -26,7 +26,7 @@ export class MavensMateChannel implements Disposable {
         MavensMateChannel._instance = this;
         this.channel = window.createOutputChannel('MavensMate');
         this.waitingOnCount = 0;
-        this.waitingDelay = 5000;
+        this.waitingDelay = getConfiguration<number>('mavensMate.hideOutputDelay');
         this.isShowing = false;
         this.isWaiting = false;
     }
@@ -56,7 +56,9 @@ export class MavensMateChannel implements Disposable {
                 this.isWaiting = true;
                 Promise.delay(this.waitingDelay).then(() => {
                     if(this.waitingOnCount == 0){
-                        this.hide();
+                        if(level == 'STATUS' && getConfiguration<boolean>('mavensMate.hideOutputOnSuccess')){
+                            this.hide();
+                        }
                         this.isWaiting = false;
                     }
                 }); 

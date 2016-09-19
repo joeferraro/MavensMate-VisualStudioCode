@@ -3,8 +3,9 @@ import nock = require('nock');
 import Promise = require('bluebird');
 
 import vscode = require('vscode');
-import Command from '../../src/mavensmate/command';
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
+import { ClientCommand } from '../../src/mavensmate/commands/clientCommand';
+import OpenUI = require('../../src/mavensmate/commands/openUI');
 
 suite("MavensMate Client", () => {
     let mavensMateClientOptions = {
@@ -48,16 +49,7 @@ suite("MavensMate Client", () => {
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
                 .query({"command":"open-ui","async":"0"})
                 .reply(200);
-            let openUICommand: Command = {
-                command: 'open-ui',
-                name: 'Open UI',
-                async: false,
-                body: {
-                    args: {
-                        ui: true
-                    }
-                }
-            };
+            let openUICommand: ClientCommand = new OpenUI();
                 
             // mavensMateClient.sendCommand(openUICommand)
             //     .then(() => {
@@ -95,16 +87,7 @@ suite("MavensMate Client", () => {
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
                 .reply(200, completedResponse);
             
-            let openUICommand: Command = {
-                command: 'open-ui',
-                name: 'Open UI',
-                async: true,
-                body: {
-                    args: {
-                        ui: true
-                    }
-                }
-            };
+            let openUICommand: ClientCommand = new OpenUI();
                 
             // mavensMateClient.sendCommand(openUICommand)
             //     .then((actualResponse) => {

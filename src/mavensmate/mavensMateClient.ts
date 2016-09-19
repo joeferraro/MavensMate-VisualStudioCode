@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import request = require('request-promise');
 import urlJoin = require('url-join');
 import Promise = require('bluebird');
-import Command from './command';
 import { ClientCommand } from './commands/clientCommand';
 import { hasProjectSettings, ProjectSettings } from './projectSettings';
 import { MavensMateStatus } from '../vscode/mavensMateStatus';
