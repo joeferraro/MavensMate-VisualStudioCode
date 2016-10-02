@@ -68,7 +68,8 @@ export abstract class ClientCommand extends BaseCommand {
     onFailure(response): Promise<any>{
         this.mavensMateChannel.waitingOnCount--;
         if(response.error){
-            this.mavensMateChannel.appendError(`${this.label}: ${response.error}\n${response.stack}`);
+            let error: string = response.error;
+            this.mavensMateChannel.appendError(`${this.label}: ${error}\n${response.stack}`);
         } else {
             this.mavensMateChannel.appendError(`${this.label}: Failed\n${response}`);   
         }

@@ -1,5 +1,7 @@
 import vscode = require('vscode');
 import commandIndex = require('../mavensmate/commands/index');
+import { BaseCommand } from '../mavensmate/commands/baseCommand';
+import OAuthProject = require('../mavensmate/commands/oAuthProject');
 import { hasProjectSettings } from '../mavensmate/projectSettings';
 
 export function registerCommands(context: vscode.ExtensionContext, withProject: boolean){
@@ -16,7 +18,7 @@ export function registerCommands(context: vscode.ExtensionContext, withProject: 
                 if(withProject || Command.allowWithoutProject === true){
                     try{
                         let command = Command.create();
-                        return command.execute(selectedResource);
+                        return command.execute(selectedResource).then(null, handleAuthenticationError);
                     } catch(commandException){
                         logAsErrorAndThrow(commandException);
                     }
@@ -32,7 +34,7 @@ export function registerCommands(context: vscode.ExtensionContext, withProject: 
                 if(withProject || Command.allowWithoutProject === true){
                     try{
                         let command = Command.create();
-                        return command.executeTextEditor(textEditor, edit);
+                        return command.executeTextEditor(textEditor, edit).then(null, handleAuthenticationError);
                     } catch(commandException){
                         logAsErrorAndThrow(commandException);
                     }
@@ -59,4 +61,12 @@ function promptToOpenProject(commandKey){
 function logAsErrorAndThrow(commandException){
     console.error(commandException);
     throw(commandException);
+}
+
+function handleAuthenticationError(response){
+    let error: string = response.error;
+    if(error && error.endsWith('Project requires re-authentication.')){
+        console.log('Need to re-authenticate.');
+        return new OAuthProject().execute();
+    }     
 }

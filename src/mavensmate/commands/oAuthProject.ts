@@ -1,7 +1,7 @@
 import { ClientCommand } from './clientCommand';
 import { BaseCommand } from './baseCommand';
 
-module.exports = class OAuthProjectCommand extends ClientCommand {
+class OAuthProjectCommand extends ClientCommand {
     static create(): BaseCommand {
         return new OAuthProjectCommand();
     }
@@ -12,3 +12,5 @@ module.exports = class OAuthProjectCommand extends ClientCommand {
         this.body.args.ui = true;
     }
 }
+
+export = OAuthProjectCommand;

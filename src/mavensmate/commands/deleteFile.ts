@@ -2,13 +2,13 @@ import { PathsCommand } from './pathsCommand';
 
 import * as vscode from 'vscode';
 
-module.exports = class RefreshFile extends PathsCommand {
+module.exports = class DeleteFile extends PathsCommand {
     static create(){
-        return new RefreshFile();
+        return new DeleteFile();
     }
 
     constructor() {
-        super('Refresh File', 'refresh-metadata');
+        super('Delete File', 'delete-metadata');
         this.async = true;
         this.body.args.ui = false;
     }
@@ -18,13 +18,14 @@ module.exports = class RefreshFile extends PathsCommand {
     }
 
     private promptForConfirmation(){
-        let confirmMessage = `Are you sure you want to refresh ${ this.baseName } from Salesforce?`;
+        let confirmMessage = `Are you sure you want to delete ${ this.baseName } from Salesforce?`;
         return vscode.window.showInformationMessage(confirmMessage, 'Yes').then((answer) => {
             if(answer === 'Yes'){
                 return Promise.resolve();
             } else {
-                return Promise.reject('Refresh File Cancelled');
+                return Promise.reject('Delete File Cancelled');
             }
         });
     }
+
 }

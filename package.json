@@ -33,7 +33,7 @@
         "title": "MavensMate: New Project"
       },
       {
-        "command": "mavensmate.newProjectFromExistingDirectory",
+        "command": "mavensmate.convertProject",
         "title": "MavensMate: Convert To MavensMate Project"
       },
       {
@@ -103,6 +103,10 @@
       {
         "command": "mavensmate.refreshFile",
         "title": "MavensMate: Refresh File"
+      },
+      {
+        "command": "mavensmate.deleteFile",
+        "title": "MavensMate: Delete File"
       },
       {
         "command": "mavensmate.getCoverage",
@@ -276,6 +280,21 @@
         {
           "when": "resourceLangId == 'xml'",
           "command": "mavensmate.refreshFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'apex'",
+          "command": "mavensmate.deleteFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'visualforce'",
+          "command": "mavensmate.deleteFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'xml'",
+          "command": "mavensmate.deleteFile",
           "group": "mavensmate"
         }
       ]

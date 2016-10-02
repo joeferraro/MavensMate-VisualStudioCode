@@ -21,8 +21,6 @@ export abstract class PathsCommand extends ClientCommand {
         return this.confirmPath()
             .then(() => {
                 this.body.paths = [this.filePath];
-            })
-            .then(() => {
                 return super.execute();
             });
     }

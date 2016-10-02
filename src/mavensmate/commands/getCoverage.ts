@@ -22,7 +22,7 @@ module.exports = class GetCoverage extends PathsCommand {
         if(this.filePath.indexOf('apex-scripts') === -1){
             return super.confirmPath();
         } else {
-            return Promise.reject(`Local Apex Scripts can't be compiled. You can run them with Run Apex Script`);
+            return Promise.reject(`Local Apex Scripts aren't covered by tests`);
         }
     }
 
