@@ -45,6 +45,10 @@
         "title": "MavensMate: Edit Project"
       },
       {
+        "command": "mavensmate.runTests",
+        "title": "MavensMate: Run Apex Tests"
+      },
+      {
         "command": "mavensmate.openSalesforce",
         "title": "MavensMate: Open Salesforce"
       },
