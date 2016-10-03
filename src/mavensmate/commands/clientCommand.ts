@@ -11,6 +11,7 @@ export abstract class ClientCommand extends BaseCommand {
     body: {
         name?: string,
         paths?: string[],
+        callThrough?: boolean,
         force?: boolean,
         soql?: string,
         global?: boolean,

@@ -105,6 +105,10 @@
         "title": "MavensMate: Refresh File"
       },
       {
+        "command": "mavensmate.openMetadata",
+        "title": "MavensMate: Open File In Salesforce"
+      },
+      {
         "command": "mavensmate.deleteFile",
         "title": "MavensMate: Delete File"
       },
