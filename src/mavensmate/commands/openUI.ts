@@ -15,11 +15,7 @@ class OpenUI extends ClientCommand {
     }
 
     onSuccess(response) {
-        return super.onSuccess(response)
-            .then(() => {
-                vscode.window.showInformationMessage('DREAMFORCE IS AMAZING');
-                return response;
-            });
+        return super.onSuccess(response);
     }
 }
 

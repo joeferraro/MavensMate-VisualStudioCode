@@ -117,6 +117,10 @@
         "title": "MavensMate: Get Org Wide Apex Coverage"
       },
       {
+        "command": "mavensmate.indexMetadata",
+        "title": "MavensMate: Index Metadata"
+      },
+      {
         "command": "mavensmate.toggleOutput",
         "title": "MavensMate: Toggle Output"
       },
