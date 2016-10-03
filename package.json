@@ -147,6 +147,14 @@
       {
         "command": "mavensmate.newVisualforcePage",
         "title": "MavensMate: New Visualforce Page"
+      },
+      {
+        "command": "mavensmate.createResourceBundle",
+        "title": "MavensMate: Create Resource Bundle"
+      },
+      {
+        "command": "mavensmate.deployResourceBundle",
+        "title": "MavensMate: Deploy Resource Bundle"
       }
     ],
     "languages": [
@@ -171,6 +179,12 @@
         ],
         "aliases": [
           "Visualforce"
+        ]
+      },
+      {
+        "id": "staticResource",
+        "extensions": [
+          ".resource"
         ]
       },
       {
@@ -295,6 +309,11 @@
         {
           "when": "resourceLangId == 'xml'",
           "command": "mavensmate.deleteFile",
+          "group": "mavensmate"
+        },
+        {
+          "when": "resourceLangId == 'staticResource'",
+          "command": "mavensmate.createResourceBundle",
           "group": "mavensmate"
         }
       ]
