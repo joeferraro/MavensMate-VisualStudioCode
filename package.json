@@ -113,6 +113,10 @@
         "title": "MavensMate: Get Apex Coverage"
       },
       {
+        "command": "mavensmate.getOrgWideCoverage",
+        "title": "MavensMate: Get Org Wide Apex Coverage"
+      },
+      {
         "command": "mavensmate.toggleOutput",
         "title": "MavensMate: Toggle Output"
       },

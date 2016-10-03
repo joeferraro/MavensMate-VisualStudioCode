@@ -45,6 +45,7 @@ module.exports = class GetCoverage extends PathsCommand {
         } else {
             let message = `No Apex Code Coverage Available: ${this.baseName} (${this.filePath})`;
             this.mavensMateChannel.appendLine(message);
+            vscode.window.showWarningMessage(message);
         }
     }
 }

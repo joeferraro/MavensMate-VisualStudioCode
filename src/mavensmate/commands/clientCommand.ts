@@ -13,6 +13,7 @@ export abstract class ClientCommand extends BaseCommand {
         paths?: string[],
         force?: boolean,
         soql?: string,
+        global?: boolean,
         args: {
             ui?: boolean,
             type?: string,
