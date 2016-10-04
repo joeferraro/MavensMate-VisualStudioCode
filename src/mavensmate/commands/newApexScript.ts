@@ -19,8 +19,10 @@ module.exports = class EditProject extends ClientCommand {
             ignoreFocusOut: true
         };
         let inputBoxPromise = vscode.window.showInputBox(inputBoxOptions).then((apexScriptName) => {
-            this.body.name = apexScriptName;
-            return super.execute();
+            if(apexScriptName && apexScriptName.length > 0){
+                this.body.name = apexScriptName;
+                return super.execute();
+            }
         });
         return inputBoxPromise;
     }
