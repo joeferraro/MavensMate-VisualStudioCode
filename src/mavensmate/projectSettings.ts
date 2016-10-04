@@ -4,10 +4,27 @@ import vscode = require('vscode');
 import file = require('../workspace/jsonFile');
 import Promise = require('bluebird');
 
-export interface ProjectSettings {
+export class ProjectSettings {
     id: string;
-    project_name: string;
+    projectName: string;
     instanceUrl: string;
+
+    private static _instances: { [projectPath:string]: ProjectSettings } = {};
+
+    static getProjectSettings(projectPath?: string): ProjectSettings {
+        projectPath = projectPath || vscode.workspace.rootPath;
+
+        if(projectPath && ProjectSettings._instances[projectPath] === undefined){
+            let settingsPath = buildSettingsPath(projectPath);
+            ProjectSettings._instances[projectPath] = file.open(settingsPath);
+        }
+
+        return ProjectSettings._instances[projectPath];
+    }
+}
+
+function buildSettingsPath(projectPath: string){
+    return path.join(projectPath, 'config', '.settings');
 }
 
 export function hasProjectSettings(projectPath?: string): Promise<any>{
@@ -18,14 +35,4 @@ export function hasProjectSettings(projectPath?: string): Promise<any>{
 function hasSettings(projectPath: string): Promise<any> {
     let settingsPath = buildSettingsPath(projectPath);
     return fs.stat(settingsPath);
-}
-
-function buildSettingsPath(projectPath: string){
-    return path.join(projectPath, 'config', '.settings');
-}
-
-export function getProjectSettings(projectPath?: string): ProjectSettings {
-    projectPath = projectPath || vscode.workspace.rootPath;
-    let settingsPath = buildSettingsPath(projectPath);
-    return file.open(settingsPath);
 }

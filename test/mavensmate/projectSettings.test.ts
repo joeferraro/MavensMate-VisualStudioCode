@@ -7,18 +7,18 @@ import Promise = require('bluebird');
 import jsonFile = require('../../src/workspace/jsonFile');
 import vscode = require('vscode');
 
+import { ProjectSettings, hasProjectSettings } from '../../src/mavensmate/projectSettings';
 let workspacePath = vscode.workspace.rootPath;
 let workspaceSettingsPath = path.join(workspacePath, 'config', '.settings');
 let projectPath = 'someProject';
 let projectSettingsPath = path.join(projectPath, 'config', '.settings');
 
-let testSettings: projectSettings.ProjectSettings  = {
+let testSettings: ProjectSettings  = {
     id: 'testid1',
-    project_name: 'project name',
+    projectName: 'project name',
     instanceUrl: 'instance'
 };
 
-import projectSettings = require('../../src/mavensmate/projectSettings');
 
 suite('projectSettings', () => {
     let statStub: sinon.SinonStub;
@@ -38,7 +38,7 @@ suite('projectSettings', () => {
         });
 
         test('hasProjectSettings fails with no projectPath', (testDone) => {
-            projectSettings.hasProjectSettings()
+            hasProjectSettings()
                 .then(() => {
                     assert.fail('should have rejected the promise');
                 },(error) => {
@@ -51,7 +51,7 @@ suite('projectSettings', () => {
         });
 
         test('hasProjectSettings fails with projectPath', (testDone) => {
-            projectSettings.hasProjectSettings(projectPath)
+            hasProjectSettings(projectPath)
                 .then(() => {
                     assert.fail('should have rejected the promise');
                 },(error) => {
@@ -80,7 +80,7 @@ suite('projectSettings', () => {
         });
 
         test('hasProjectSettings succeeds with no projectPath', (testDone) => {
-            projectSettings.hasProjectSettings()
+            hasProjectSettings()
                 .then(null,(error) => {
                     assert.fail(error);
                 })
@@ -90,7 +90,7 @@ suite('projectSettings', () => {
         });
 
         test('hasProjectSettings succeeds with projectPath', (testDone) => {
-            projectSettings.hasProjectSettings(projectPath)
+            hasProjectSettings(projectPath)
                 .then(null,(error) => {
                     assert.fail(error);
                 })
@@ -100,14 +100,14 @@ suite('projectSettings', () => {
         });
 
         test('getProjectSettings gets settings with no projectPath', () => {
-            let actualSettings = projectSettings.getProjectSettings();
+            let actualSettings = ProjectSettings.getProjectSettings();
             
             assert.equal(actualSettings.id, testSettings.id, 'id of settings');
             sinon.assert.calledWith(jsonFileStub, workspaceSettingsPath);
         });
 
         test('getProjectSettings gets settings with projectPath', () => {
-            let actualSettings = projectSettings.getProjectSettings(projectPath);
+            let actualSettings = ProjectSettings.getProjectSettings(projectPath);
             
             assert.equal(actualSettings.id, testSettings.id, 'id of settings');
             sinon.assert.calledWith(jsonFileStub, projectSettingsPath);
