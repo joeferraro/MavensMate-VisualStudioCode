@@ -1,407 +1,411 @@
 {
-  "name": "mavensmate",
-  "displayName": "mavensmate",
-  "description": "MavensMate plugin for the Visual Studio Code editor",
-  "version": "0.0.1",
-  "publisher": "DavidHelmer",
-  "engines": {
-    "vscode": "^0.10.10"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "*"
-  ],
-  "main": "./out/src/extension",
-  "contributes": {
-    "commands": [
-      {
-        "command": "mavensmate.openProject",
-        "title": "MavensMate: Open Project"
-      },
-      {
-        "command": "mavensmate.openUI",
-        "title": "MavensMate: Open MavensMate UI"
-      },
-      {
-        "command": "mavensmate.openSettings",
-        "title": "MavensMate: Open MavensMate Settings"
-      },
-      {
-        "command": "mavensmate.openGlobalSettings",
-        "title": "MavensMate: Open Global Settings"
-      },
-      {
-        "command": "mavensmate.newProject",
-        "title": "MavensMate: New Project"
-      },
-      {
-        "command": "mavensmate.convertProject",
-        "title": "MavensMate: Convert To MavensMate Project"
-      },
-      {
-        "command": "mavensmate.editProject",
-        "title": "MavensMate: Edit Project"
-      },
-      {
-        "command": "mavensmate.runTests",
-        "title": "MavensMate: Run Apex Tests"
-      },
-      {
-        "command": "mavensmate.openSalesforce",
-        "title": "MavensMate: Open Salesforce"
-      },
-      {
-        "command": "mavensmate.deploy",
-        "title": "MavensMate: Deploy"
-      },
-      {
-        "command": "mavensmate.newLightningApp",
-        "title": "MavensMate: New Lightning App"
-      },
-      {
-        "command": "mavensmate.newLightningComponent",
-        "title": "MavensMate: New Lightning Component"
-      },
-      {
-        "command": "mavensmate.newLightningEvent",
-        "title": "MavensMate: New Lightning Event"
-      },
-      {
-        "command": "mavensmate.newLightningInterface",
-        "title": "MavensMate: New Lightning Interface"
-      },
-      {
-        "command": "mavensmate.newLightningToken",
-        "title": "MavensMate: New Lightning Token"
-      },
-      {
-        "command": "mavensmate.executeApex",
-        "title": "MavensMate: Execute Apex"
-      },
-      {
-        "command": "mavensmate.flushLogs",
-        "title": "MavensMate: Flush Logs"
-      },
-      {
-        "command": "mavensmate.startLogging",
-        "title": "MavensMate: Start Logging"
-      },
-      {
-        "command": "mavensmate.stopLogging",
-        "title": "MavensMate: Stop Logging"
-      },
-      {
-        "command": "mavensmate.cleanProject",
-        "title": "MavensMate: Clean Project"
-      },
-      {
-        "command": "mavensmate.compileFile",
-        "title": "MavensMate: Compile File"
-      },
-      {
-        "command": "mavensmate.forceCompileFile",
-        "title": "MavensMate: Force Compile File"
-      },
-      {
-        "command": "mavensmate.compileProject",
-        "title": "MavensMate: Compile Project"
-      },
-      {
-        "command": "mavensmate.refreshFile",
-        "title": "MavensMate: Refresh File"
-      },
-      {
-        "command": "mavensmate.openMetadata",
-        "title": "MavensMate: Open File In Salesforce"
-      },
-      {
-        "command": "mavensmate.deleteFile",
-        "title": "MavensMate: Delete File"
-      },
-      {
-        "command": "mavensmate.getCoverage",
-        "title": "MavensMate: Get Apex Coverage"
-      },
-      {
-        "command": "mavensmate.getOrgWideCoverage",
-        "title": "MavensMate: Get Org Wide Apex Coverage"
-      },
-      {
-        "command": "mavensmate.indexMetadata",
-        "title": "MavensMate: Index Metadata"
-      },
-      {
-        "command": "mavensmate.toggleOutput",
-        "title": "MavensMate: Toggle Output"
-      },
-      {
-        "command": "mavensmate.runApexScript",
-        "title": "MavensMate: Run Apex Script"
-      },
-      {
-        "command": "mavensmate.newApexScript",
-        "title": "MavensMate: New Apex Script"
-      },
-      {
-        "command": "mavensmate.executeSoql",
-        "title": "MavensMate: Execute SOQL"
-      },
-      {
-        "command": "mavensmate.flushSoql",
-        "title": "MavensMate: Flush SOQL"
-      },
-      {
-        "command": "mavensmate.newApexClass",
-        "title": "MavensMate: New Apex Class"
-      },
-      {
-        "command": "mavensmate.newApexTrigger",
-        "title": "MavensMate: New Apex Trigger"
-      },
-      {
-        "command": "mavensmate.newVisualforceComponent",
-        "title": "MavensMate: New Visualforce Component"
-      },
-      {
-        "command": "mavensmate.newVisualforcePage",
-        "title": "MavensMate: New Visualforce Page"
-      },
-      {
-        "command": "mavensmate.createResourceBundle",
-        "title": "MavensMate: Create Resource Bundle"
-      },
-      {
-        "command": "mavensmate.deployResourceBundle",
-        "title": "MavensMate: Deploy Resource Bundle"
-      }
-    ],
-    "languages": [
-      {
-        "id": "apex",
-        "extensions": [
-          ".apex",
-          ".cls",
-          ".trigger",
-          ".tgr"
-        ],
-        "aliases": [
-          "Apex"
-        ],
-        "configuration": "./languages/apex-language-configuration.json"
-      },
-      {
-        "id": "visualforce",
-        "extensions": [
-          ".component",
-          ".page"
-        ],
-        "aliases": [
-          "Visualforce"
-        ]
-      },
-      {
-        "id": "staticResource",
-        "extensions": [
-          ".resource"
-        ]
-      },
-      {
-        "id": "xml",
-        "extensions": [
-          ".object",
-          ".layout",
-          ".resource",
-          ".remoteSite",
-          ".labels", 
-          ".app",
-          ".dashboard",
-          ".permissionset",
-          ".workflow",
-          ".email",
-          ".profile",
-          ".scf",
-          ".queue",
-          ".reportType",
-          ".report",
-          ".weblink",
-          ".tab",
-          ".letter",
-          ".role",
-          ".homePageComponent",
-          ".homePageLayout",
-          ".objectTranslation",
-          ".flow",
-          ".datacategorygroup",
-          ".snapshot",
-          ".site",
-          ".sharingRules",
-          ".settings",
-          ".callCenter",
-          ".community",
-          ".authProvider",
-          ".customApplicationComponent",
-          ".quickAction",
-          ".approvalProcess",
-          ".app",
-          ".auradoc",
-          ".cmp",
-          ".evt",
-          ".tokens",
-          ".design",
-          ".object"
-        ]
-      },
-      {
-        "id": "log",
-        "extensions": [
-          ".log"
-        ],
-        "aliaslint": [
-          "Debug Log"
-        ]
-      }
-    ],
-    "grammars": [
-      {
-        "language": "apex",
-        "scopeName": "source.apex",
-        "path": "./grammars/apex.json" 
-      },
-      {
-        "language": "visualforce",
-        "scopeName": "visualforce.text.html.basic",
-        "path": "./grammars/visualforce.json" 
-      },
-      {
-        "language": "log",
-        "scopeName": "source.log",
-        "path": "./grammars/log.json" 
-      }
-    ],
-    "menus": {
-      "editor/title": [{
-        "command": "mavensmate.newProject",
-        "group": "mavensmate"
-      }],
-      "explorer/context": [
-        {
-          "when": "resourceLangId == 'apex'",
-          "command": "mavensmate.compileFile",
-          "group": "mavensmate"
-        },
-        {
-          "when": "resourceLangId == 'visualforce'",
-          "command": "mavensmate.compileFile",
-          "group": "mavensmate"
-        },
-        {
-          "when": "resourceLangId == 'xml'",
-          "command": "mavensmate.compileFile",
-          "group": "mavensmate"
-        },
-        {
-          "when": "resourceLangId == 'apex'",
-          "command": "mavensmate.refreshFile",
-          "group": "mavensmate"
-        },
-        {
-          "when": "resourceLangId == 'visualforce'",
-          "command": "mavensmate.refreshFile",
-          "group": "mavensmate"
-        },
-        {
-          "when": "resourceLangId == 'xml'",
-          "command": "mavensmate.refreshFile",
-          "group": "mavensmate"
-        },
-        {
-          "when": "resourceLangId == 'apex'",
-          "command": "mavensmate.deleteFile",
-          "group": "mavensmate"
-        },
-        {
-          "when": "resourceLangId == 'visualforce'",
-          "command": "mavensmate.deleteFile",
-          "group": "mavensmate"
-        },
-        {
-          "when": "resourceLangId == 'xml'",
-          "command": "mavensmate.deleteFile",
-          "group": "mavensmate"
-        },
-        {
-          "when": "resourceLangId == 'staticResource'",
-          "command": "mavensmate.createResourceBundle",
-          "group": "mavensmate"
-        }
-      ]
+    "name": "mavensmate",
+    "displayName": "mavensmate",
+    "description": "MavensMate plugin for the Visual Studio Code editor",
+    "version": "0.2.0",
+    "publisher": "DavidHelmer",
+    "repository": "https://github.com/kidtsunami/MavensMate-VisualStudioCode",
+    "icon": "icon.png",
+    "engines": {
+        "vscode": "^0.10.10"
     },
-    "configuration": {
-      "type": "object",
-      "title": "MavensMate configuration",
-      "properties": {
-        "mavensMateDesktop.baseURL": {
-          "type": "string",
-          "default": "http://localhost:56248",
-          "description": "The base URL of the MavensMate Desktop Server"
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "mavensmate.openProject",
+                "title": "MavensMate: Open Project"
+            },
+            {
+                "command": "mavensmate.openUI",
+                "title": "MavensMate: Open MavensMate UI"
+            },
+            {
+                "command": "mavensmate.openSettings",
+                "title": "MavensMate: Open MavensMate Settings"
+            },
+            {
+                "command": "mavensmate.openGlobalSettings",
+                "title": "MavensMate: Open Global Settings"
+            },
+            {
+                "command": "mavensmate.newProject",
+                "title": "MavensMate: New Project"
+            },
+            {
+                "command": "mavensmate.convertProject",
+                "title": "MavensMate: Convert To MavensMate Project"
+            },
+            {
+                "command": "mavensmate.editProject",
+                "title": "MavensMate: Edit Project"
+            },
+            {
+                "command": "mavensmate.runTests",
+                "title": "MavensMate: Run Apex Tests"
+            },
+            {
+                "command": "mavensmate.openSalesforce",
+                "title": "MavensMate: Open Salesforce"
+            },
+            {
+                "command": "mavensmate.deploy",
+                "title": "MavensMate: Deploy"
+            },
+            {
+                "command": "mavensmate.newLightningApp",
+                "title": "MavensMate: New Lightning App"
+            },
+            {
+                "command": "mavensmate.newLightningComponent",
+                "title": "MavensMate: New Lightning Component"
+            },
+            {
+                "command": "mavensmate.newLightningEvent",
+                "title": "MavensMate: New Lightning Event"
+            },
+            {
+                "command": "mavensmate.newLightningInterface",
+                "title": "MavensMate: New Lightning Interface"
+            },
+            {
+                "command": "mavensmate.newLightningToken",
+                "title": "MavensMate: New Lightning Token"
+            },
+            {
+                "command": "mavensmate.executeApex",
+                "title": "MavensMate: Execute Apex"
+            },
+            {
+                "command": "mavensmate.flushLogs",
+                "title": "MavensMate: Flush Logs"
+            },
+            {
+                "command": "mavensmate.startLogging",
+                "title": "MavensMate: Start Logging"
+            },
+            {
+                "command": "mavensmate.stopLogging",
+                "title": "MavensMate: Stop Logging"
+            },
+            {
+                "command": "mavensmate.cleanProject",
+                "title": "MavensMate: Clean Project"
+            },
+            {
+                "command": "mavensmate.compileFile",
+                "title": "MavensMate: Compile File"
+            },
+            {
+                "command": "mavensmate.forceCompileFile",
+                "title": "MavensMate: Force Compile File"
+            },
+            {
+                "command": "mavensmate.compileProject",
+                "title": "MavensMate: Compile Project"
+            },
+            {
+                "command": "mavensmate.refreshFile",
+                "title": "MavensMate: Refresh File"
+            },
+            {
+                "command": "mavensmate.openMetadata",
+                "title": "MavensMate: Open File In Salesforce"
+            },
+            {
+                "command": "mavensmate.deleteFile",
+                "title": "MavensMate: Delete File"
+            },
+            {
+                "command": "mavensmate.getCoverage",
+                "title": "MavensMate: Get Apex Coverage"
+            },
+            {
+                "command": "mavensmate.getOrgWideCoverage",
+                "title": "MavensMate: Get Org Wide Apex Coverage"
+            },
+            {
+                "command": "mavensmate.indexMetadata",
+                "title": "MavensMate: Index Metadata"
+            },
+            {
+                "command": "mavensmate.toggleOutput",
+                "title": "MavensMate: Toggle Output"
+            },
+            {
+                "command": "mavensmate.runApexScript",
+                "title": "MavensMate: Run Apex Script"
+            },
+            {
+                "command": "mavensmate.newApexScript",
+                "title": "MavensMate: New Apex Script"
+            },
+            {
+                "command": "mavensmate.executeSoql",
+                "title": "MavensMate: Execute SOQL"
+            },
+            {
+                "command": "mavensmate.flushSoql",
+                "title": "MavensMate: Flush SOQL"
+            },
+            {
+                "command": "mavensmate.newApexClass",
+                "title": "MavensMate: New Apex Class"
+            },
+            {
+                "command": "mavensmate.newApexTrigger",
+                "title": "MavensMate: New Apex Trigger"
+            },
+            {
+                "command": "mavensmate.newVisualforceComponent",
+                "title": "MavensMate: New Visualforce Component"
+            },
+            {
+                "command": "mavensmate.newVisualforcePage",
+                "title": "MavensMate: New Visualforce Page"
+            },
+            {
+                "command": "mavensmate.createResourceBundle",
+                "title": "MavensMate: Create Resource Bundle"
+            },
+            {
+                "command": "mavensmate.deployResourceBundle",
+                "title": "MavensMate: Deploy Resource Bundle"
+            }
+        ],
+        "languages": [
+            {
+                "id": "apex",
+                "extensions": [
+                    ".apex",
+                    ".cls",
+                    ".trigger",
+                    ".tgr"
+                ],
+                "aliases": [
+                    "Apex"
+                ],
+                "configuration": "./languages/apex-language-configuration.json"
+            },
+            {
+                "id": "visualforce",
+                "extensions": [
+                    ".component",
+                    ".page"
+                ],
+                "aliases": [
+                    "Visualforce"
+                ]
+            },
+            {
+                "id": "staticResource",
+                "extensions": [
+                    ".resource"
+                ]
+            },
+            {
+                "id": "xml",
+                "extensions": [
+                    ".object",
+                    ".layout",
+                    ".resource",
+                    ".remoteSite",
+                    ".labels",
+                    ".app",
+                    ".dashboard",
+                    ".permissionset",
+                    ".workflow",
+                    ".email",
+                    ".profile",
+                    ".scf",
+                    ".queue",
+                    ".reportType",
+                    ".report",
+                    ".weblink",
+                    ".tab",
+                    ".letter",
+                    ".role",
+                    ".homePageComponent",
+                    ".homePageLayout",
+                    ".objectTranslation",
+                    ".flow",
+                    ".datacategorygroup",
+                    ".snapshot",
+                    ".site",
+                    ".sharingRules",
+                    ".settings",
+                    ".callCenter",
+                    ".community",
+                    ".authProvider",
+                    ".customApplicationComponent",
+                    ".quickAction",
+                    ".approvalProcess",
+                    ".app",
+                    ".auradoc",
+                    ".cmp",
+                    ".evt",
+                    ".tokens",
+                    ".design",
+                    ".object"
+                ]
+            },
+            {
+                "id": "log",
+                "extensions": [
+                    ".log"
+                ],
+                "aliaslint": [
+                    "Debug Log"
+                ]
+            }
+        ],
+        "grammars": [
+            {
+                "language": "apex",
+                "scopeName": "source.apex",
+                "path": "./grammars/apex.json"
+            },
+            {
+                "language": "visualforce",
+                "scopeName": "visualforce.text.html.basic",
+                "path": "./grammars/visualforce.json"
+            },
+            {
+                "language": "log",
+                "scopeName": "source.log",
+                "path": "./grammars/log.json"
+            }
+        ],
+        "menus": {
+            "editor/title": [
+                {
+                    "command": "mavensmate.newProject",
+                    "group": "mavensmate"
+                }
+            ],
+            "explorer/context": [
+                {
+                    "when": "resourceLangId == 'apex'",
+                    "command": "mavensmate.compileFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'visualforce'",
+                    "command": "mavensmate.compileFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'xml'",
+                    "command": "mavensmate.compileFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'apex'",
+                    "command": "mavensmate.refreshFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'visualforce'",
+                    "command": "mavensmate.refreshFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'xml'",
+                    "command": "mavensmate.refreshFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'apex'",
+                    "command": "mavensmate.deleteFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'visualforce'",
+                    "command": "mavensmate.deleteFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'xml'",
+                    "command": "mavensmate.deleteFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'staticResource'",
+                    "command": "mavensmate.createResourceBundle",
+                    "group": "mavensmate"
+                }
+            ]
         },
-        "mavensMateDesktop.Path.osx": {
-          "type": "string",
-          "default": "/Applications/MavensMate.app",
-          "description": "The absolute path to MavensMate Desktop when running OS X"
-        },
-        "mavensMateDesktop.Path.windows": {
-          "type": "string",
-          "default": "C:\\Program Files\\MavensMate.exe",
-          "description": "The absolute path to MavensMate Desktop when running Windows"
-        },
-        "mavensMateDesktop.Path.linux": {
-          "type": "string",
-          "default": "",
-          "description": "The absolute path to MavensMate Desktop when running Linux"
-        },
-        "mavensMate.hideOutputOnSuccess": {
-          "type": "boolean",
-          "default": "true",
-          "description": "If true, MavensMate will automatically hide the Output upon a successful operation"
-        },
-        "mavensMate.hideOutputDelay": {
-          "type": "number",
-          "default": "0",
-          "description": "The amount of time (in seconds)"
-        },
-        "mavensMate.startMavensMateApp": {
-          "type": "boolean",
-          "default": "false",
-          "description": "If true, MavensMate will automatically start MavensMate Desktop when VS Code opens"
-        },
-        "mavensMate.pingMavensMateOnStartUp": {
-          "type": "boolean",
-          "default": "false",
-          "description": "If true, MavensMate will ping MavensMate Desktop when VS Code opens to check it's availability"
+        "configuration": {
+            "type": "object",
+            "title": "MavensMate configuration",
+            "properties": {
+                "mavensMateDesktop.baseURL": {
+                    "type": "string",
+                    "default": "http://localhost:56248",
+                    "description": "The base URL of the MavensMate Desktop Server"
+                },
+                "mavensMateDesktop.Path.osx": {
+                    "type": "string",
+                    "default": "/Applications/MavensMate.app",
+                    "description": "The absolute path to MavensMate Desktop when running OS X"
+                },
+                "mavensMateDesktop.Path.windows": {
+                    "type": "string",
+                    "default": "C:\\Program Files\\MavensMate.exe",
+                    "description": "The absolute path to MavensMate Desktop when running Windows"
+                },
+                "mavensMateDesktop.Path.linux": {
+                    "type": "string",
+                    "default": "",
+                    "description": "The absolute path to MavensMate Desktop when running Linux"
+                },
+                "mavensMate.hideOutputOnSuccess": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "If true, MavensMate will automatically hide the Output upon a successful operation"
+                },
+                "mavensMate.hideOutputDelay": {
+                    "type": "number",
+                    "default": "0",
+                    "description": "The amount of time (in seconds)"
+                },
+                "mavensMate.startMavensMateApp": {
+                    "type": "boolean",
+                    "default": "false",
+                    "description": "If true, MavensMate will automatically start MavensMate Desktop when VS Code opens"
+                },
+                "mavensMate.pingMavensMateOnStartUp": {
+                    "type": "boolean",
+                    "default": "false",
+                    "description": "If true, MavensMate will ping MavensMate Desktop when VS Code opens to check it's availability"
+                }
+            }
         }
-      }
+    },
+    "scripts": {
+        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "dependencies": {
+        "bluebird": "3.3.5",
+        "fs-promise": "0.5.0",
+        "path": "0.12.7",
+        "request-promise": "2.0.1",
+        "url-join": "1.1.0"
+    },
+    "devDependencies": {
+        "expect.js": "0.3.1",
+        "nock": "8.0.0",
+        "sinon": "1.17.3",
+        "typescript": "^1.8.5",
+        "vscode": "^0.11.0"
     }
-  },
-  "scripts": {
-    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install"
-  },
-  "dependencies": {
-    "bluebird": "3.3.5",
-    "fs-promise": "0.5.0",
-    "path": "0.12.7",
-    "request-promise": "2.0.1",
-    "url-join": "1.1.0"
-  },
-  "devDependencies": {
-    "expect.js": "0.3.1",
-    "nock": "8.0.0",
-    "sinon": "1.17.3",
-    "typescript": "^1.8.5",
-    "vscode": "^0.11.0"
-  }
 }
