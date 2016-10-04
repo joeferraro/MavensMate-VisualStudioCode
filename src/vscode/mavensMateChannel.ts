@@ -1,7 +1,7 @@
 'use strict';
 import { window, OutputChannel, Disposable } from 'vscode';
-import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
-import Command from '../../src/mavensmate/command';
+import { MavensMateClient } from '../mavensmate/mavensMateClient';
+import { getConfiguration } from './mavensMateConfiguration';
 import Promise = require('bluebird');
 
 export class MavensMateChannel implements Disposable {
@@ -11,18 +11,26 @@ export class MavensMateChannel implements Disposable {
     isShowing: boolean;
     isWaiting: boolean;
     
-    static Create(){
-        return new MavensMateChannel();
+    private static _instance: MavensMateChannel = null;
+    static getInstance(): MavensMateChannel{
+        if(MavensMateChannel._instance == null){
+            MavensMateChannel._instance = new MavensMateChannel();
+        }
+        return MavensMateChannel._instance;
     }
     
     constructor(){
+        if(MavensMateChannel._instance){
+            throw new Error("Error: Instantiation failed. Singleton module! Use .getInstance() instead of new.");
+        }
+        MavensMateChannel._instance = this;
         this.channel = window.createOutputChannel('MavensMate');
         this.waitingOnCount = 0;
-        this.waitingDelay = 5000;
+        this.waitingDelay = getConfiguration<number>('mavensMate.hideOutputDelay');
         this.isShowing = false;
         this.isWaiting = false;
     }
-
+    
     appendStatus(message: string){
         return this.appendLine(message, 'STATUS');
     }
@@ -37,6 +45,8 @@ export class MavensMateChannel implements Disposable {
             let formattedMessage = `${ '\t'.repeat(tabs) }${message}`;
             if(level){
                 formattedMessage = `[${level}]${formattedMessage}`;
+            } else {
+                formattedMessage = '\t\t' + formattedMessage;
             }
             this.channel.appendLine(formattedMessage);
             
@@ -44,15 +54,16 @@ export class MavensMateChannel implements Disposable {
 
             if(this.waitingOnCount == 0 && this.isWaiting == false){
                 this.isWaiting = true;
-                return Promise.delay(this.waitingDelay).then(() => {
+                Promise.delay(this.waitingDelay).then(() => {
                     if(this.waitingOnCount == 0){
-                        this.hide();
+                        if(level == 'STATUS' && getConfiguration<boolean>('mavensMate.hideOutputOnSuccess')){
+                            this.hide();
+                        }
                         this.isWaiting = false;
                     }
-                });
-            } else {
-                return null;
+                }); 
             }
+            return null;
         });
     }
 

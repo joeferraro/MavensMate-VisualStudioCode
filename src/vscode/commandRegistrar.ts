@@ -1,66 +1,72 @@
-import { MavensMateClient } from '../mavensmate/mavensMateClient';
-import ProjectQuickPick = require('./projectQuickPick');
-import ClientCommands = require('../mavensmate/clientCommands');
-import { CommandEventRouter } from '../mavensmate/commandEventRouter';
-import { CommandInvoker } from '../mavensmate/commandInvoker';
-import Command from '../mavensmate/command';
-import { MavensMateChannel } from './mavensMateChannel';
 import vscode = require('vscode');
+import commandIndex = require('../mavensmate/commands/index');
+import { BaseCommand } from '../mavensmate/commands/baseCommand';
+import OAuthProject = require('../mavensmate/commands/oAuthProject');
+import { hasProjectSettings } from '../mavensmate/projectSettings';
 
-export class CommandRegistrar {
-    client: MavensMateClient;
-    context: vscode.ExtensionContext;
-    channel: MavensMateChannel;
-    commandEventRouter: CommandEventRouter;
+export function registerCommands(context: vscode.ExtensionContext, withProject: boolean){
+    let registerCommand = vscode.commands.registerCommand;
+    let registerTextEditorCommand = vscode.commands.registerTextEditorCommand;  
+    let commandDirectory = commandIndex.commandDirectory();
 
-    static Create(client: MavensMateClient, context: vscode.ExtensionContext, 
-        channel: MavensMateChannel, commandEventRouter: CommandEventRouter){
-        return new CommandRegistrar(client, context, channel, commandEventRouter);
-    }
+    for(let commandKey in commandDirectory){
+        let Command = commandDirectory[commandKey];
+        console.log(Command.prototype.execute);
 
-    constructor(client: MavensMateClient, context: vscode.ExtensionContext, 
-        channel: MavensMateChannel, commandEventRouter: CommandEventRouter){
-        this.client = client;
-        this.context = context;
-        this.channel = channel;
-        this.commandEventRouter = commandEventRouter;
-    }
-
-    registerCommands(){
-        this.registerClientCommands();
-        this.registerLocalCommands();
-    }
-
-    private registerClientCommands(){
-        let commands = ClientCommands.list();
-        for(let commandKey in commands){
-            let clientCommand = commands[commandKey];
-            this.registerClientCommand(commandKey, clientCommand);
+        if(Command.prototype.execute){
+            registerCommand(commandKey, (selectedResource?: vscode.Uri) => {
+                if(withProject || Command.allowWithoutProject === true){
+                    try{
+                        let command = Command.create();
+                        return command.execute(selectedResource).then(null, handleAuthenticationError);
+                    } catch(commandException){
+                        logAsErrorAndThrow(commandException);
+                    }
+                } else {
+                    return promptToOpenProject(commandKey);
+                }
+            });
         }
-    }
 
-    private registerClientCommand(commandKey: string, clientCommand: Command){
-        let registerCommand = vscode.commands.registerCommand;
-        let registerTextEditorCommand = vscode.commands.registerTextEditorCommand;        
-        let commandInvoker = CommandInvoker.Create(this.client, clientCommand, this.commandEventRouter);
-        let commandRegistration: vscode.Disposable;
-        
-        if(clientCommand.currentTextDocument){
-            commandRegistration = registerTextEditorCommand(commandKey, commandInvoker.invokeTextEditorProxy);
-        } else {
-            commandRegistration = registerCommand(commandKey, commandInvoker.invokeProxy);
+        if(Command.prototype.executeTextEditor){
+            let commandKeyWithTextEditor = commandKey + '.withTextEditor';
+            registerTextEditorCommand(commandKeyWithTextEditor, (textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
+                if(withProject || Command.allowWithoutProject === true){
+                    try{
+                        let command = Command.create();
+                        return command.executeTextEditor(textEditor, edit).then(null, handleAuthenticationError);
+                    } catch(commandException){
+                        logAsErrorAndThrow(commandException);
+                    }
+                } else {
+                    return promptToOpenProject(commandKey);
+                }
+            });
         }
-        this.context.subscriptions.push(commandRegistration);
         
     }
+}
 
-    private registerLocalCommands(){
-        let registerCommand = vscode.commands.registerCommand;
-        
-        let openProject = registerCommand('mavensmate.openProject', ProjectQuickPick.showProjectListAndOpen);
-        this.context.subscriptions.push(openProject);
+function promptToOpenProject(commandKey){
+    let message = `${commandKey} requires an open MavensMate project`;
+    let openProject = 'Open Project';
+    return vscode.window.showWarningMessage(message, openProject)
+        .then((answer) => {
+            if(answer == openProject){
+                return vscode.commands.executeCommand('mavensmate.openProject');
+            }
+        });
+}
 
-        let toggleChannel = registerCommand('mavensmate.toggleOutput', this.channel.toggle, this.channel);
-        this.context.subscriptions.push(toggleChannel);
-    }
+function logAsErrorAndThrow(commandException){
+    console.error(commandException);
+    throw(commandException);
+}
+
+function handleAuthenticationError(response){
+    let error: string = response.error;
+    if(error && error.endsWith('Project requires re-authentication.')){
+        console.log('Need to re-authenticate.');
+        return new OAuthProject().execute();
+    }     
 }
