@@ -25,7 +25,7 @@ All issues are managed by the [central MavensMate project](https://github.com/jo
 
 ### Plugin Installation
 
-1. Open VS Code`
+1. Open VS Code
 2. Run `Extensions: Install Extension` command
 	- [Running commands from VS Code](https://code.visualstudio.com/docs/editor/codebasics#_command-palette)
 3. Search for `MavensMate`
