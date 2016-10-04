@@ -2,7 +2,7 @@
     "name": "mavensmate",
     "displayName": "mavensmate",
     "description": "MavensMate plugin for the Visual Studio Code editor",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "publisher": "DavidHelmer",
     "repository": "https://github.com/kidtsunami/MavensMate-VisualStudioCode",
     "icon": "icon.png",

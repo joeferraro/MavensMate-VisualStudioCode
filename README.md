@@ -1,9 +1,5 @@
 # MavensMate for VS Code
-[MavensMate](http://mavensmate.com/) plugin for the Visual Studio Code editor
-
-#MavensMate for VS Code
-
-MavensMate for VS Code is a plugin that aims to replicate the functionality of the Eclipse-based Force.com IDE. Its goal is to allow developers to work inside Sublime Text for all their Force.com-related tasks.
+[MavensMate](http://mavensmate.com/) plugin for the Visual Studio Code editor that aims to replicate the functionality of the Eclipse-based Salesforce IDE. Its goal is to allow developers to work inside Sublime Text for all their Salesforce-related tasks.
 
 * Create & Edit Salesforce.com projects with specific package metadata
 * Create & compile Apex Classes, Apex Trigger, Visualforce Pages, Visualforce Components
