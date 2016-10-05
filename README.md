@@ -21,6 +21,7 @@ All issues are managed by the [central MavensMate project](https://github.com/jo
 ### Prerequisites
 
 - VS Code [https://code.visualstudio.com/](https://code.visualstudio.com/)
+ - OSX: Add VS Code to Path (Run `Shell Command : Install code in PATH` from command palette)
 - MavensMate Desktop Beta.6 **(must be running in order for MavensMate for VS Code to function)** [https://github.com/joeferraro/MavensMate-Desktop/releases/tag/v0.0.11-beta.6](https://github.com/joeferraro/MavensMate-Desktop/releases/tag/v0.0.11-beta.6)
 
 ### Plugin Installation
