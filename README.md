@@ -1,4 +1,5 @@
 # MavensMate for VS Code
+
 [MavensMate](http://mavensmate.com/) plugin for the Visual Studio Code editor that aims to replicate the functionality of the Eclipse-based Salesforce IDE. Its goal is to allow developers to work inside Sublime Text for all their Salesforce-related tasks.
 
 * Create & Edit Salesforce.com projects with specific package metadata
@@ -20,11 +21,12 @@ All issues are managed by the [central MavensMate project](https://github.com/jo
 ### Prerequisites
 
 - VS Code [https://code.visualstudio.com/](https://code.visualstudio.com/)
+ - OSX: Add VS Code to Path (Run `Shell Command : Install code in PATH` from command palette)
 - MavensMate Desktop Beta.6 **(must be running in order for MavensMate for VS Code to function)** [https://github.com/joeferraro/MavensMate-Desktop/releases/tag/v0.0.11-beta.6](https://github.com/joeferraro/MavensMate-Desktop/releases/tag/v0.0.11-beta.6)
 
 ### Plugin Installation
 
-1. Open VS Code`
+1. Open VS Code
 2. Run `Extensions: Install Extension` command
 	- [Running commands from VS Code](https://code.visualstudio.com/docs/editor/codebasics#_command-palette)
 3. Search for `MavensMate`
@@ -64,25 +66,8 @@ You may set `mm_workspace` to a single path on your local filesystem or an array
 ],
 ```
 
-##Screenshots
+## Plugin Development
 
-###Project Wizard
-<img src="https://mavens.com/public/mavensmate/img/new-project.png" style="box-shadow:-14px 14px 0 0 #16325c"/>
-###Apex Test Runner
-<img src="https://mavens.com/public/mavensmate/img/tests.png"/>
-###Apex Execute Anonymous
-<img src="https://mavens.com/public/mavensmate/img/execute-apex.png"/>
-###Quick Panel
-<img src="http://wearemavens.com/images/mm/panel.png"/>
-###Apex/Visualforce Code Assist
-<img src="https://mavens.com/public/mavensmate/img/apex2.png"/>
-<img src="https://mavens.com/public/mavensmate/img/vf1.png"/>
-<img src="https://mavens.com/public/mavensmate/img/vf2.png"/>
-
-[mmcom]: http://mavensmate.com/?utm_source=github&utm_medium=st-plugin&utm_campaign=st
-## Development
-
-### When Cloning This For Development
 1. Open the extension project in VS Code
 2. Open a Terminal with ```ctrl+` ```
 3. Run ```npm install```
@@ -90,7 +75,7 @@ You may set `mm_workspace` to a single path on your local filesystem or an array
 
 ## Organization
 The point of entry for the code is src/extension.ts where the extension is registered.
-### src 
+### src
 Is the main directory of code for this project.
 #### mavensmate
 Code specifically relevant to the MavensMate app. Should avoid referencing vscode.
