@@ -16,7 +16,7 @@ export function registerCommands(context: vscode.ExtensionContext, withProject: 
         if(Command.prototype.execute){
             registerCommand(commandKey, (selectedResource?: vscode.Uri) => {
                 if(withProject || Command.allowWithoutProject === true){
-                    try{
+                    try {
                         let command = Command.create();
                         return command.execute(selectedResource).then(null, handleAuthenticationError);
                     } catch(commandException){
@@ -64,8 +64,7 @@ function logAsErrorAndThrow(commandException){
 }
 
 function handleAuthenticationError(response){
-    let error: string = response.error;
-    if(error && error.endsWith('Project requires re-authentication.')){
+    if(response && response.error && response.error.endsWith('Project requires re-authentication.')){
         console.log('Need to re-authenticate.');
         return new OAuthProject().execute();
     }     
