@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 let mavensMateMateExtension;
 
 export function activate(context: vscode.ExtensionContext) {
-    let { MavensMateExtension } = require('./mavensmateExtension');
+    let { MavensMateExtension } = require('./mavensMateExtension');
     mavensMateMateExtension = new MavensMateExtension(context);
     mavensMateMateExtension.activate().catch(console.error);
 }
