@@ -4,8 +4,8 @@ let mavensMateMateExtension;
 
 export function activate(context: vscode.ExtensionContext) {
     let { MavensMateExtension } = require('./mavensMateExtension');
-    mavensMateMateExtension = new MavensMateExtension(context);
-    mavensMateMateExtension.activate().catch(console.error);
+    mavensMateMateExtension = MavensMateExtension.create(context);
+    return mavensMateMateExtension.activate();
 }
 
 export function deactivate() {

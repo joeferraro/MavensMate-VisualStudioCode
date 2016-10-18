@@ -19,7 +19,7 @@ suite("MavensMate Client", () => {
                     .get('/app/home/index')
                     .reply(200, 'OK');
             });
-
+ 
             test("returns true", () => {
                 return mavensMateClient.isAppAvailable()
                     .then((isAvailable) =>{

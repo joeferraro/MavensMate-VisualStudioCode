@@ -1,38 +1,32 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-
-import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
-import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
-
 import * as vscode from 'vscode';
 
-suite("MavensMate Extension", () => {
-    let mavensMateExtension : vscode.Extension<any>;
-    let mavensMateClient;
-    let mavensMateClientCreateStub : sinon.SinonStub;
-    let mavensMateStatus;
-    let mavensMateStatusCreateStub : sinon.SinonStub;
+import { MavensMateExtension } from '../src/mavensMateExtension';
+
+suite("Extension", () => {
+    let baseExtension: vscode.Extension<any>;
+    let mavensMateExtension: MavensMateExtension;
+    let mavensMateExtensionCreateStub: sinon.SinonStub;
+    let mavensMateExtensionActivateSpy: sinon.SinonSpy;
     
     setup(() => {
-        mavensMateClient = {};
         
-        mavensMateClientCreateStub = sinon.stub(MavensMateClient, "Create");
-        mavensMateClientCreateStub.returns(mavensMateClient);
+        baseExtension = vscode.extensions.getExtension("DavidHelmer.mavensmate");
+        assert.notEqual(undefined, baseExtension);
+
+        mavensMateExtension = MavensMateExtension.create(null);
         
-        mavensMateStatus = {};
-        mavensMateStatus.updateAppStatus = sinon.stub();
-        
-        mavensMateStatusCreateStub = sinon.stub(MavensMateStatus, "Create");
-        mavensMateStatusCreateStub.returns(mavensMateStatus);
-        
-        mavensMateExtension = vscode.extensions.getExtension("DavidHelmer.mavensmate");
-        assert.notEqual(undefined, mavensMateExtension); 
+        mavensMateExtensionCreateStub = sinon.stub(MavensMateExtension, "create").returns(mavensMateExtension);
+        mavensMateExtensionActivateSpy = sinon.spy(mavensMateExtension, "activate");
     });
     
     test("activates", () => {
-        return mavensMateExtension.activate()
+        return baseExtension.activate()
             .then(() => {
-                assert(mavensMateStatus.updateAppStatus.calledOnce);
+                assert(mavensMateExtensionCreateStub.calledOnce);
+                assert(mavensMateExtensionCreateStub.neverCalledWith(null));
+                assert(mavensMateExtensionActivateSpy.calledOnce);
             });
     });
 });

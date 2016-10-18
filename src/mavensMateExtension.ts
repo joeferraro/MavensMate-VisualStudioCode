@@ -18,6 +18,10 @@ export class MavensMateExtension {
     mavensMateClient: MavensMateClient;
     mavensMateCodeCoverage: MavensMateCodeCoverage;
 
+    static create(context: vscode.ExtensionContext){
+        return new MavensMateExtension(context);
+    }
+
     constructor(context: vscode.ExtensionContext){
         this.context = context;
     }

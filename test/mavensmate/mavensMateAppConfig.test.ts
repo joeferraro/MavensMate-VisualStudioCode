@@ -27,7 +27,7 @@ suite('mavensMate App Config', () => {
         openStub.withArgs('hometest/.mavensmate-config.json').returns(nonWindowsJson); 
     });
     
-    teardown(() => {
+    teardown(() => { 
         process.env.USERPROFILE = originalUserProfile;
         process.env.HOME = originalHome;
         openStub.restore();
