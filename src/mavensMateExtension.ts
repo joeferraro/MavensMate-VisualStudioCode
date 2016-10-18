@@ -60,10 +60,15 @@ export class MavensMateExtension {
 
     subscribeToEvents(){
         let saveEvent = vscode.workspace.onDidSaveTextDocument((textDocument) => {
-            if(!textDocument.fileName.includes('apex-scripts')){
-                return vscode.commands.executeCommand('mavensmate.compileFile', textDocument.uri);
+            let compileOnSaveConfigured = getConfiguration('mavensMate.compileOnSave');
+            let isApexScript = textDocument.fileName.includes('apex-scripts');
+
+            if (!compileOnSaveConfigured) {
+                console.info('MavensMate: compileOnSave is not configured.');
+            } else if (isApexScript) {
+                console.info('MavensMate: silently ignoring the saving of a local apex script. (OK you got me, this isn\'t necessarily silence)');
             } else {
-                console.info('silently ignoring the saving of a local apex script, ok you got me, this isn\'t necessarily silence');
+                return vscode.commands.executeCommand('mavensmate.compileFile', textDocument.uri);
             }
         });
         this.context.subscriptions.push(saveEvent);
