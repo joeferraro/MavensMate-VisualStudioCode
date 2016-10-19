@@ -13,34 +13,31 @@ export interface Options {
 }
 
 export class MavensMateClient implements vscode.Disposable {
-    options: Options;
+    baseURL: string;
+    projectId: string;
     mavensMateStatus: MavensMateStatus;
     
     private static _instance: MavensMateClient = null;
 
     static getInstance(){
         if(MavensMateClient._instance == null){
-            let options: Options = {
-                baseURL: vscode.workspace.getConfiguration().get<string>('mavensMateDesktop.baseURL')
-            }
-            
-            let projectSettings = ProjectSettings.getProjectSettings();
-            if(projectSettings){
-                options.projectId = projectSettings.id;
-            }
-                
-            MavensMateClient._instance = new MavensMateClient(options);
+            MavensMateClient._instance = new MavensMateClient();
         }
         return MavensMateClient._instance;
     }
     
-    constructor(options: Options){
-        this.options = options;
+    constructor(){
+        this.baseURL = vscode.workspace.getConfiguration().get<string>('mavensMateDesktop.baseURL');
         this.mavensMateStatus = MavensMateStatus.getInstance();
+    
+        let projectSettings = ProjectSettings.getProjectSettings();
+        if(projectSettings){
+            this.projectId = projectSettings.id;
+        }
     }
     
     isAppAvailable(){
-        let isAvailableURL = urlJoin(this.options.baseURL, '/app/home/index');
+        let isAvailableURL = urlJoin(this.baseURL, '/app/home/index');
         let getOptions = {
             uri: isAvailableURL
         };
@@ -52,7 +49,7 @@ export class MavensMateClient implements vscode.Disposable {
     }
     
     sendCommand(command: ClientCommand) : Promise<any> {
-        let postOptions = this.getPostOptionsForCommand(command, this.options.baseURL);
+        let postOptions = this.getPostOptionsForCommand(command, this.baseURL);
         let promiseCommandSend = request(postOptions).promise();
         this.mavensMateStatus.showAppIsThinking();
         if(command.async){
@@ -68,7 +65,7 @@ export class MavensMateClient implements vscode.Disposable {
         let commandParmeters = 'command=' + command.id +'&async=' + asyncParam;
 
         if(this.hasProjectId()){
-            commandParmeters += '&pid=' + this.options.projectId; 
+            commandParmeters += '&pid=' + this.projectId; 
         }
         let commandURL = urlJoin(baseURL, '/execute?' + commandParmeters);
         let commandHeaders = {
@@ -87,6 +84,7 @@ export class MavensMateClient implements vscode.Disposable {
     }
 
     handlePollResponse(commandResponse){
+        console.log(commandResponse);
         if(commandResponse.status && commandResponse.status == 'pending'){
             this.mavensMateStatus.showAppIsThinking();
             return Promise.delay(500, commandResponse)
@@ -99,7 +97,7 @@ export class MavensMateClient implements vscode.Disposable {
     }
 
     poll(commandResponse){
-        let statusURL = urlJoin(this.options.baseURL, '/execute/' + commandResponse.id);
+        let statusURL = urlJoin(this.baseURL, '/execute/' + commandResponse.id);
         let statusHeaders = {
             'MavensMate-Editor-Agent': 'vscode'
         };
@@ -115,7 +113,7 @@ export class MavensMateClient implements vscode.Disposable {
     }
 
     private hasProjectId(){
-        return this.options.projectId && this.options.projectId != '';
+        return this.projectId && this.projectId != '';
     }
 
     dispose(){

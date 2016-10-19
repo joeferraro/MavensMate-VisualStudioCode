@@ -67,6 +67,8 @@ suite('projectSettings', () => {
         setup(() => {
             let statSuccess = Promise.resolve();
 
+            console.log('setting up projectPath');
+            console.log(workspaceSettingsPath);
             statStub = sinon.stub(fs, 'stat');
             statStub.withArgs(workspaceSettingsPath).returns(statSuccess);
             statStub.withArgs(projectSettingsPath).returns(statSuccess);

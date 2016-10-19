@@ -14,9 +14,12 @@ export class ProjectSettings {
     static getProjectSettings(projectPath?: string): ProjectSettings {
         projectPath = projectPath || vscode.workspace.rootPath;
 
-        if(projectPath && ProjectSettings._instances[projectPath] === undefined){
+        console.log('projectsettings');
+        console.log(projectPath);
+
+        if(projectPath && !ProjectSettings._instances[projectPath]){
             let settingsPath = buildSettingsPath(projectPath);
-            ProjectSettings._instances[projectPath] = file.open(settingsPath);
+            ProjectSettings._instances[projectPath] = file.open(settingsPath);            
         }
 
         return ProjectSettings._instances[projectPath];
