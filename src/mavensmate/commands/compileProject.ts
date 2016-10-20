@@ -4,7 +4,7 @@ import { handleCompileResponse } from '../handlers/compileResponseHandler';
 import * as vscode from 'vscode';
 import path = require('path');
 
-module.exports = class CompileProject extends ClientCommand {
+class CompileProject extends ClientCommand {
     static create(): CompileProject{
         return new CompileProject();
     }
@@ -26,3 +26,5 @@ module.exports = class CompileProject extends ClientCommand {
         }); 
     }
 }
+
+export = CompileProject;

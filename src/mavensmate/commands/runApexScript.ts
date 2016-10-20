@@ -62,12 +62,5 @@ class RunApexScript extends PathsCommand {
             this.mavensMateChannel.appendLine(exceptionStackTrace);
         }
     }
-
-    executeTextEditor(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit): Thenable<any> {
-        if(languagesToRun.has(textEditor.document.languageId)){
-            let selectedResource: vscode.Uri = textEditor.document.uri;
-            return this.execute(selectedResource);
-        }
-    }
 }
 export = RunApexScript;

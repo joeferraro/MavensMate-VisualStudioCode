@@ -1,54 +1,79 @@
-import assert = require('assert');
+import expect = require('expect.js');
 import sinon = require('sinon');
+import Promise = require('bluebird');
 
-import { MavensMateClient, Options } from '../../src/mavensmate/mavensMateClient';
-import ProjectQuickPick = require('../../src/vscode/projectQuickPick');
 import vscode = require('vscode');
-import { TestExtensionContext } from './testExtensionContext';
-
 import { registerCommands } from '../../src/vscode/commandRegistrar';
-import { MavensMateChannel } from '../../src/vscode/mavensMateChannel';
 
-let clientOptions: Options = null;
-let client = MavensMateClient.getInstance();
-let channel = MavensMateChannel.getInstance();
-let context : vscode.ExtensionContext = new TestExtensionContext();
-let command1 = { command: '1', name: 'command', async: false };
-let command2 = { command: '2', name: 'command', async: false };
-let command3 = { command: '3', name: 'command', async: false, paths: 'active' };
-let commandList = {
-    'command1': command1,
-    'command2': command2
-};
-let commandRegistration1 = new vscode.Disposable(() => {});
-let commandRegistration2 = new vscode.Disposable(() => {});
-let commandRegistration3 = new vscode.Disposable(() => {});
+import commandIndex = require('../../src/mavensmate/commands/index');
+import CleanProject = require('../../src/mavensmate/commands/cleanProject');
+import CompileFile = require('../../src/mavensmate/commands/compileFile');
+import CompileProject = require('../../src/mavensmate/commands/compileProject');
+
+let directoryOfCommands = {
+    'clean-project': CleanProject,
+    'compile-file': CompileFile,
+    'compile-project': CompileProject
+}
 
 suite('commandRegistrar', () => {
-    let commandListStub : sinon.SinonStub;
-    let createInvokerStub : sinon.SinonStub;
-    let registerCommandStub : sinon.SinonStub;
-    let subscriptionPushStub : sinon.SinonStub;
+    let commandDirectoryStub: sinon.SinonStub;
+    let registerCommandStub: sinon.SinonStub;
+
+    let createSpys: sinon.SinonSpy[];
+    let invokeStubs: sinon.SinonStub[];
 
     setup(() => {
+        commandDirectoryStub = sinon.stub(commandIndex, 'commandDirectory').returns(directoryOfCommands);
         registerCommandStub = sinon.stub(vscode.commands, 'registerCommand');
-        registerCommandStub.onFirstCall().returns(commandRegistration1);
-        registerCommandStub.onSecondCall().returns(commandRegistration2);
-        registerCommandStub.onThirdCall().returns(commandRegistration3);
+
+        createSpys = [];
+        invokeStubs = [];
+        
+        createSpys.push(sinon.spy(CleanProject, 'create'));
+        createSpys.push(sinon.spy(CompileFile, 'create'));
+        createSpys.push(sinon.spy(CompileProject, 'create'));
+        
+        invokeStubs.push(sinon.stub(CleanProject.prototype, 'invoke'));
+        invokeStubs.push(sinon.stub(CompileFile.prototype, 'invoke'));
+        invokeStubs.push(sinon.stub(CompileProject.prototype, 'invoke'));
     });
 
     teardown(() => {
-        commandListStub.restore();
-        createInvokerStub.restore();
+        
+        commandDirectoryStub.restore();
         registerCommandStub.restore();
+        createSpys.forEach((stub) => {
+            stub.restore();
+        });
+        invokeStubs.forEach((stub) => {
+            stub.restore();
+        });
     });
 
-    test('registerCommands', () => {
-        registerCommands(context, true);
+    test('registerCommands', (testDone) => {
+        registerCommands();
 
-        sinon.assert.calledOnce(commandListStub);
-        sinon.assert.calledTwice(createInvokerStub);
-        sinon.assert.callCount(registerCommandStub, 4);
-        sinon.assert.calledWith(registerCommandStub, 'mavensmate.openProject', ProjectQuickPick.showProjectListAndOpen);
+        sinon.assert.calledThrice(registerCommandStub);
+        expect(registerCommandStub.getCall(0).args[0]).to.equal('clean-project');
+        expect(registerCommandStub.getCall(1).args[0]).to.equal('compile-file');
+        expect(registerCommandStub.getCall(2).args[0]).to.equal('compile-project');
+
+        let testPath = 'atestpath';
+
+        let registeredPromises: Promise<any>[] = [
+            registerCommandStub.getCall(0).args[1](testPath),
+            registerCommandStub.getCall(1).args[1](testPath),
+            registerCommandStub.getCall(2).args[1](testPath)
+        ];
+
+        Promise.all(registeredPromises).then(() => {
+            createSpys.forEach((stub) => {
+                sinon.assert.calledOnce(stub);
+            });
+            invokeStubs.forEach((stub) => {
+                sinon.assert.calledWith(stub, testPath);
+            });
+        }).then(testDone);
     });
 });

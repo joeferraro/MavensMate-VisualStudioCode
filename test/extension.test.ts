@@ -8,7 +8,7 @@ suite("Extension", () => {
     let baseExtension: vscode.Extension<any>;
     let mavensMateExtension: MavensMateExtension;
     let mavensMateExtensionCreateStub: sinon.SinonStub;
-    let mavensMateExtensionActivateSpy: sinon.SinonSpy;
+    let mavensMateExtensionActivateStub: sinon.SinonStub;
     
     setup(() => {
         
@@ -18,7 +18,7 @@ suite("Extension", () => {
         mavensMateExtension = MavensMateExtension.create(null);
         
         mavensMateExtensionCreateStub = sinon.stub(MavensMateExtension, "create").returns(mavensMateExtension);
-        mavensMateExtensionActivateSpy = sinon.spy(mavensMateExtension, "activate");
+        mavensMateExtensionActivateStub = sinon.stub(mavensMateExtension, "activate");
     });
     
     test("activates", () => {
@@ -26,7 +26,7 @@ suite("Extension", () => {
             .then(() => {
                 assert(mavensMateExtensionCreateStub.calledOnce);
                 assert(mavensMateExtensionCreateStub.neverCalledWith(null));
-                assert(mavensMateExtensionActivateSpy.calledOnce);
+                assert(mavensMateExtensionActivateStub.calledOnce);
             });
     });
 });

@@ -12,10 +12,7 @@ export class ProjectSettings {
     private static _instances: { [projectPath:string]: ProjectSettings } = {};
 
     static getProjectSettings(projectPath?: string): ProjectSettings {
-        projectPath = projectPath || vscode.workspace.rootPath;
-
-        console.log('projectsettings');
-        console.log(projectPath);
+        projectPath = workspaceRootIfBlank(projectPath);
 
         if(projectPath && !ProjectSettings._instances[projectPath]){
             let settingsPath = buildSettingsPath(projectPath);
@@ -24,18 +21,21 @@ export class ProjectSettings {
 
         return ProjectSettings._instances[projectPath];
     }
+
+    static hasProjectSettings(projectPath?: string): boolean {
+        projectPath = workspaceRootIfBlank(projectPath);
+        if(ProjectSettings._instances[projectPath] === undefined){
+            ProjectSettings.getProjectSettings(projectPath);
+        }
+
+        return ProjectSettings._instances[projectPath] !== null;
+    }
+}
+
+function workspaceRootIfBlank(projectPath?: string): string {
+    return projectPath || vscode.workspace.rootPath;
 }
 
 function buildSettingsPath(projectPath: string){
     return path.join(projectPath, 'config', '.settings');
-}
-
-export function hasProjectSettings(projectPath?: string): Promise<any>{
-    projectPath = projectPath || vscode.workspace.rootPath;
-    return hasSettings(projectPath);
-}
-
-function hasSettings(projectPath: string): Promise<any> {
-    let settingsPath = buildSettingsPath(projectPath);
-    return fs.stat(settingsPath);
 }

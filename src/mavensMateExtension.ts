@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import Promise = require('bluebird');
 
 import { MavensMateChannel } from '../src/vscode/mavensMateChannel';
-import { hasProjectSettings, ProjectSettings } from '../src/mavensmate/projectSettings';
+import { ProjectSettings } from '../src/mavensmate/projectSettings';
 import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
 import { MavensMateCodeCoverage } from '../src/vscode/mavensMateCodeCoverage';
@@ -35,10 +35,7 @@ export class MavensMateExtension {
         this.mavensMateChannel.appendStatus('MavensMate is activating');
 
         return Promise.resolve().bind(this)
-            .then(() => {
-                return hasProjectSettings();
-            })
-            .then(this.instantiateWithProject, this.instantiateWithoutProject)
+            .then(() => CommandRegistrar.registerCommands())
             .then(() => {
                 if(getConfiguration<boolean>('mavensMate.pingMavensMateOnStartUp')){
                     this.mavensMateClient.isAppAvailable();
@@ -52,14 +49,15 @@ export class MavensMateExtension {
         let projectSettings = ProjectSettings.getProjectSettings();
         this.mavensMateChannel.appendStatus(`Instantiating with Project: ${projectSettings.projectName} (${ projectSettings.instanceUrl })`);
         let withProject = true;
-        CommandRegistrar.registerCommands(this.context, withProject);
+        CommandRegistrar.registerCommands();
         return this.subscribeToEvents();
     }
 
     instantiateWithoutProject(){
         this.mavensMateChannel.appendStatus(`Instantiating without Project`);
         let withProject = false;
-        CommandRegistrar.registerCommands(this.context, withProject);
+        
+        CommandRegistrar.registerCommands();
     }
 
     subscribeToEvents(){

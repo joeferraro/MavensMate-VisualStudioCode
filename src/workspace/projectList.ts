@@ -4,7 +4,7 @@ import path = require('path');
 import fs = require('fs-promise');
 import Promise = require('bluebird');
 import mavensMateAppConfig = require('../mavensmate/mavensMateAppConfig');
-import { hasProjectSettings } from '../mavensmate/projectSettings';
+import { ProjectSettings } from '../mavensmate/projectSettings';
 
 export interface projectDirectory {
     name: string,
@@ -48,11 +48,14 @@ function notHiddenFile(fileName){
 
 function getProjectFromFileName(workspace, fileName){
     let projectPath = path.join(workspace, fileName);
-    let returnProjectInfo = () => {
-        return { name: fileName, path: projectPath, workspace: baseName(workspace) };
-    };
-    return hasProjectSettings(projectPath)
-        .then(returnProjectInfo, console.error);
+    
+    return Promise.resolve().then(() => {
+        if(ProjectSettings.hasProjectSettings(projectPath)){
+            return { name: fileName, path: projectPath, workspace: baseName(workspace) };
+        } else {
+            console.warn(`No project settings found at ${ projectPath }`);
+        }
+    });
 }
 
 function baseName(path){
