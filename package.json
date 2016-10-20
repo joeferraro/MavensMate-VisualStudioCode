@@ -366,6 +366,11 @@
                     "default": "",
                     "description": "The absolute path to MavensMate Desktop when running Linux"
                 },
+                "mavensMate.compileOnSave": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "If true, MavensMate will attempt to compile the document on save, if it is one of the supported file types"
+                },
                 "mavensMate.hideOutputOnSuccess": {
                     "type": "boolean",
                     "default": "true",
