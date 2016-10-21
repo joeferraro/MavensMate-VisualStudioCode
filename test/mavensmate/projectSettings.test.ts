@@ -74,7 +74,7 @@ suite('projectSettings', () => {
         });
 
         test('hasProjectSettings succeeds with projectPath', () => {
-            let result = ProjectSettings.hasProjectSettings();
+            let result = ProjectSettings.hasProjectSettings(projectSettingsPath);
 
             expect(result).to.be(true);
         });
@@ -82,15 +82,13 @@ suite('projectSettings', () => {
         test('getProjectSettings gets settings with no projectPath', () => {
             let actualSettings = ProjectSettings.getProjectSettings();
             
-            expect.equal(actualSettings.id, testSettings.id, 'id of settings');
-            sinon.assert.calledWith(jsonFileStub, workspaceSettingsPath);
+            expect(actualSettings.id).to.equal(testSettings.id, 'id of settings');
         });
 
         test('getProjectSettings gets settings with projectPath', () => {
             let actualSettings = ProjectSettings.getProjectSettings(projectPath);
             
-            expect.equal(actualSettings.id, testSettings.id, 'id of settings');
-            sinon.assert.calledWith(jsonFileStub, projectSettingsPath);
+            expect(actualSettings.id).to.equal(testSettings.id, 'id of settings');
         });
     });
 });
