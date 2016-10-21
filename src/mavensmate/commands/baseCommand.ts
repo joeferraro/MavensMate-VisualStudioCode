@@ -37,13 +37,13 @@ export abstract class BaseCommand implements BaseCommandInterface {
     }
 
     private logAsErrorAndThrow(commandException){
-        console.error(commandException);
+        console.error(`MavensMate: ${commandException}`);
         throw(commandException);
     }
 
     private handleAuthenticationError(response){
         if(response && response.error && response.error.endsWith('Project requires re-authentication.')){
-            console.log('Need to re-authenticate.');
+            console.warn('MavensMate: Need to re-authenticate.');
             return vscode.commands.executeCommand('mavensmate.oAuthProject');
         }     
     }

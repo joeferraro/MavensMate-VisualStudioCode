@@ -129,7 +129,6 @@ suite("MavensMate Client", () => {
                 
             mavensMateClient.sendCommand(cleanProjectCommand)
                 .then((actualResponse) => {
-                    console.log(actualResponse);
                     expect(actualResponse.complete).to.be(true);
                     sendCommandNock.done();
                     checkStatusPendingNock.done();

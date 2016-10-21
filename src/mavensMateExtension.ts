@@ -32,7 +32,7 @@ export class MavensMateExtension {
         this.mavensMateStatus = MavensMateStatus.getInstance();
         this.mavensMateClient = MavensMateClient.getInstance();
         this.mavensMateCodeCoverage = MavensMateCodeCoverage.getInstance();
-        this.mavensMateChannel.appendStatus('MavensMate is activating');
+        this.mavensMateChannel.appendStatus('MavensMate: Activating');
 
         return Promise.resolve().bind(this)
             .then(() => CommandRegistrar.registerCommands())
@@ -40,7 +40,7 @@ export class MavensMateExtension {
                 if(getConfiguration<boolean>('mavensMate.pingMavensMateOnStartUp')){
                     this.mavensMateClient.isAppAvailable();
                 } else {
-                    console.log('Not pinging MavensMate on Startup, controlled by mavensMate.pingMavensMateOnStartUp');
+                    console.log(`MavensMate: Not pinging MavensMate Desktop on Startup, controlled by mavensMate.pingMavensMateOnStartUp`);
                 }
             });
     }
@@ -84,6 +84,6 @@ export class MavensMateExtension {
         this.mavensMateClient.dispose();
         this.mavensMateStatus.dispose();
         this.mavensMateCodeCoverage.dispose();
-        console.info('Finished Deactivating');
+        console.info(`MavensMate: Finished Deactivating`);
     }
 }

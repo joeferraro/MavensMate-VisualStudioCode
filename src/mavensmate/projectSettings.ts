@@ -25,14 +25,9 @@ export class ProjectSettings {
 
     static hasProjectSettings(projectPath?: string): boolean {
         projectPath = workspaceRootIfBlank(projectPath);
-        console.log(`Checking if project path has settings ${projectPath}`);
-        console.log(projectPath);
-        console.log(ProjectSettings._instances[projectPath]);
         if(!ProjectSettings._instances[projectPath]){
             ProjectSettings.getProjectSettings(projectPath);
         }
-        console.log(ProjectSettings._instances[projectPath]);
-        console.log(`Checking if project path has settings ${ProjectSettings._instances[projectPath] !== null}`);
         return ProjectSettings._instances[projectPath] !== null;
     }
 }

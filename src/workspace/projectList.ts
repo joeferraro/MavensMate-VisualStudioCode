@@ -53,7 +53,7 @@ function getProjectFromFileName(workspace, fileName){
         if(ProjectSettings.hasProjectSettings(projectPath)){
             return { name: fileName, path: projectPath, workspace: baseName(workspace) };
         } else {
-            console.warn(`No project settings found at ${ projectPath }`);
+            console.warn(`MavensMate: No project settings found at ${ projectPath }`);
         }
     });
 }

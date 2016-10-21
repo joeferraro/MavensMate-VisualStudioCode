@@ -29,7 +29,7 @@ export function openProject(projectItem: projectQuickPickItem) {
         let projectUri = Uri.parse(projectItem.path);
         return commands.executeCommand('vscode.openFolder', projectUri).then(null, console.error);
     } else {
-        console.warn('No project selected');
+        console.warn('MavensMate: No project selected');
         return;
     }
 }

@@ -14,5 +14,5 @@ export function deactivate() {
 }
 
 process.on("unhandledRejection", function(reason, promise) {
-    console.error(reason);
+    console.error(`MavensMate Unhandled Exception: ${reason}`);
 });

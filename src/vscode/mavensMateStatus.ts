@@ -12,9 +12,13 @@ export class MavensMateStatus implements Disposable {
 
     static getInstance(): MavensMateStatus{
         if(MavensMateStatus._instance == null){
-            MavensMateStatus._instance = new MavensMateStatus();
+            MavensMateStatus._instance = MavensMateStatus.create();
         }
         return MavensMateStatus._instance;
+    }
+
+    static create(): MavensMateStatus {
+        return new MavensMateStatus();
     }
     
     constructor(){

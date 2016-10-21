@@ -84,7 +84,6 @@ export class MavensMateClient implements vscode.Disposable {
     }
 
     handlePollResponse(commandResponse){
-        console.log(commandResponse);
         if(commandResponse.status && commandResponse.status == 'pending'){
             this.mavensMateStatus.showAppIsThinking();
             return Promise.delay(500, commandResponse)
