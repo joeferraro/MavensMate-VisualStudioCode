@@ -1,7 +1,7 @@
 {
     "name": "mavensmate",
     "displayName": "mavensmate",
-    "description": "MavensMate plugin for the Visual Studio Code editor",
+    "description": "MavensMate Salesforce plugin for the Visual Studio Code editor",
     "version": "0.4.2",
     "publisher": "DavidHelmer",
     "repository": "https://github.com/kidtsunami/MavensMate-VisualStudioCode",
@@ -10,7 +10,7 @@
         "vscode": "^0.10.10"
     },
     "categories": [
-        "Other"
+        "Productivity", "Languages"
     ],
     "activationEvents": [
         "*"
