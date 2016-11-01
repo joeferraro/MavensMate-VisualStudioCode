@@ -2,7 +2,7 @@
     "name": "mavensmate",
     "displayName": "mavensmate",
     "description": "MavensMate Salesforce plugin for the Visual Studio Code editor",
-    "version": "0.4.2",
+    "version": "0.6.0",
     "publisher": "DavidHelmer",
     "repository": "https://github.com/kidtsunami/MavensMate-VisualStudioCode",
     "icon": "icon.png",
@@ -10,7 +10,7 @@
         "vscode": "^0.10.10"
     },
     "categories": [
-        "Productivity", "Languages"
+        "Other"
     ],
     "activationEvents": [
         "*"
@@ -403,6 +403,7 @@
     "dependencies": {
         "bluebird": "3.3.5",
         "fs-promise": "0.5.0",
+        "global": "^4.3.1",
         "path": "0.12.7",
         "request-promise": "2.0.1",
         "url-join": "1.1.0"
