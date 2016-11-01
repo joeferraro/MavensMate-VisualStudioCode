@@ -5,6 +5,10 @@
     "version": "0.6.0",
     "publisher": "DavidHelmer",
     "repository": "https://github.com/kidtsunami/MavensMate-VisualStudioCode",
+    "homepage": "http://mavensmate.com/",
+    "bugs": {
+		"url": "https://github.com/joeferraro/MavensMate/issues"
+	},
     "icon": "icon.png",
     "engines": {
         "vscode": "^0.10.10"
