@@ -2,7 +2,7 @@
     "name": "mavensmate",
     "displayName": "mavensmate",
     "description": "MavensMate Salesforce plugin for the Visual Studio Code editor",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "publisher": "DavidHelmer",
     "repository": "https://github.com/kidtsunami/MavensMate-VisualStudioCode",
     "homepage": "http://mavensmate.com/",

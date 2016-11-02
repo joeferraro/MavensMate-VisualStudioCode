@@ -35,6 +35,7 @@ export class MavensMateExtension {
         this.mavensMateChannel.appendStatus('MavensMate: Activating');
 
         return Promise.resolve().bind(this)
+            .then(() => this.checkProjectSettingsAndSubscribe())
             .then(() => CommandRegistrar.registerCommands())
             .then(() => {
                 if(getConfiguration<boolean>('mavensMate.pingMavensMateOnStartUp')){
@@ -45,16 +46,18 @@ export class MavensMateExtension {
             });
     }
 
-    instantiateWithProject(){
-        let projectSettings = ProjectSettings.getProjectSettings();
-        this.mavensMateChannel.appendStatus(`Instantiating with Project: ${projectSettings.projectName} (${ projectSettings.instanceUrl })`);
-        let withProject = true;
-        CommandRegistrar.registerCommands();
-        return this.subscribeToEvents();
+    checkProjectSettingsAndSubscribe(){
+        if(ProjectSettings.hasProjectSettings()){
+            let projectSettings = ProjectSettings.getProjectSettings();
+            this.mavensMateChannel.appendStatus(`Instantiating with Project: ${projectSettings.projectName} (${ projectSettings.instanceUrl })`);
+            return this.subscribeToEvents();
+        } else {
+            this.mavensMateChannel.appendStatus(`Instantiating without Project`);
+        }
     }
 
     instantiateWithoutProject(){
-        this.mavensMateChannel.appendStatus(`Instantiating without Project`);
+        
         let withProject = false;
         
         CommandRegistrar.registerCommands();
