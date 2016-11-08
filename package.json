@@ -51,6 +51,10 @@
                 "title": "MavensMate: Run Apex Tests"
             },
             {
+                "command": "mavensmate.runTestsAsync",
+                "title": "MavensMate: Run Tests In Editor (async)"
+            },
+            {
                 "command": "mavensmate.openSalesforce",
                 "title": "MavensMate: Open Salesforce"
             },
