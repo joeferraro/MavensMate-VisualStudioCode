@@ -7,8 +7,8 @@
     "repository": "https://github.com/kidtsunami/MavensMate-VisualStudioCode",
     "homepage": "http://mavensmate.com/",
     "bugs": {
-		"url": "https://github.com/joeferraro/MavensMate/issues"
-	},
+        "url": "https://github.com/joeferraro/MavensMate/issues"
+    },
     "icon": "icon.png",
     "engines": {
         "vscode": "^0.10.10"
@@ -413,10 +413,11 @@
         "url-join": "1.1.0"
     },
     "devDependencies": {
+        "coveralls": "^2.11.14",
         "expect.js": "0.3.1",
         "nock": "8.0.0",
         "sinon": "1.17.3",
-        "typescript": "^1.8.5",
+        "typescript": "^2.0.3",
         "vscode": "^0.11.0"
     }
 }
