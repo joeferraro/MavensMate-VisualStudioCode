@@ -1,4 +1,5 @@
 # MavensMate for VS Code
+[![Build Status](https://travis-ci.org/kidtsunami/MavensMate-VisualStudioCode.svg?branch=master)](https://travis-ci.org/kidtsunami/MavensMate-VisualStudioCode)
 
 [MavensMate](http://mavensmate.com/) plugin for the Visual Studio Code editor that aims to replicate the functionality of the Eclipse-based Salesforce IDE. Its goal is to allow developers to work inside Sublime Text for all their Salesforce-related tasks.
 

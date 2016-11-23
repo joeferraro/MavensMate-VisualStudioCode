@@ -2,7 +2,7 @@ import { ClientCommand } from './clientCommand';
 import { BaseCommand } from './baseCommand';
 import * as vscode from 'vscode';
 
-module.exports = class CleanProject extends ClientCommand {
+class CleanProject extends ClientCommand {
     
     static create(): BaseCommand {
         return new CleanProject();
@@ -29,3 +29,5 @@ module.exports = class CleanProject extends ClientCommand {
         }); 
     }
 }
+
+export = CleanProject;

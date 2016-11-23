@@ -19,7 +19,7 @@ export function handleCompileResponse(compileResponse): Promise<any>{
             handlePromise = handleSuccess(result);
         }
     } else {
-        console.error(compileResponse);
+        console.error(`MavensMate Compile Error Resposne ${compileResponse}`);
         return Promise.reject(compileResponse.error);
     }
     return handlePromise;

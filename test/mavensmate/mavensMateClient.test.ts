@@ -1,29 +1,69 @@
 import expect = require('expect.js');
 import nock = require('nock');
+import * as sinon from 'sinon';
 import Promise = require('bluebird');
 
 import vscode = require('vscode');
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
+import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
 import { ClientCommand } from '../../src/mavensmate/commands/clientCommand';
 import OpenUI = require('../../src/mavensmate/commands/openUI');
+import CleanProject = require('../../src/mavensmate/commands/cleanProject');
 
 suite("MavensMate Client", () => {
-    let mavensMateClientOptions = {
-        baseURL: 'http://localhost:55555'
-    }; 
-    let mavensMateClient = new MavensMateClient(mavensMateClientOptions);
+    let baseURL: string = 'http://localhost:55555';
+    let mavensMateClient: MavensMateClient = MavensMateClient.getInstance();
+
+    suite("getInstance", () => {
+        teardown(() => {
+            MavensMateClient.getInstance().baseURL = baseURL;
+        });
+
+        test("returns client", () => {
+            let returnedClient = MavensMateClient.getInstance();
+
+            expect(returnedClient).to.not.be(undefined);
+            expect(typeof(returnedClient.isAppAvailable)).to.equal('function');
+        });
+
+        test("returns same client on subsequent calls", () => {
+            let returnedClient = MavensMateClient.getInstance();
+            returnedClient.baseURL = 'blahhhhh';
+
+            let secondClient = MavensMateClient.getInstance();
+            expect(returnedClient).to.be(secondClient);
+            expect(secondClient.baseURL).to.equal('blahhhhh');
+        });
+    });
+
     suite("isAppAvailable", () => {
+        let showAppIsAvailableSpy: sinon.SinonSpy;
+        let showAppIsUnavailableSpy: sinon.SinonSpy;
+
+        setup(() => {
+            let mavensMateStatus = MavensMateStatus.getInstance();
+
+            showAppIsAvailableSpy = sinon.spy(mavensMateStatus, 'showAppIsAvailable');
+            showAppIsUnavailableSpy = sinon.spy(mavensMateStatus, 'showAppIsUnavailable');
+        });
+
+        teardown(() => {
+            showAppIsAvailableSpy.restore();
+            showAppIsUnavailableSpy.restore();
+        });
+
         suite("server is up", () => {
             setup(() => {
-                nock(mavensMateClientOptions.baseURL)
+                nock(baseURL)
                     .get('/app/home/index')
                     .reply(200, 'OK');
             });
-
+ 
             test("returns true", () => {
                 return mavensMateClient.isAppAvailable()
-                    .then((isAvailable) =>{
-                        expect(isAvailable).to.be(true);
+                    .then(() =>{
+                        expect(showAppIsAvailableSpy.calledOnce).to.be(true);
+                        expect(showAppIsUnavailableSpy.calledOnce).to.be(false);
                     });
             });
         });
@@ -31,11 +71,9 @@ suite("MavensMate Client", () => {
         suite("server is down", () => {
             test("returns an error", () => {
                 return mavensMateClient.isAppAvailable()
-                    .then((isAvailable) =>{
-                        expect().fail("Shouldn't be available");
-                    })
-                    .catch((requestError) => {
-                        expect(requestError).to.not.be(undefined);
+                    .then(() =>{
+                        expect(showAppIsAvailableSpy.calledOnce).to.be(false);
+                        expect(showAppIsUnavailableSpy.calledOnce).to.be(true);
                     });
             });
         });
@@ -43,7 +81,7 @@ suite("MavensMate Client", () => {
     
     suite("sendCommand", () => {
         test("sends synchronous command", (testDone) => {
-            let sendCommandNock = nock(mavensMateClientOptions.baseURL)
+            let sendCommandNock = nock(baseURL)
                 .post('/execute', {"args":{"ui":true}})
                 .matchHeader('Content-Type', 'application/json')
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
@@ -51,11 +89,11 @@ suite("MavensMate Client", () => {
                 .reply(200);
             let openUICommand: ClientCommand = new OpenUI();
                 
-            // mavensMateClient.sendCommand(openUICommand)
-            //     .then(() => {
-            //         sendCommandNock.done();
-            //     }, assertIfError)
-            //     .done(testDone);
+            mavensMateClient.sendCommand(openUICommand)
+                .then(() => {
+                    sendCommandNock.done();
+                }, assertIfError)
+                .done(testDone);
         });
 
         test("sends async command", (testDone) => {
@@ -66,37 +104,37 @@ suite("MavensMate Client", () => {
             let completedResponse = {
                 id: 'e14b82c0-2d98-11e6-a468-5bbc3ff5e056',
                 complete: true,
-                operation: "open-ui",
+                operation: "clean-project",
                 result: {
                     "message": "Success"
                 }
             }
-            let sendCommandNock = nock(mavensMateClientOptions.baseURL)
-                .post('/execute', {"args":{"ui":true}})
+            let sendCommandNock = nock(baseURL)
+                .post('/execute', {"args":{"ui":false}})
                 .matchHeader('Content-Type', 'application/json')
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
-                .query({"command":"open-ui","async":"1"})
+                .query({"command":"clean-project","async":"1"})
                 .reply(200, pendingResponse);
-            let checkStatusPendingNock = nock(mavensMateClientOptions.baseURL)
+            let checkStatusPendingNock = nock(baseURL)
                 .get('/execute/'+pendingResponse.id)
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
                 .times(2)
                 .reply(200, pendingResponse);
-            let checkStatusCompleteNock = nock(mavensMateClientOptions.baseURL)
+            let checkStatusCompleteNock = nock(baseURL)
                 .get('/execute/'+pendingResponse.id)
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
                 .reply(200, completedResponse);
             
-            let openUICommand: ClientCommand = new OpenUI();
+            let cleanProjectCommand: ClientCommand = new CleanProject();
                 
-            // mavensMateClient.sendCommand(openUICommand)
-            //     .then((actualResponse) => {
-            //         expect(actualResponse.complete).to.be(true);
-            //         sendCommandNock.done();
-            //         checkStatusPendingNock.done();
-            //         checkStatusCompleteNock.done();
-            //     }, assertIfError)
-            //     .done(testDone);
+            mavensMateClient.sendCommand(cleanProjectCommand)
+                .then((actualResponse) => {
+                    expect(actualResponse.complete).to.be(true);
+                    sendCommandNock.done();
+                    checkStatusPendingNock.done();
+                    checkStatusCompleteNock.done();
+                }, assertIfError)
+                .done(testDone);
         });
     });
 });

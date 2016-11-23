@@ -77,7 +77,7 @@ export abstract class ClientCommand extends BaseCommand {
             this.mavensMateChannel.appendError(`${this.label}: Failed\n${response}`);   
         }
         this.mavensMateStatus.showAppIsUnavailable();
-        console.error(response);
+        console.error(`MavensMate Client Error Response:\n ${response}`);
         return Promise.reject(response);
     }
 }

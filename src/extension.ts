@@ -3,9 +3,9 @@ import * as vscode from 'vscode';
 let mavensMateMateExtension;
 
 export function activate(context: vscode.ExtensionContext) {
-    let { MavensMateExtension } = require('./mavensmateExtension');
-    mavensMateMateExtension = new MavensMateExtension(context);
-    mavensMateMateExtension.activate().catch(console.error);
+    let { MavensMateExtension } = require('./mavensMateExtension');
+    mavensMateMateExtension = MavensMateExtension.create(context);
+    return mavensMateMateExtension.activate();
 }
 
 export function deactivate() {
@@ -14,5 +14,5 @@ export function deactivate() {
 }
 
 process.on("unhandledRejection", function(reason, promise) {
-    console.error(reason);
+    console.error(`MavensMate Unhandled Exception: ${reason}`);
 });

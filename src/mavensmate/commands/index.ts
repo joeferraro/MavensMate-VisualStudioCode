@@ -13,14 +13,14 @@ export function commandDirectory(): CommandDirectoryInterface {
         if(commandFile.endsWith('js')){
             let commandBaseName = path.basename(commandFile, '.js');
             let commandKey = 'mavensmate.' + commandBaseName;
-            console.log('Attempting to import ' + commandKey);
+            console.info(`MavensMate: Attempting to import ${commandKey}`);
 
             let importedCommand = require('./' + commandFile);
             if(importedCommand.create){
-                console.info('Imported ' + commandKey);
+                console.info(`MavensMate: Imported ${commandKey}`);
                 commandDirectory[commandKey] = importedCommand;
             } else {
-                console.warn(commandKey + ' not imported because it does not have a static create method');
+                console.warn(`MavensMate: ${commandKey} not imported because it does not have a static create method`);
             }
         }
     }

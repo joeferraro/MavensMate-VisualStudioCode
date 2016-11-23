@@ -7,7 +7,7 @@ export function getPathEnd(path: string): string{
     if(matches && matches.length > 0){
         pathEnd = matches[matches.length-1];
     } else {
-        console.error('Failed to get the pathEnd from: ' + path);
+        console.error(`MavensMate: Failed to get the pathEnd from: ${path}`);
     }
     return pathEnd;
 }

@@ -1,4 +1,4 @@
-import assert = require('assert');
+import expect = require('expect.js');
 import sinon = require('sinon');
 
 import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
@@ -19,7 +19,12 @@ suite("MavensMateStatus", () => {
             createStatusBarItemStub = sinon.stub(vscode.window, "createStatusBarItem");
             createStatusBarItemStub.returns(statusBarItem);
             
-            mavensMateStatus = MavensMateStatus.getInstance();
+            mavensMateStatus = MavensMateStatus.create();
+
+            expect(createStatusBarItemStub.calledOnce).to.be(true);
+            expect(statusBarItem.show.calledOnce).to.be(true);
+            expect(statusBarItem.text).to.equal("MavensMate");
+            expect(statusBarItem.command).to.equal("mavensmate.toggleOutput");
         });
     
         teardown(() => {
@@ -28,19 +33,15 @@ suite("MavensMateStatus", () => {
     
         suite("when MavensMateApp is Available", () => {
             test("it sets the statusBarItem to Check", () => {
-                return mavensMateStatus.updateAppStatus().then(() => {
-                    assert(statusBarItem.show.calledOnce);
-                    assert.equal(statusBarItem.text, "MavensMate $(check)");
-                });
+                mavensMateStatus.showAppIsAvailable();
+                expect(statusBarItem.text).to.equal("MavensMate $(check)");
             });
         });
         
         suite("when MavensMateApp is not Available", () => {
             test("it sets the statusBarItem to alert", () => {
-                return mavensMateStatus.updateAppStatus().then(() => {
-                    assert(statusBarItem.show.calledOnce);
-                    assert.equal(statusBarItem.text, "MavensMate $(alert)");
-                });
+                mavensMateStatus.showAppIsUnavailable();
+                expect(statusBarItem.text).to.equal("MavensMate $(alert)");
             });
         });
     });

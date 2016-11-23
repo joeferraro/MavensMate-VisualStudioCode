@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import Promise = require('bluebird');
 
 import { MavensMateChannel } from '../src/vscode/mavensMateChannel';
-import { hasProjectSettings, ProjectSettings } from '../src/mavensmate/projectSettings';
+import { ProjectSettings } from '../src/mavensmate/projectSettings';
 import { MavensMateClient } from '../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../src/vscode/mavensMateStatus';
 import { MavensMateCodeCoverage } from '../src/vscode/mavensMateCodeCoverage';
@@ -18,6 +18,10 @@ export class MavensMateExtension {
     mavensMateClient: MavensMateClient;
     mavensMateCodeCoverage: MavensMateCodeCoverage;
 
+    static create(context: vscode.ExtensionContext){
+        return new MavensMateExtension(context);
+    }
+
     constructor(context: vscode.ExtensionContext){
         this.context = context;
     }
@@ -28,34 +32,35 @@ export class MavensMateExtension {
         this.mavensMateStatus = MavensMateStatus.getInstance();
         this.mavensMateClient = MavensMateClient.getInstance();
         this.mavensMateCodeCoverage = MavensMateCodeCoverage.getInstance();
-        this.mavensMateChannel.appendStatus('MavensMate is activating');
+        this.mavensMateChannel.appendStatus('MavensMate: Activating');
 
         return Promise.resolve().bind(this)
-            .then(() => {
-                return hasProjectSettings();
-            })
-            .then(this.instantiateWithProject, this.instantiateWithoutProject)
+            .then(() => this.checkProjectSettingsAndSubscribe())
+            .then(() => CommandRegistrar.registerCommands())
             .then(() => {
                 if(getConfiguration<boolean>('mavensMate.pingMavensMateOnStartUp')){
                     this.mavensMateClient.isAppAvailable();
                 } else {
-                    console.log('Not pinging MavensMate on Startup, controlled by mavensMate.pingMavensMateOnStartUp');
+                    console.log(`MavensMate: Not pinging MavensMate Desktop on Startup, controlled by mavensMate.pingMavensMateOnStartUp`);
                 }
             });
     }
 
-    instantiateWithProject(){
-        let projectSettings = ProjectSettings.getProjectSettings();
-        this.mavensMateChannel.appendStatus(`Instantiating with Project: ${projectSettings.projectName} (${ projectSettings.instanceUrl })`);
-        let withProject = true;
-        CommandRegistrar.registerCommands(this.context, withProject);
-        return this.subscribeToEvents();
+    checkProjectSettingsAndSubscribe(){
+        if(ProjectSettings.hasProjectSettings()){
+            let projectSettings = ProjectSettings.getProjectSettings();
+            this.mavensMateChannel.appendStatus(`Instantiating with Project: ${projectSettings.projectName} (${ projectSettings.instanceUrl })`);
+            return this.subscribeToEvents();
+        } else {
+            this.mavensMateChannel.appendStatus(`Instantiating without Project`);
+        }
     }
 
     instantiateWithoutProject(){
-        this.mavensMateChannel.appendStatus(`Instantiating without Project`);
+        
         let withProject = false;
-        CommandRegistrar.registerCommands(this.context, withProject);
+        
+        CommandRegistrar.registerCommands();
     }
 
     subscribeToEvents(){
@@ -82,6 +87,6 @@ export class MavensMateExtension {
         this.mavensMateClient.dispose();
         this.mavensMateStatus.dispose();
         this.mavensMateCodeCoverage.dispose();
-        console.info('Finished Deactivating');
+        console.info(`MavensMate: Finished Deactivating`);
     }
 }
