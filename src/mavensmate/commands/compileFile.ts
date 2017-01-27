@@ -27,6 +27,8 @@ class CompileFile extends PathsCommand {
                     return Promise.reject(`Can not compile this file: ${this.filePath}`);
                 } else if(this.filePath.includes('apex-scripts')){
                     return Promise.reject(`Local Apex Scripts can't be compiled. You can run them with Run Apex Script`);
+                }else if(this.filePath.includes('resource-bundles')){
+                    return Promise.reject(`Files inside Resource Bundles cannot be compiled. Use Deploy Resource Bundle instead`);
                 } else {
                     return super.confirmPath();
                 }

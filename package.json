@@ -348,6 +348,53 @@
                     "command": "mavensmate.createResourceBundle",
                     "group": "mavensmate"
                 }
+            ],
+            "editor/context": [
+                {
+                    "when": "resourceLangId == 'apex'",
+                    "command": "mavensmate.compileFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'visualforce'",
+                    "command": "mavensmate.compileFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'xml'",
+                    "command": "mavensmate.compileFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'apex'",
+                    "command": "mavensmate.refreshFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'visualforce'",
+                    "command": "mavensmate.refreshFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'xml'",
+                    "command": "mavensmate.refreshFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'apex'",
+                    "command": "mavensmate.deleteFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'visualforce'",
+                    "command": "mavensmate.deleteFile",
+                    "group": "mavensmate"
+                },
+                {
+                    "when": "resourceLangId == 'xml'",
+                    "command": "mavensmate.deleteFile",
+                    "group": "mavensmate"
+                }
             ]
         },
         "configuration": {
