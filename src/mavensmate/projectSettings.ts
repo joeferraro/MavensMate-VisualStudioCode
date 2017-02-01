@@ -17,7 +17,7 @@ export class ProjectSettings {
         if(projectPath && !ProjectSettings._instances[projectPath]){
             let settingsPath = buildSettingsPath(projectPath);
             console.info(`Retrieving settings at path:  ${ settingsPath }`);
-            ProjectSettings._instances[projectPath] = file.open(settingsPath);            
+            ProjectSettings._instances[projectPath] = file.open(settingsPath);
         }
 
         return ProjectSettings._instances[projectPath];
@@ -28,7 +28,7 @@ export class ProjectSettings {
         if(!ProjectSettings._instances[projectPath]){
             ProjectSettings.getProjectSettings(projectPath);
         }
-        return ProjectSettings._instances[projectPath] !== null;
+        return ProjectSettings._instances[projectPath] != null;
     }
 }
 
