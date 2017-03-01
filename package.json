@@ -107,6 +107,10 @@
                 "title": "MavensMate: Clean Project"
             },
             {
+                "command": "mavensmate.compileAllTabs",
+                "title": "MavensMate: Compile All Tabs"
+            },
+            {
                 "command": "mavensmate.compileFile",
                 "title": "MavensMate: Compile File"
             },
