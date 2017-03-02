@@ -209,7 +209,8 @@
                 ],
                 "aliases": [
                     "Visualforce"
-                ]
+                ],
+                "configuration": "./languages/visualforce-language-configuration.json"
             },
             {
                 "id": "staticResource",
