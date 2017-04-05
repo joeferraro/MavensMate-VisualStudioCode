@@ -35,15 +35,15 @@ All issues are managed by the [central MavensMate project](https://github.com/jo
 
 ## Setup
 
-###Important Settings (Configured in MavensMate Desktop)
+### Important Settings (Configured in MavensMate Desktop)
 
-####Workspaces (mm_workspace)
+#### Workspaces (mm_workspace)
 
 You may set `mm_workspace` to a single path on your local filesystem or an array of paths.
 
-#####Examples
+##### Examples
 
-######Array of workspaces
+###### Array of workspaces
 
 ```
 "mm_workspace" : [
@@ -52,7 +52,7 @@ You may set `mm_workspace` to a single path on your local filesystem or an array
 ],
 ```
 
-######Single workspace
+###### Single workspace
 
 ```
 "mm_workspace" : "/Users/darylshaber/Desktop/my-cool-folder",
