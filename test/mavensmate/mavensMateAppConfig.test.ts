@@ -1,5 +1,6 @@
 import assert = require('assert');
 import sinon = require('sinon');
+import path = require('path');
 
 import operatingSystem = require('../../src/workspace/operatingSystem');
 import jsonFile = require('../../src/workspace/jsonFile');
@@ -23,8 +24,8 @@ suite('mavensMate App Config', () => {
         process.env.HOME = 'hometest';
         
         openStub = sinon.stub(jsonFile, 'open');
-        openStub.withArgs('userprofiletest/.mavensmate-config.json').returns(windowsJson);
-        openStub.withArgs('hometest/.mavensmate-config.json').returns(nonWindowsJson); 
+        openStub.withArgs(path.normalize('userprofiletest/.mavensmate-config.json')).returns(windowsJson);
+        openStub.withArgs(path.normalize('hometest/.mavensmate-config.json')).returns(nonWindowsJson); 
     });
     
     teardown(() => { 
@@ -43,8 +44,8 @@ suite('mavensMate App Config', () => {
         test('it uses home', () => {
             mavensMateAppConfig.getConfig();
             
-            sinon.assert.calledWith(openStub, 'hometest/.mavensmate-config.json');
-            sinon.assert.neverCalledWith(openStub, 'userprofiletest/.mavensmate-config.json');
+            sinon.assert.calledWith(openStub, path.normalize('hometest/.mavensmate-config.json'));
+            sinon.assert.neverCalledWith(openStub, path.normalize('userprofiletest/.mavensmate-config.json'));
         });
         
         test('it parses correct json', () => {
@@ -70,8 +71,8 @@ suite('mavensMate App Config', () => {
         test('it uses userprofile', () => {
             mavensMateAppConfig.getConfig();
             
-            sinon.assert.calledWith(openStub, 'userprofiletest/.mavensmate-config.json');
-            sinon.assert.neverCalledWith(openStub, 'hometest/.mavensmate-config.json');
+            sinon.assert.calledWith(openStub, path.normalize('userprofiletest/.mavensmate-config.json'));
+            sinon.assert.neverCalledWith(openStub, path.normalize('hometest/.mavensmate-config.json'));
         });
         
         test('it parses correct json', () => {
@@ -97,8 +98,8 @@ suite('mavensMate App Config', () => {
         test('it uses home', () => {
             mavensMateAppConfig.getConfig();
             
-            sinon.assert.calledWith(openStub, 'hometest/.mavensmate-config.json');
-            sinon.assert.neverCalledWith(openStub, 'userprofiletest/.mavensmate-config.json');
+            sinon.assert.calledWith(openStub, path.normalize('hometest/.mavensmate-config.json'));
+            sinon.assert.neverCalledWith(openStub, path.normalize('userprofiletest/.mavensmate-config.json'));
         });
         
         test('it parses correct json', () => {
