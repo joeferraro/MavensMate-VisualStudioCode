@@ -28,7 +28,8 @@ export class ProjectSettings {
         if(!ProjectSettings._instances[projectPath]){
             ProjectSettings.getProjectSettings(projectPath);
         }
-        return ProjectSettings._instances[projectPath] !== null;
+        return ProjectSettings._instances[projectPath] !== null 
+            && ProjectSettings._instances[projectPath] !== undefined;
     }
 }
 
