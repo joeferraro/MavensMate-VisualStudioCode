@@ -467,7 +467,6 @@
     },
     "dependencies": {
         "bluebird": "3.5.0",
-        "fs-promise": "2.0.2",
         "global": "^4.3.1",
         "path": "0.12.7",
         "request-promise": "4.2.0",

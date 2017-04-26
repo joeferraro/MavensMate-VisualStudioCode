@@ -1,6 +1,5 @@
 import path = require('path');
-
-import fs = require('fs-promise');
+import * as fs from './readDirAsync';
 import Promise = require('bluebird');
 import * as vscode from 'vscode';
 

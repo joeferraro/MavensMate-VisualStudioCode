@@ -1,4 +1,3 @@
-import fs = require('fs-promise');
 import path = require('path');
 import vscode = require('vscode');
 import file = require('../workspace/jsonFile');
