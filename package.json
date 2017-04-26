@@ -11,7 +11,7 @@
     },
     "icon": "icon.png",
     "engines": {
-        "vscode": "^0.10.10"
+        "vscode": "^1.1.0"
     },
     "categories": [
         "Other"
@@ -466,19 +466,19 @@
         "test": "node ./node_modules/vscode/bin/test"
     },
     "dependencies": {
-        "bluebird": "3.3.5",
-        "fs-promise": "0.5.0",
+        "bluebird": "3.5.0",
+        "fs-promise": "2.0.2",
         "global": "^4.3.1",
         "path": "0.12.7",
-        "request-promise": "2.0.1",
-        "url-join": "1.1.0"
+        "request-promise": "4.2.0",
+        "url-join": "2.0.1"
     },
     "devDependencies": {
         "coveralls": "^2.11.14",
         "expect.js": "0.3.1",
-        "nock": "8.0.0",
-        "sinon": "1.17.3",
-        "typescript": "^2.0.3",
-        "vscode": "^0.11.0"
+        "nock": "9.0.13",
+        "sinon": "2.1.0",
+        "typescript": "2.2.2",
+        "vscode": "1.1.0"
     }
 }
