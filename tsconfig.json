@@ -7,9 +7,7 @@
         "sourceMap": true,
         "rootDir": "."
     },
-    "exclude": [
-        "node_modules",
-        "typings/browser",
-        "typings/browser.td.s"
+    "include": [
+        "node_modules/@types"
     ]
 }
