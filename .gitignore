@@ -2,6 +2,3 @@ out
 node_modules
 .DS_Store
 *.vsix
-typings/globals/
-typings/modules/
-typings/index.d.ts
