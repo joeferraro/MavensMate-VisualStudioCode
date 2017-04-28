@@ -123,10 +123,6 @@
                 "title": "MavensMate: Refresh File"
             },
             {
-                "command": "mavensmate.refreshFolder",
-                "title": "MavensMate: Refresh Folder"
-            },
-            {
                 "command": "mavensmate.openMetadata",
                 "title": "MavensMate: Open File In Salesforce"
             },
@@ -331,11 +327,6 @@
                 {
                     "when": "resourceLangId == 'xml'",
                     "command": "mavensmate.refreshFile",
-                    "group": "mavensmate"
-                },
-                {
-                    "when": "explorerResourceIsFolder",
-                    "command": "mavensmate.refreshFolder",
                     "group": "mavensmate"
                 },
                 {
