@@ -4,7 +4,10 @@ import bbPromise = require('bluebird');
 export async function readdir(filePath: string): bbPromise<string> {
     return new bbPromise<string>((resolve, reject) => {
         fs.readdir(filePath, (err, files) => {
-            if (err) { reject("Error reading directory " + filePath) }
+            if (err) {
+                console.error("Error reading directory " + filePath);
+                reject();
+            }
             return resolve(files);
         });
     });

@@ -12,7 +12,7 @@ export function promiseList() : Promise<staticResource[]> {
     let staticResourcesPath = buildStaticResourcesPath();
 
     let listStaticResourcesInWorkspace = fs.readdir(staticResourcesPath)
-        .then(staticResourcesFromFileList, console.error);
+        .then(staticResourcesFromFileList);
     
     return listStaticResourcesInWorkspace;
 }

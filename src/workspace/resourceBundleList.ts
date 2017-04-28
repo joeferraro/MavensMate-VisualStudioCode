@@ -12,7 +12,7 @@ export function promiseList() : Promise<resourceBundle[]> {
     let resourceBundlesPath = buildResourceBundlesPath();
 
     let listResourceBundlesInWorkspace = fs.readdir(resourceBundlesPath)
-        .then(resourceBundlesFromFileList, console.error);
+        .then(resourceBundlesFromFileList);
     
     return listResourceBundlesInWorkspace;
 }
