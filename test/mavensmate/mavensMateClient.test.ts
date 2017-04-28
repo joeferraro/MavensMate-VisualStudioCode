@@ -82,9 +82,9 @@ suite("MavensMate Client", () => {
     suite("sendCommand", () => {
         test("sends synchronous command", (testDone) => {
             let sendCommandNock = nock(baseURL)
-                .post('/execute', {"args":{"ui":true}})
                 .matchHeader('Content-Type', 'application/json')
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
+                .post('/execute', {"args":{"ui":true}})
                 .query({"command":"open-ui","async":"0"})
                 .reply(200);
             let openUICommand: ClientCommand = new OpenUI();
@@ -110,19 +110,19 @@ suite("MavensMate Client", () => {
                 }
             }
             let sendCommandNock = nock(baseURL)
-                .post('/execute', {"args":{"ui":false}})
                 .matchHeader('Content-Type', 'application/json')
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
+                .post('/execute', {"args":{"ui":false}})
                 .query({"command":"clean-project","async":"1"})
                 .reply(200, pendingResponse);
             let checkStatusPendingNock = nock(baseURL)
-                .get('/execute/'+pendingResponse.id)
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
+                .get('/execute/'+pendingResponse.id)
                 .times(2)
                 .reply(200, pendingResponse);
             let checkStatusCompleteNock = nock(baseURL)
-                .get('/execute/'+pendingResponse.id)
                 .matchHeader('MavensMate-Editor-Agent', 'vscode')
+                .get('/execute/'+pendingResponse.id)
                 .reply(200, completedResponse);
             
             let cleanProjectCommand: ClientCommand = new CleanProject();
