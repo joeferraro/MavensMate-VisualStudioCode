@@ -1,6 +1,6 @@
 'use strict';
 import * as vscode from 'vscode';
-import request = require('request-promise');
+import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 import urlJoin = require('url-join');
 import Promise = require('bluebird');
 import { ClientCommand } from './commands/clientCommand';
@@ -16,7 +16,7 @@ export class MavensMateClient implements vscode.Disposable {
     baseURL: string;
     projectId: string;
     mavensMateStatus: MavensMateStatus;
-    
+
     private static _instance: MavensMateClient = null;
 
     static getInstance(){
@@ -29,7 +29,6 @@ export class MavensMateClient implements vscode.Disposable {
     constructor(){
         this.baseURL = vscode.workspace.getConfiguration().get<string>('mavensMateDesktop.baseURL');
         this.mavensMateStatus = MavensMateStatus.getInstance();
-    
         let projectSettings = ProjectSettings.getProjectSettings();
         if(projectSettings){
             this.projectId = projectSettings.id;
@@ -38,10 +37,10 @@ export class MavensMateClient implements vscode.Disposable {
     
     isAppAvailable(){
         let isAvailableURL = urlJoin(this.baseURL, '/app/home/index');
-        let getOptions = {
-            uri: isAvailableURL
+        let getOptions: AxiosRequestConfig = {
+            url: isAvailableURL
         };
-        return request.get(getOptions).then(() => {
+        return axios(isAvailableURL).then(() => {
             this.mavensMateStatus.showAppIsAvailable();
         }, () => {
             this.mavensMateStatus.showAppIsUnavailable();
@@ -50,10 +49,10 @@ export class MavensMateClient implements vscode.Disposable {
     
     sendCommand(command: ClientCommand) : Promise<any> {
         let postOptions = this.getPostOptionsForCommand(command, this.baseURL);
-        let promiseCommandSend = request(postOptions).promise();
+        let promiseCommandSend = Promise.resolve(axios(postOptions));
         this.mavensMateStatus.showAppIsThinking();
         if(command.async){
-            return promiseCommandSend.bind(this).then(this.handlePollResponse);
+            return promiseCommandSend.then(this.handlePollResponse);
         } else {
             return promiseCommandSend;
         }
@@ -73,12 +72,11 @@ export class MavensMateClient implements vscode.Disposable {
             'MavensMate-Editor-Agent': 'vscode'
         };
         
-        let postOptions = {
+        let postOptions: AxiosRequestConfig = {
             method: 'POST',
-            uri: commandURL,
+            url: commandURL,
             headers: commandHeaders,
-            body: command.body,
-            json: true
+            data: command.body
         };
         return postOptions;
     }
@@ -101,14 +99,12 @@ export class MavensMateClient implements vscode.Disposable {
             'MavensMate-Editor-Agent': 'vscode'
         };
 
-        let getOptions = {
-            method: 'GET',
-            uri: statusURL,
-            headers: statusHeaders,
-            json: true
+        let getOptions: AxiosRequestConfig = {
+            url: statusURL,
+            headers: statusHeaders
         };
         
-        return request(getOptions);
+        return axios(getOptions);
     }
 
     private hasProjectId(){
