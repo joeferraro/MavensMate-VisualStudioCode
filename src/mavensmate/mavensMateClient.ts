@@ -1,6 +1,6 @@
 'use strict';
 import * as vscode from 'vscode';
-import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
+import axios, { AxiosRequestConfig, AxiosInstance, AxiosPromise } from 'axios';
 import urlJoin = require('url-join');
 import Promise = require('bluebird');
 import { ClientCommand } from './commands/clientCommand';
@@ -52,7 +52,7 @@ export class MavensMateClient implements vscode.Disposable {
         let promiseCommandSend = Promise.resolve(axios(postOptions));
         this.mavensMateStatus.showAppIsThinking();
         if(command.async){
-            return promiseCommandSend.then(this.handlePollResponse);
+            return promiseCommandSend.bind(this).then(this.handlePollResponse);
         } else {
             return promiseCommandSend;
         }
@@ -82,19 +82,19 @@ export class MavensMateClient implements vscode.Disposable {
     }
 
     handlePollResponse(commandResponse){
-        if(commandResponse.status && commandResponse.status == 'pending'){
+        if(commandResponse.data && commandResponse.data.status && commandResponse.data.status == 'pending'){
             this.mavensMateStatus.showAppIsThinking();
             return Promise.delay(500, commandResponse)
                 .bind(this)
                 .then(this.poll)
                 .then(this.handlePollResponse);
         } else {
-            return commandResponse;
+            return commandResponse.data;
         }
     }
 
     poll(commandResponse){
-        let statusURL = urlJoin(this.baseURL, '/execute/' + commandResponse.id);
+        let statusURL = urlJoin(this.baseURL, '/execute/' + commandResponse.data.id);
         let statusHeaders = {
             'MavensMate-Editor-Agent': 'vscode'
         };
