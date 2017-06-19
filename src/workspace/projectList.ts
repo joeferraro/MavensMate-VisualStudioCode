@@ -1,7 +1,5 @@
-
 import path = require('path');
-
-import fs = require('fs-promise');
+import * as fs from './readDirAsync';
 import Promise = require('bluebird');
 import mavensMateAppConfig = require('../mavensmate/mavensMateAppConfig');
 import { ProjectSettings } from '../mavensmate/projectSettings';

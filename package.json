@@ -11,7 +11,7 @@
     },
     "icon": "icon.png",
     "engines": {
-        "vscode": "^0.10.10"
+        "vscode": "^1.1.0"
     },
     "categories": [
         "Other"
@@ -451,25 +451,30 @@
         }
     },
     "scripts": {
-        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "vscode:prepublish": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
         "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test"
     },
     "dependencies": {
-        "bluebird": "3.3.5",
-        "fs-promise": "0.5.0",
+        "axios": "^0.16.1",
+        "bluebird": "3.5.0",
         "global": "^4.3.1",
+        "moxios": "^0.4.0",
         "path": "0.12.7",
-        "request-promise": "2.0.1",
-        "url-join": "1.1.0"
+        "url-join": "2.0.1"
     },
     "devDependencies": {
+        "@types/bluebird": "3.5.0",
+        "@types/mocha": "2.2.41",
+        "@types/nock": "8.2.1",
+        "@types/node": "^6.0.70",
+        "@types/sinon": "2.1.0",
         "coveralls": "^2.11.14",
         "expect.js": "0.3.1",
-        "nock": "8.0.0",
-        "sinon": "1.17.3",
-        "typescript": "^2.0.3",
-        "vscode": "^0.11.0"
+        "nock": "8.2.1",
+        "sinon": "2.1.0",
+        "typescript": "2.2.2",
+        "vscode": "1.1.0"
     }
 }
