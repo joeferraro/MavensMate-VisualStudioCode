@@ -1,9 +1,11 @@
 import expect = require('expect.js');
-import nock = require('nock');
 import * as sinon from 'sinon';
 import Promise = require('bluebird');
-
 import vscode = require('vscode');
+import axios, { AxiosStatic } from 'axios';
+import moxios = require('moxios');
+import querystring = require('querystring');
+
 import { MavensMateClient } from '../../src/mavensmate/mavensMateClient';
 import { MavensMateStatus } from '../../src/vscode/mavensMateStatus';
 import { ClientCommand } from '../../src/mavensmate/commands/clientCommand';
@@ -23,7 +25,7 @@ suite("MavensMate Client", () => {
             let returnedClient = MavensMateClient.getInstance();
 
             expect(returnedClient).to.not.be(undefined);
-            expect(typeof(returnedClient.isAppAvailable)).to.equal('function');
+            expect(typeof (returnedClient.isAppAvailable)).to.equal('function');
         });
 
         test("returns same client on subsequent calls", () => {
@@ -53,54 +55,93 @@ suite("MavensMate Client", () => {
         });
 
         suite("server is up", () => {
+
             setup(() => {
-                nock(baseURL)
-                    .get('/app/home/index')
-                    .reply(200, 'OK');
+                moxios.install();
             });
- 
-            test("returns true", () => {
-                return mavensMateClient.isAppAvailable()
-                    .then(() =>{
+
+            teardown(() => {
+                moxios.uninstall();
+            });
+
+            test("returns true", (done) => {
+                mavensMateClient.isAppAvailable();
+                moxios.wait(() => {
+                    let request = moxios.requests.mostRecent();
+                    request.respondWith({
+                        status: 200,
+                        response: 'OK'
+                    }).then(() => {
                         expect(showAppIsAvailableSpy.calledOnce).to.be(true);
                         expect(showAppIsUnavailableSpy.calledOnce).to.be(false);
+                        done();
                     });
+                });
             });
         });
 
         suite("server is down", () => {
-            test("returns an error", () => {
-                return mavensMateClient.isAppAvailable()
-                    .then(() =>{
+
+            setup(() => {
+                moxios.install();
+            });
+
+            teardown(() => {
+                moxios.uninstall();
+            });
+
+            test("returns an error", (done) => {
+                mavensMateClient.isAppAvailable();
+                moxios.wait(() => {
+                    let request = moxios.requests.mostRecent();
+                    request.respondWith({
+                        status: 'ERR',
+                        response: 'ERR'
+                    }).then(() => {
                         expect(showAppIsAvailableSpy.calledOnce).to.be(false);
                         expect(showAppIsUnavailableSpy.calledOnce).to.be(true);
+                        done();
                     });
+                });
             });
         });
     });
-    
+
     suite("sendCommand", () => {
-        test("sends synchronous command", (testDone) => {
-            let sendCommandNock = nock(baseURL)
-                .post('/execute', {"args":{"ui":true}})
-                .matchHeader('Content-Type', 'application/json')
-                .matchHeader('MavensMate-Editor-Agent', 'vscode')
-                .query({"command":"open-ui","async":"0"})
-                .reply(200);
-            let openUICommand: ClientCommand = new OpenUI();
-                
-            mavensMateClient.sendCommand(openUICommand)
-                .then(() => {
-                    sendCommandNock.done();
-                }, assertIfError)
-                .done(testDone);
+
+        setup(() => {
+            moxios.install();
         });
 
-        test("sends async command", (testDone) => {
+        teardown(() => {
+            moxios.uninstall();
+        });
+
+        test("sends synchronous command", (done) => {
+            let openUICommand: ClientCommand = new OpenUI();
+
+            mavensMateClient.sendCommand(openUICommand).then(() => {
+                done()
+            }, assertIfError);
+
+            moxios.wait(() => {
+                let request = moxios.requests.mostRecent();
+                expect(request.headers['Content-Type']).to.be('application/json');
+                expect(request.headers['MavensMate-Editor-Agent']).to.be('vscode');
+                expect(request.config.data).to.be('{"args":{"ui":true}}');
+                request.respondWith({
+                    status: 200,
+                    response: 'OK'
+                });
+            });
+        });
+
+        test("sends Asynchronous command", (done) => {
             let pendingResponse = {
                 id: 'e14b82c0-2d98-11e6-a468-5bbc3ff5e056',
                 status: 'pending'
             };
+
             let completedResponse = {
                 id: 'e14b82c0-2d98-11e6-a468-5bbc3ff5e056',
                 complete: true,
@@ -109,36 +150,52 @@ suite("MavensMate Client", () => {
                     "message": "Success"
                 }
             }
-            let sendCommandNock = nock(baseURL)
-                .post('/execute', {"args":{"ui":false}})
-                .matchHeader('Content-Type', 'application/json')
-                .matchHeader('MavensMate-Editor-Agent', 'vscode')
-                .query({"command":"clean-project","async":"1"})
-                .reply(200, pendingResponse);
-            let checkStatusPendingNock = nock(baseURL)
-                .get('/execute/'+pendingResponse.id)
-                .matchHeader('MavensMate-Editor-Agent', 'vscode')
-                .times(2)
-                .reply(200, pendingResponse);
-            let checkStatusCompleteNock = nock(baseURL)
-                .get('/execute/'+pendingResponse.id)
-                .matchHeader('MavensMate-Editor-Agent', 'vscode')
-                .reply(200, completedResponse);
-            
             let cleanProjectCommand: ClientCommand = new CleanProject();
-                
+
             mavensMateClient.sendCommand(cleanProjectCommand)
-                .then((actualResponse) => {
-                    expect(actualResponse.complete).to.be(true);
-                    sendCommandNock.done();
-                    checkStatusPendingNock.done();
-                    checkStatusCompleteNock.done();
-                }, assertIfError)
-                .done(testDone);
+                .then(finalResponse => {
+                    expect(finalResponse.complete).to.be(true);
+                    done();
+                });
+
+            moxios.wait(() => {
+                let request = moxios.requests.mostRecent();
+                expect(request.headers['Content-Type']).to.be('application/json');
+                expect(request.headers['MavensMate-Editor-Agent']).to.be('vscode');
+                expect(request.config.data).to.be('{"args":{"ui":false}}');
+                request.respondWith({
+                    status: 200,
+                    response: pendingResponse
+                });
+                moxios.wait(() => {
+                    let request = moxios.requests.mostRecent();
+                    expect(request.headers['MavensMate-Editor-Agent']).to.be('vscode');
+                    request.respondWith({
+                        status: 200,
+                        response: pendingResponse
+                    });
+                    moxios.wait(() => {
+                        let request = moxios.requests.mostRecent();
+                        expect(request.headers['MavensMate-Editor-Agent']).to.be('vscode');
+                        request.respondWith({
+                            status: 200,
+                            response: pendingResponse
+                        });
+                        moxios.wait(() => {
+                            let request = moxios.requests.mostRecent();
+                            expect(request.headers['MavensMate-Editor-Agent']).to.be('vscode');
+                            request.respondWith({
+                                status: 200,
+                                response: completedResponse
+                            });
+                        }, 550);
+                    }, 550);
+                }, 550);
+            });
         });
     });
 });
 
-function assertIfError(error){
+function assertIfError(error) {
     expect().fail(error);
 }

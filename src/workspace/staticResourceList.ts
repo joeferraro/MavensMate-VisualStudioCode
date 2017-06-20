@@ -1,6 +1,5 @@
 import path = require('path');
-
-import fs = require('fs-promise');
+import * as fs from './readDirAsync';
 import Promise = require('bluebird');
 import * as vscode from 'vscode';
 
@@ -13,7 +12,7 @@ export function promiseList() : Promise<staticResource[]> {
     let staticResourcesPath = buildStaticResourcesPath();
 
     let listStaticResourcesInWorkspace = fs.readdir(staticResourcesPath)
-        .then(staticResourcesFromFileList, console.error);
+        .then(staticResourcesFromFileList);
     
     return listStaticResourcesInWorkspace;
 }

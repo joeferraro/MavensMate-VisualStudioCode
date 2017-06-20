@@ -1,7 +1,7 @@
 import expect = require('expect.js');
 import sinon = require('sinon');
 import path = require('path');
-import fs = require('fs-promise');
+import fs = require('fs');
 import Promise = require('bluebird');
 
 import jsonFile = require('../../src/workspace/jsonFile');

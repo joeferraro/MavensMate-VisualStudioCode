@@ -2,7 +2,7 @@
     "name": "mavensmate",
     "displayName": "mavensmate",
     "description": "MavensMate Salesforce plugin for the Visual Studio Code editor",
-    "version": "0.7.0",
+    "version": "0.9.2",
     "publisher": "DavidHelmer",
     "repository": "https://github.com/kidtsunami/MavensMate-VisualStudioCode",
     "homepage": "http://mavensmate.com/",
@@ -11,7 +11,7 @@
     },
     "icon": "icon.png",
     "engines": {
-        "vscode": "^0.10.10"
+        "vscode": "^1.1.0"
     },
     "categories": [
         "Other"
@@ -57,6 +57,10 @@
             {
                 "command": "mavensmate.runTestsAsync",
                 "title": "MavensMate: Run Tests In Editor (async)"
+            },
+            {
+                "command": "mavensmate.runTestsMethods",
+                "title": "MavensMate: Run Apex Test Methods"
             },
             {
                 "command": "mavensmate.openSalesforce",
@@ -107,6 +111,10 @@
                 "title": "MavensMate: Clean Project"
             },
             {
+                "command": "mavensmate.compileAllTabs",
+                "title": "MavensMate: Compile All Tabs"
+            },
+            {
                 "command": "mavensmate.compileFile",
                 "title": "MavensMate: Compile File"
             },
@@ -121,6 +129,10 @@
             {
                 "command": "mavensmate.refreshFile",
                 "title": "MavensMate: Refresh File"
+            },
+            {
+                "command": "mavensmate.refreshFolder",
+                "title": "MavensMate: Refresh Folder"
             },
             {
                 "command": "mavensmate.openMetadata",
@@ -330,6 +342,11 @@
                     "group": "mavensmate"
                 },
                 {
+                    "when": "explorerResourceIsFolder",
+                    "command": "mavensmate.refreshFolder",
+                    "group": "mavensmate"
+                },
+                {
                     "when": "resourceLangId == 'apex'",
                     "command": "mavensmate.deleteFile",
                     "group": "mavensmate"
@@ -451,25 +468,30 @@
         }
     },
     "scripts": {
-        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "vscode:prepublish": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
         "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./node_modules/vscode/bin/test"
     },
     "dependencies": {
-        "bluebird": "3.3.5",
-        "fs-promise": "0.5.0",
+        "axios": "^0.16.1",
+        "bluebird": "3.5.0",
         "global": "^4.3.1",
+        "moxios": "^0.4.0",
         "path": "0.12.7",
-        "request-promise": "2.0.1",
-        "url-join": "1.1.0"
+        "url-join": "2.0.1"
     },
     "devDependencies": {
+        "@types/bluebird": "3.5.0",
+        "@types/mocha": "2.2.41",
+        "@types/nock": "8.2.1",
+        "@types/node": "^6.0.70",
+        "@types/sinon": "2.1.0",
         "coveralls": "^2.11.14",
         "expect.js": "0.3.1",
-        "nock": "8.0.0",
-        "sinon": "1.17.3",
-        "typescript": "^2.0.3",
-        "vscode": "^0.11.0"
+        "nock": "8.2.1",
+        "sinon": "2.1.0",
+        "typescript": "2.2.2",
+        "vscode": "1.1.0"
     }
 }

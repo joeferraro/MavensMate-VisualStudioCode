@@ -1,6 +1,6 @@
 import assert = require('assert');
 import sinon = require('sinon');
-import fs = require('fs-promise');
+import * as fs from '../../src/workspace/readDirAsync';
 import path = require('path');
 
 import jsonFile = require('../../src/workspace/jsonFile');
