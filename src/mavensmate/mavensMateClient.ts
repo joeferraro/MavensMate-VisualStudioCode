@@ -51,11 +51,7 @@ export class MavensMateClient implements vscode.Disposable {
         let postOptions = this.getPostOptionsForCommand(command, this.baseURL);
         let promiseCommandSend = Promise.resolve(axios(postOptions));
         this.mavensMateStatus.showAppIsThinking();
-        if(command.async){
-            return promiseCommandSend.bind(this).then(this.handlePollResponse);
-        } else {
-            return promiseCommandSend;
-        }
+        return promiseCommandSend.bind(this).then(this.handleResponse);
     }
 
     private getPostOptionsForCommand(command: ClientCommand, baseURL: string){
@@ -81,13 +77,13 @@ export class MavensMateClient implements vscode.Disposable {
         return postOptions;
     }
 
-    handlePollResponse(commandResponse){
+    handleResponse(commandResponse){
         if(commandResponse.data && commandResponse.data.status && commandResponse.data.status == 'pending'){
             this.mavensMateStatus.showAppIsThinking();
             return Promise.delay(500, commandResponse)
                 .bind(this)
                 .then(this.poll)
-                .then(this.handlePollResponse);
+                .then(this.handleResponse);
         } else {
             return commandResponse.data;
         }

@@ -153,17 +153,8 @@ suite("MavensMate Client", () => {
             let cleanProjectCommand: ClientCommand = new CleanProject();
 
             mavensMateClient.sendCommand(cleanProjectCommand)
-                .then(firstResponse => {
-                    expect(firstResponse.data.status).to.be('pending');
-                    return axios(`${baseURL}/execute/${pendingResponse.id}`, { headers: { 'MavensMate-Editor-Agent': 'vscode' } });
-                }).then(secondResponse => {
-                    expect(secondResponse.data.status).to.be('pending');
-                    return axios(`${baseURL}/execute/${pendingResponse.id}`, { headers: { 'MavensMate-Editor-Agent': 'vscode' } });
-                }).then(thirdResponse => {
-                    expect(thirdResponse.data.status).to.be('pending');
-                    return axios(`${baseURL}/execute/${pendingResponse.id}`, { headers: { 'MavensMate-Editor-Agent': 'vscode' } });
-                }).then(finalResponse => {
-                    expect(finalResponse.data.complete).to.be(true);
+                .then(finalResponse => {
+                    expect(finalResponse.complete).to.be(true);
                     done();
                 });
 
@@ -197,9 +188,9 @@ suite("MavensMate Client", () => {
                                 status: 200,
                                 response: completedResponse
                             });
-                        });
-                    });
-                });
+                        }, 550);
+                    }, 550);
+                }, 550);
             });
         });
     });
