@@ -5,7 +5,7 @@ import { handleCompileResponse } from '../handlers/compileResponseHandler';
 import * as vscode from 'vscode';
 import Promise = require('bluebird');
 
-let languagesToCompileOnSave = new Set<string>(['apex', 'visualforce', 'xml', 'javascript']);
+let languagesToCompileOnSave = new Set<string>(['apex', 'visualforce', 'xml', 'javascript', 'css']);
 
 class CompileFile extends PathsCommand {
     static create(label?: string): PathsCommand{
@@ -37,8 +37,8 @@ class CompileFile extends PathsCommand {
     }
 
     onSuccess(response): Promise<any> {
-        return super.onSuccess(response)
-            .then(() => handleCompileResponse(response));
+        return handleCompileResponse(response)
+            .then(() => super.onSuccess(response));
     }
 }
 export = CompileFile;

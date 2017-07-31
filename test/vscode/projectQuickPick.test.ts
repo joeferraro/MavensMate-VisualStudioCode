@@ -70,7 +70,7 @@ suite('project Quick Pick', () => {
                 sinon.assert.calledWithExactly(executeCommandStub, 'vscode.openFolder', validUri);
                 testDone();
             }, (error) => {
-                assert.fail(null, null, error);
+                assert.fail(null, null, error, null);
                 testDone();
             });
         });
@@ -121,7 +121,7 @@ suite('project Quick Pick', () => {
                 sinon.assert.calledWithExactly(executeCommandStub, 'vscode.openFolder', validUri);
                 testDone();
             }, (error) => {
-                assert.fail(null, null, error);
+                assert.fail(null, null, error, null);
                 testDone();
             });
         });

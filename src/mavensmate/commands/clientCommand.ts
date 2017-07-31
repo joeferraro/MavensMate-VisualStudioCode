@@ -2,7 +2,10 @@ import { BaseCommand } from './baseCommand';
 import Promise = require('bluebird');
 import { MavensMateStatus } from '../../vscode/mavensMateStatus';
 import { MavensMateClient } from '../mavensMateClient';
-
+export class SalesforceTest {
+    testNameOrPath?: string;
+    methodNames?: string[];
+}
 export abstract class ClientCommand extends BaseCommand {
     id: string;
     async: boolean;
@@ -12,6 +15,8 @@ export abstract class ClientCommand extends BaseCommand {
         name?: string,
         paths?: string[],
         classes?: string[],
+        tests?: SalesforceTest[],
+        skipCoverage?: boolean,
         callThrough?: boolean,
         force?: boolean,
         soql?: string,
@@ -38,7 +43,8 @@ export abstract class ClientCommand extends BaseCommand {
         return this.onStart()
             .bind(this)
             .then(this.sendCommand)
-            .then(this.onSuccess, this.onFailure);
+            .then(this.onSuccess)
+            .catch(this.onFailure);
     }
 
     onStart(): Promise<any>{

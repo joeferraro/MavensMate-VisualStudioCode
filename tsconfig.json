@@ -1,15 +1,15 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
+        "target": "es6",
         "outDir": "out",
-        "noLib": true,
+        "lib": [ "es6" ],
         "sourceMap": true,
         "rootDir": "."
     },
-    "exclude": [
-        "node_modules",
-        "typings/browser",
-        "typings/browser.td.s"
+    "include": [
+        "node_modules/@types",
+        "src",
+        "test"
     ]
 }

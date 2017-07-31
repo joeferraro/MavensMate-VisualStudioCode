@@ -1,9 +1,0 @@
-{
-  "devDependencies": {
-    "nock": "registry:npm/nock#0.7.0+20160211003958",
-    "sinon": "registry:npm/sinon#1.16.0+20160309002336"
-  },
-  "dependencies": {
-    "bluebird": "registry:npm/bluebird#3.3.4+20160427051630"
-  }
-}

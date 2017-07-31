@@ -9,7 +9,7 @@ suite("MavensMateStatus", () => {
     let mavensMateStatus;
     
     suite("updateAppStatus", () => {
-        let statusBarItem;
+        let statusBarItem: any;
         let createStatusBarItemStub;
     
         setup(() => {
