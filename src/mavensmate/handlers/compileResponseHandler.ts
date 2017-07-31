@@ -2,7 +2,7 @@ import * as CompileResultParser from './parsers/compileResultParser';
 import { getPathEnd } from '../../workspace/componentPath';
 import * as vscode from 'vscode';
 import path = require('path');
-import Bluebird = require('bluebird');
+import Promise = require('bluebird');
 import { MavensMateDiagnostics } from '../../vscode/mavensMateDiagnostics';
 import * as DiagnosticFactory from '../../vscode/diagnosticFactory';
 
@@ -19,7 +19,7 @@ export function handleCompileResponse(compileResponse): Promise<any>{
             handlePromise = handleSuccess(result);
         }
     } else {
-        console.error(`MavensMate Compile Error Resposne ${compileResponse}`);
+        console.error(`MavensMate Compile Error Response ${compileResponse}`);
         return Promise.reject(compileResponse.error);
     }
     return handlePromise;

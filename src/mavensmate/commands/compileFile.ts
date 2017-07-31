@@ -37,8 +37,8 @@ class CompileFile extends PathsCommand {
     }
 
     onSuccess(response): Promise<any> {
-        return super.onSuccess(response)
-            .then(() => handleCompileResponse(response));
+        return handleCompileResponse(response)
+            .then(() => super.onSuccess(response));
     }
 }
 export = CompileFile;

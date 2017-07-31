@@ -43,7 +43,8 @@ export abstract class ClientCommand extends BaseCommand {
         return this.onStart()
             .bind(this)
             .then(this.sendCommand)
-            .then(this.onSuccess, this.onFailure);
+            .then(this.onSuccess)
+            .catch(this.onFailure);
     }
 
     onStart(): Promise<any>{
